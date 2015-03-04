@@ -9,21 +9,22 @@ import javalib.appletsoundworld.*;
  * @since 14 August 2010
  */
 
-public class TunesDemoApplet extends WorldApplet{
+public class TunesDemoApplet extends WorldApplet {
+    private static final long serialVersionUID = 912421128698699761L;
 
-  /** Produce a new TunesWorld */
-  public World getNewWorld(){    
-    return new TunesWorld();
-  }
+    /** Produce a new TunesWorld */
+    public World getNewWorld() {
+        return new TunesWorld();
+    }
 
-  /** Set the size of this world */
-  public void setWorldSize(){
-    this.WIDTH = 600;
-    this.HEIGHT = 400;
-  }
-  
-  /** Set the speed to be twice the normal, so the music plays better */
-  public double setSpeedFactor(){
-    return 2.0;
-  }
+    /** Set the size of this world */
+    public void setWorldSize() {
+        this.WIDTH = 600;
+        this.HEIGHT = 400;
+    }
+
+    /** Set the speed to be twice the normal, so the music plays better */
+    public double setSpeedFactor() {
+        return 2.0;
+    }
 }

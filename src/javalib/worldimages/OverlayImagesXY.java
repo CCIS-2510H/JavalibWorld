@@ -52,8 +52,10 @@ public class OverlayImagesXY extends WorldImage {
         this.top = top;
         this.dx = dx;
         this.dy = dy;
-        this.pinhole.x = (this.bot.pinhole.x + this.top.pinhole.x) / 2;
-        this.pinhole.y = (this.bot.pinhole.y + this.top.pinhole.y) / 2;
+        
+        // Calculate proper pinhole
+        this.pinhole.x = this.getWidth() / 2;
+        this.pinhole.y = this.getHeight() / 2;
     }
 
     /**
