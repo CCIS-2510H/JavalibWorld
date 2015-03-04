@@ -50,8 +50,10 @@ public class TriangleImage extends WorldImage {
         this.poly = new Polygon(xCoord, yCoord, 3);
 
         // set the pinhole in the center of the triangle
-        this.pinhole.x = (this.p1.x + this.p2.x + this.p3.x) / 3;
-        this.pinhole.y = (this.p1.y + this.p2.y + this.p3.y) / 3;
+        this.pinhole.x = Math.min(this.p1.x, Math.min(this.p2.x, this.p3.x))
+                + (this.getWidth() / 2);
+        this.pinhole.y = Math.min(this.p1.y, Math.min(this.p2.y, this.p3.y))
+                + (this.getHeight() / 2);
     }
 
     /**
