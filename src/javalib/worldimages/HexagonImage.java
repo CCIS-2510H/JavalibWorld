@@ -1,0 +1,285 @@
+package javalib.worldimages;
+
+import javalib.colors.*;
+
+import java.awt.*;
+
+/**
+ * <p>Copyright 2014 Benjamin Lerner</p>
+ * <p>This program is distributed under the terms of the 
+ * GNU Lesser General Public License (LGPL)</p>
+ */
+
+/**
+ * <p>
+ * The class to represent filled regular polygon images drawn by the world when
+ * drawing on its <code>Canvas</code>.
+ * </p>
+ * <p>
+ * The pinhole for the polygon is in the center of the polygon.
+ * </p>
+ * 
+ * @author Benjamin Lerner
+ * @since November 14 2014
+ */
+
+class RegularPolyImage extends WorldImage {
+    public Posn center;
+    public int sides;
+    public double sideLen;
+    public double angle;
+    private Polygon poly;
+
+    /**
+     * The full constructor for an equilateral regular polygon, whose rightmost
+     * point is rotated from the horizontal
+     * 
+     * @param center
+     *            -- the central point of the regular polygon
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param angle
+     *            -- the angle of rotation in radians
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(Posn center, double sideLen, int numSides,
+            double angle, Color color) {
+        super(center, color);
+        this.sideLen = sideLen;
+        this.sides = numSides;
+        this.angle = angle;
+        this.center = center;
+        this.setPoly(center);
+
+        // set the pinhole in the center of the triangle
+        this.pinhole = center;
+    }
+
+    private void setPoly(Posn center) {
+        int[] xCoord = new int[this.sides];
+        int[] yCoord = new int[this.sides];
+        double internalAngle = (2.0 * Math.PI) / this.sides;
+        for (int i = 0; i < this.sides; i = i + 1) {
+            xCoord[i] = (int) (center.x + Math.cos(angle + i * internalAngle)
+                    * sideLen);
+            yCoord[i] = (int) (center.y + Math.sin(angle + i * internalAngle)
+                    * sideLen);
+        }
+        this.poly = new Polygon(xCoord, yCoord, this.sides);
+    }
+
+    /**
+     * A convenience constructor to supply the color in the form of
+     * <code>{@link IColor IColor}</code>.
+     * 
+     * @param center
+     *            -- the central point of the regular polygon
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param angle
+     *            -- the angle of rotation in radians
+     * @param color
+     *            the color for this image
+     */
+    public RegularPolyImage(Posn center, double sideLen, int numSides,
+            double angle, IColor color) {
+        this(center, sideLen, numSides, angle, color.thisColor());
+    }
+
+    /**
+     * Draw this image in the provided <code>Graphics2D</code> context.
+     * 
+     * @param g
+     *            the provided <code>Graphics2D</code> context
+     */
+    public void draw(Graphics2D g) {
+        if (color == null)
+            color = new Color(0, 0, 0);
+
+        // save the current paint
+        Paint oldPaint = g.getPaint();
+        // set the paint to the given color
+        g.setPaint(color);
+        // draw the triangle
+        g.fill(poly);
+        // reset the original paint
+        g.setPaint(oldPaint);
+    }
+
+    /**
+     * Produce the regular polygon with the pinhole moved by the given (dx, dy)
+     * 
+     * @param dx
+     *            the horizontal offset
+     * @param dy
+     *            the vertical offset
+     */
+    public WorldImage getMovedImage(int dx, int dy) {
+        return new RegularPolyImage(this.movePosn(this.center, dx, dy),
+                this.sideLen, this.sides, this.angle, this.color);
+    }
+
+    /**
+     * Produce the regular polygon with the pinhole moved to the given location
+     * 
+     * @param p
+     *            the given location
+     */
+    public WorldImage getMovedTo(Posn p) {
+        int dx = p.x - this.pinhole.x;
+        int dy = p.y - this.pinhole.y;
+        return this.getMovedImage(dx, dy);
+    }
+
+    /**
+     * EFFECT: Move the pinhole for this image by the given offset.
+     * 
+     * @param dx
+     *            the horizontal offset
+     * @param dy
+     *            the vertical offset
+     */
+    public void movePinhole(int dx, int dy) {
+        this.pinhole.x = this.pinhole.x + dx;
+        this.pinhole.y = this.pinhole.y + dy;
+        this.center = this.pinhole;
+        this.setPoly(this.pinhole);
+    }
+
+    /**
+     * EFFECT: Move the pinhole for this image to the given location.
+     * 
+     * @param p
+     *            the given location
+     */
+    public void moveTo(Posn p) {
+        int dx = p.x - this.pinhole.x;
+        int dy = p.y - this.pinhole.y;
+        this.movePinhole(dx, dy);
+    }
+
+    /**
+     * Produce the width of this triangle image
+     * 
+     * @return the width of this image
+     */
+    public int getWidth() {
+        int minX = this.poly.xpoints[0];
+        int maxX = this.poly.xpoints[0];
+        for (int i = 0; i < this.sides; i = i + 1) {
+            minX = Math.min(minX, this.poly.xpoints[i]);
+            maxX = Math.max(maxX, this.poly.xpoints[i]);
+        }
+        return maxX - minX;
+    }
+
+    /**
+     * Produce the height of this triangle image
+     * 
+     * @return the height of this image
+     */
+    public int getHeight() {
+        int minY = this.poly.ypoints[0];
+        int maxY = this.poly.ypoints[0];
+        for (int i = 0; i < this.sides; i = i + 1) {
+            minY = Math.min(minY, this.poly.ypoints[i]);
+            maxY = Math.max(maxY, this.poly.ypoints[i]);
+        }
+        return maxY - minY;
+    }
+
+    /**
+     * Produce a <code>String</code> representation of this triangle image
+     */
+    public String toString() {
+        return "new RegularPolyImage(" + "this.pinhole = (" + this.pinhole.x
+                + ", " + this.pinhole.y + "),\n" + "this.sideLen = "
+                + Double.toString(this.sideLen) + ",\n" + "this.sides = "
+                + Integer.toString(this.sides) + ",\n" + "this.color = "
+                + this.color.toString() + "))\n";
+    }
+
+    /**
+     * Produce a <code>String</code> that represents this image, indented by the
+     * given <code>indent</code>
+     * 
+     * @param indent
+     *            the given prefix representing the desired indentation
+     * @return the <code>String</code> representation of this image
+     */
+    public String toIndentedString(String indent) {
+        indent = indent + " ";
+        return classNameString(indent, "RegularPolyImage")
+                + pinholeString(indent, this.pinhole) + indent
+                + "this.sideLen = " + Double.toString(this.sideLen) + ",\n"
+                + indent + "this.sides = " + Integer.toString(this.sides)
+                + ",\n" + colorString(indent, this.color) + "))\n";
+    }
+
+    /**
+     * Is this <code>RegularPolyImage</code> same as the given object?
+     */
+    public boolean equals(Object o) {
+        if (o instanceof RegularPolyImage) {
+            RegularPolyImage that = (RegularPolyImage) o;
+            return this.pinhole.x == that.pinhole.x
+                    && this.pinhole.y == that.pinhole.y
+                    && this.sideLen == that.sideLen && this.sides == that.sides
+                    && this.color.equals(that.color);
+        } else
+            return false;
+    }
+
+    /**
+     * The hashCode to match the equals method
+     */
+    public int hashCode() {
+        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
+                + (int) this.sideLen + this.sides;
+    }
+}
+
+/**
+ * Represents a filled Hexagon, a special case of a filled regular polygon
+ * 
+ */
+class HexagonImage extends RegularPolyImage {
+    /**
+     * The full constructor for an equilateral hexagon, whose top and bottom are
+     * rotated from the horizontal
+     * 
+     * @param center
+     *            -- the central point of the hexagon
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param angle
+     *            -- the angle of rotation in radians
+     * @param color
+     *            -- the color for this hexagon
+     */
+    public HexagonImage(Posn center, double sideLen, double angle, Color color) {
+        super(center, sideLen, 6, angle, color);
+    }
+
+    /**
+     * A convenience constructor to supply the color in the form of
+     * <code>{@link IColor IColor}</code>.
+     * 
+     * @param center
+     *            -- the central point of the hexagon
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param angle
+     *            -- the angle of rotation in radians
+     * @param color
+     *            the color for this image
+     */
+    public HexagonImage(Posn center, double sideLen, double angle, IColor color) {
+        this(center, sideLen, angle, color.thisColor());
+    }
+}
