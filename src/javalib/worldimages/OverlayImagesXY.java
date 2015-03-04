@@ -54,14 +54,18 @@ public class OverlayImagesXY extends WorldImage {
         this.dy = dy;
         
         // Calculate proper pinhole
-        int rightX = Math.max(this.bot.pinhole.x + this.bot.getWidth() / 2,
-                this.top.pinhole.x + this.top.getWidth() / 2);
-        int leftX = Math.min(this.bot.pinhole.x - this.bot.getWidth() / 2,
-                this.top.pinhole.x - this.top.getWidth() / 2);
-        int bottomY = Math.max(this.bot.pinhole.y + this.bot.getHeight() / 2,
-                this.top.pinhole.y + this.top.getHeight() / 2);
-        int topY = Math.min(this.bot.pinhole.y - this.bot.getHeight() / 2,
-                this.top.pinhole.y - this.top.getHeight() / 2);
+        int botWidth = this.bot.getWidth();
+        int topWidth = this.top.getWidth();
+        int botHeight = this.bot.getHeight();
+        int topHeight = this.top.getHeight();
+        int rightX = Math.max(this.bot.pinhole.x + botWidth / 2,
+                this.top.pinhole.x + topWidth / 2);
+        int leftX = Math.min(this.bot.pinhole.x - botWidth / 2,
+                this.top.pinhole.x - topWidth / 2);
+        int bottomY = Math.max(this.bot.pinhole.y + botHeight / 2,
+                this.top.pinhole.y + topHeight / 2);
+        int topY = Math.min(this.bot.pinhole.y - botHeight / 2,
+                this.top.pinhole.y - topHeight / 2);
         this.pinhole.x = (rightX + leftX) / 2;
         this.pinhole.y = (bottomY + topY) / 2;
     }
