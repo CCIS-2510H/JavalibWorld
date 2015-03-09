@@ -1,9 +1,6 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 
 /**
  * <p>Copyright 2012 Viera K. Proulx</p>
@@ -20,7 +17,7 @@ import java.awt.geom.Ellipse2D;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class CircleImage extends WorldImage {
+public class CircleImage extends EllipseImage {
 
     /** the radius of this circle */
     public int radius;
@@ -28,55 +25,24 @@ public class CircleImage extends WorldImage {
     /**
      * A full constructor for this circle image.
      * 
-     * @param pinhole
-     *            the pinhole location for this image
      * @param radius
      *            the radius of this circle
      * @param color
      *            the color for this image
      */
-    public CircleImage(Posn pinhole, int radius, Color color) {
-        super(pinhole, color);
-        this.radius = radius;
+    public CircleImage(int radius, OutlineMode fill, Color color) {
+        this(new Posn(0, 0), radius, fill, color);
     }
 
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param radius
-     *            the radius of this circle
-     * @param color
-     *            the color for this image
-     */
-    public CircleImage(Posn pinhole, int radius, IColor color) {
-        super(pinhole, color);
-        this.radius = radius;
+    public CircleImage(int radius, String fill, Color color) {
+        this(new Posn(0, 0), radius, OutlineMode.fromString(fill), color);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
-    public void draw(Graphics2D g) {
-        if (this.radius <= 0)
-            return;
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
-
-        // save the current paint
-        Paint oldPaint = g.getPaint();
-        // set the paint to the given color
-        g.setPaint(this.color);
-        // draw the object
-        g.draw(new Ellipse2D.Double(this.pinhole.x - this.radius,
-                this.pinhole.y - this.radius, 2 * this.radius, 2 * this.radius));
-        // reset the original paint
-        g.setPaint(oldPaint);
+    protected CircleImage(Posn pinhole, int radius, OutlineMode fill,
+            Color color) {
+        super(pinhole, radius * 2, radius * 2, fill, color);
+        this.radius = radius;
+        this.fill = fill;
     }
 
     /**
@@ -88,8 +54,7 @@ public class CircleImage extends WorldImage {
      *            the vertical offset
      */
     public WorldImage getMovedImage(int dx, int dy) {
-        return new CircleImage(new Posn(this.pinhole.x + dx, this.pinhole.y
-                + dy), this.radius, this.color);
+        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
     }
 
     /**
@@ -99,7 +64,7 @@ public class CircleImage extends WorldImage {
      *            the given location
      */
     public WorldImage getMovedTo(Posn p) {
-        return new CircleImage(p, this.radius, this.color);
+        return new CircleImage(p, this.radius, this.fill, this.color);
     }
 
     /**
@@ -108,7 +73,7 @@ public class CircleImage extends WorldImage {
      * @return the width of this image
      */
     public int getWidth() {
-        return 2 * this.radius;
+        return this.width;
     }
 
     /**
@@ -117,7 +82,7 @@ public class CircleImage extends WorldImage {
      * @return the height of this image
      */
     public int getHeight() {
-        return 2 * this.radius;
+        return this.height;
     }
 
     /**
@@ -126,7 +91,8 @@ public class CircleImage extends WorldImage {
     public String toString() {
         return "new CircleImage(this.pinhole = (" + this.pinhole.x + ", "
                 + this.pinhole.y + "), \nthis.color = " + this.color.toString()
-                + "\nthis.radius = " + this.radius + ")\n";
+                + "\nthis.radius = " + this.radius + "\nthis.fill = "
+                + this.fill + ")\n";
     }
 
     /**
@@ -142,7 +108,8 @@ public class CircleImage extends WorldImage {
         return classNameString(indent, "CircleImage")
                 + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
-                + "this.radius = " + this.radius + ")\n";
+                + "this.radius = " + this.radius + indent + "this.fill = "
+                + this.fill + ")\n";
     }
 
     /**
@@ -153,7 +120,7 @@ public class CircleImage extends WorldImage {
             CircleImage that = (CircleImage) o;
             return this.pinhole.x == that.pinhole.x
                     && this.pinhole.y == that.pinhole.y
-                    && this.radius == that.radius
+                    && this.radius == that.radius && this.fill == that.fill
                     && this.color.equals(that.color);
         } else
             return false;

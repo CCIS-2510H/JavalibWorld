@@ -20,9 +20,6 @@ import java.awt.geom.*;
  */
 public class FromFileImage extends WorldImage {
 
-    /** is this being used with an application or an applet? */
-    public static boolean isApplet = false;
-
     /** the file name for the image source */
     public String fileName;
 
@@ -43,15 +40,13 @@ public class FromFileImage extends WorldImage {
      * @param fileName
      *            the file name for the image source
      */
-    public FromFileImage(Posn pinhole, String fileName) {
+    protected FromFileImage(Posn pinhole, String fileName) {
         super(pinhole, Color.white);
 
         // determine how to read the file name
         // then read the image, or verify that it has been read already
-        if (isApplet)
-            this.imread = new ImageMakerApplet(fileName);
-        else
-            this.imread = new ImageMaker(fileName);
+        this.imread = new ImageMaker(fileName);
+
         /*
          * this.pinhole.x = pinhole.x - (this.imread.width / 2); this.pinhole.y
          * = pinhole.y - (this.imread.height / 2);
@@ -72,6 +67,10 @@ public class FromFileImage extends WorldImage {
                 - this.imread.width / 2, this.pinhole.y - this.imread.height
                 / 2);
     }
+    
+    public FromFileImage(String fileName) {
+        this(new Posn(0, 0), fileName);
+    }
 
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
@@ -79,11 +78,10 @@ public class FromFileImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         // recompute the affine transform, as teh pinhole may have moved
-        this.at = AffineTransform.getTranslateInstance(this.pinhole.x
-                - this.imread.width / 2, this.pinhole.y - this.imread.height
-                / 2);
+        this.at = AffineTransform.getTranslateInstance(x - this.imread.width
+                / 2, y - this.imread.height / 2);
         // save the current paint
         Paint oldPaint = g.getPaint();
         // set the paint to the given color

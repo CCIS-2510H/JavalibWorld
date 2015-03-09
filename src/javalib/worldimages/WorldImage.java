@@ -1,7 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
 
 /**
@@ -40,26 +38,12 @@ public abstract class WorldImage {
     }
 
     /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param color
-     *            the color for this image
-     */
-    public WorldImage(Posn pinhole, IColor color) {
-        this.pinhole = pinhole;
-        this.color = color.thisColor();
-    }
-
-    /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    abstract public void draw(Graphics2D g);
+    abstract public void drawAt(Graphics2D g, int x, int y);
 
     /**
      * Produce the image with the pinhole moved by the given (dx, dy)
@@ -79,29 +63,6 @@ public abstract class WorldImage {
      */
     abstract public WorldImage getMovedTo(Posn p);
 
-    /**
-     * EFFECT: Move the pinhole for this image by the given offset.
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public void movePinhole(int dx, int dy) {
-        this.pinhole.x = this.pinhole.x + dx;
-        this.pinhole.y = this.pinhole.y + dy;
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image to the given location.
-     * 
-     * @param p
-     *            the given location
-     */
-    public void moveTo(Posn p) {
-        this.pinhole.x = p.x;
-        this.pinhole.y = p.y;
-    }
 
     /**
      * Helper method to produce a <code>Posn</code> moved by the given (dx, dy)

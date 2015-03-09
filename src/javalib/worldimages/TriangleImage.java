@@ -1,7 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
 
 /**
@@ -26,6 +24,7 @@ public class TriangleImage extends WorldImage {
     public Posn p1;
     public Posn p2;
     public Posn p3;
+    public OutlineMode fill;
     private Polygon poly;
 
     /**
@@ -40,11 +39,13 @@ public class TriangleImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public TriangleImage(Posn p1, Posn p2, Posn p3, Color color) {
+    public TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill,
+            Color color) {
         super(p1, color);
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
+        this.fill = fill;
         int[] xCoord = new int[] { p1.x, p2.x, p3.x };
         int[] yCoord = new int[] { p1.y, p2.y, p3.y };
         this.poly = new Polygon(xCoord, yCoord, 3);
@@ -55,22 +56,10 @@ public class TriangleImage extends WorldImage {
         this.pinhole.y = Math.min(this.p1.y, Math.min(this.p2.y, this.p3.y))
                 + (this.getHeight() / 2);
     }
-
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param p1
-     *            the first point of this triangle
-     * @param p2
-     *            the second point of this triangle
-     * @param p3
-     *            the third point of this triangle
-     * @param color
-     *            the color for this image
-     */
-    public TriangleImage(Posn p1, Posn p2, Posn p3, IColor color) {
-        this(p1, p2, p3, color.thisColor());
+    
+    public TriangleImage(Posn p1, Posn p2, Posn p3, String fill,
+            Color color) {
+        this(p1, p2, p3, OutlineMode.fromString(fill), color);
     }
 
     /**
@@ -79,7 +68,7 @@ public class TriangleImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -87,8 +76,20 @@ public class TriangleImage extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
+        // Create an adjusted polygon that centers on (x, y)
+        int[] xCoord = new int[3];
+        int[] yCoord = new int[3];
+        for (int i = 0; i < 3; i++) {
+            xCoord[i] = this.poly.xpoints[i] + x;
+            yCoord[i] = this.poly.ypoints[i] + y;
+        }
+        Polygon p = new Polygon(xCoord, yCoord, 3);
         // draw the triangle
-        g.fill(poly);
+        if (this.fill == OutlineMode.OUTLINE) {
+            g.draw(p);
+        } else if (this.fill == OutlineMode.SOLID) {
+            g.fill(p);
+        }
         // reset the original paint
         g.setPaint(oldPaint);
     }
@@ -103,7 +104,8 @@ public class TriangleImage extends WorldImage {
      */
     public WorldImage getMovedImage(int dx, int dy) {
         return new TriangleImage(this.movePosn(this.p1, dx, dy), this.movePosn(
-                this.p2, dx, dy), this.movePosn(this.p3, dx, dy), this.color);
+                this.p2, dx, dy), this.movePosn(this.p3, dx, dy), this.fill,
+                this.color);
     }
 
     /**

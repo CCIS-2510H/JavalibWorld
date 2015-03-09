@@ -1,6 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
 import javalib.worldcanvas.CanvasPanel;
 
 import java.awt.*;
@@ -60,21 +59,7 @@ public class TextImage extends WorldImage {
     /** the current default font in our graphics context */
     protected static Font font = g.getFont();
 
-    /**
-     * A full constructor for this text image.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param size
-     *            the size of the font to use (the default is 13)
-     * @param style
-     *            the style of the font: (regular, bold, italic, italic/bold)
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(Posn pinhole, String text, float size, int style,
+    private TextImage(Posn pinhole, String text, float size, int style,
             Color color) {
         super(pinhole, color);
         // bad things happen if we want to display a null String
@@ -101,68 +86,12 @@ public class TextImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public TextImage(Posn pinhole, String text, int size, int style, Color color) {
-        super(pinhole, color);
-        // bad things happen if we want to display a null String
-        // or a String of length 0
-        if (text == null || text.equals(""))
-            text = " ";
-        this.text = text;
-        this.size = size;
-        this.style = style;
-        this.setWidthHeight();
+    public TextImage(String text, float size, int style, Color color) {
+        this(new Posn(0, 0), text, size, style, color);
     }
 
     /**
-     * A convenience constructor providing the default style (regular).
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param size
-     *            the size of the font to use (the default is 13)
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(Posn pinhole, String text, float size, Color color) {
-        this(pinhole, text, size, 0, color);
-    }
-
-    /**
-     * A convenience constructor providing the default style (regular).
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param size
-     *            the size of the font to use (the default is 13)
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(Posn pinhole, String text, int size, Color color) {
-        this(pinhole, text, size, 0, color);
-    }
-
-    /**
-     * A convenience constructor providing the default style (regular).
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(Posn pinhole, String text, Color color) {
-        this(pinhole, text, 13, 0, color);
-    }
-
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code> and providing the default style
-     * (regular).
+     * A full constructor for this text image.
      * 
      * @param pinhole
      *            the pinhole location for this image
@@ -175,36 +104,12 @@ public class TextImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public TextImage(Posn pinhole, String text, float size, int style,
-            IColor color) {
-        this(pinhole, text, size, style, color.thisColor());
+    public TextImage(String text, int size, int style, Color color) {
+        this(text, (float) size, style, color);
     }
 
     /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code> and providing the default style
-     * (regular).
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param size
-     *            the size of the font to use (the default is 13)
-     * @param style
-     *            the style of the font: (regular, bold, italic, italic/bold)
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(Posn pinhole, String text, int size, int style,
-            IColor color) {
-        this(pinhole, text, size, style, color.thisColor());
-    }
-
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code> and providing the default style
-     * (regular).
+     * A convenience constructor providing the default style (regular).
      * 
      * @param pinhole
      *            the pinhole location for this image
@@ -215,14 +120,12 @@ public class TextImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public TextImage(Posn pinhole, String text, float size, IColor color) {
-        this(pinhole, text, size, 0, color);
+    public TextImage(String text, float size, Color color) {
+        this(text, size, 0, color);
     }
 
     /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code> and providing the default style
-     * (regular).
+     * A convenience constructor providing the default style (regular).
      * 
      * @param pinhole
      *            the pinhole location for this image
@@ -233,14 +136,12 @@ public class TextImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public TextImage(Posn pinhole, String text, int size, IColor color) {
-        this(pinhole, text, size, 0, color);
+    public TextImage(String text, int size, Color color) {
+        this(text, size, 0, color);
     }
 
     /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code> and providing the default style
-     * (regular).
+     * A convenience constructor providing the default style (regular).
      * 
      * @param pinhole
      *            the pinhole location for this image
@@ -249,8 +150,8 @@ public class TextImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public TextImage(Posn pinhole, String text, IColor color) {
-        this(pinhole, text, 13, 0, color);
+    public TextImage(String text, Color color) {
+        this(text, 13, 0, color);
     }
 
     /**
@@ -259,7 +160,7 @@ public class TextImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (this.text == null)
             this.text = "";
         if (this.color == null)
@@ -274,11 +175,10 @@ public class TextImage extends WorldImage {
         // set the paint to the given color
         g.setPaint(this.color);
 
-        if (alignment == 1)
-
+        if (alignment == 1) {
             // draw the object
-            g.drawString(this.text, this.pinhole.x - this.width / 2,
-                    this.pinhole.y + this.height / 4);
+            g.drawString(this.text, x - this.width / 2, y + this.height / 4);
+        }
 
         // reset the original paint and font
         g.setPaint(oldPaint);

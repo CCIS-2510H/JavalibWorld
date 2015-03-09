@@ -1,5 +1,7 @@
 package javalib.worldimages;
 
+import javalib.worldcanvas.WorldScene;
+
 /**
  * <p>Copyright 2012 Viera K. Proulx</p>
  * <p>This program is distributed under the terms of the 
@@ -27,7 +29,7 @@ public class WorldEnd {
     public boolean worldEnds;
 
     /** the last image to display when the world ends */
-    public WorldImage lastImage;
+    public WorldScene lastScene;
 
     /**
      * The standard full constructor.
@@ -38,8 +40,8 @@ public class WorldEnd {
      *            the last image to display when the world ends (ignored if the
      *            world goes on)
      */
-    public WorldEnd(boolean worldEnds, WorldImage lastImage) {
+    public WorldEnd(boolean worldEnds, WorldScene lastScene) {
         this.worldEnds = worldEnds;
-        this.lastImage = lastImage;
+        this.lastScene = lastScene;
     }
 }

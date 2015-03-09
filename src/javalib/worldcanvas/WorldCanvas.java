@@ -1,10 +1,10 @@
 package javalib.worldcanvas;
 
 import javalib.worldimages.*;
-import javalib.colors.*;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import java.io.*;
@@ -139,47 +139,12 @@ public class WorldCanvas {
     // ///////////////////////////////////////////////////////////////////////
     // Methods for drawing and erasing shapes and text //
     // ///////////////////////////////////////////////////////////////////////
-
-    /**
-     * Draw the image in the specified file at the location of the given NW
-     * corner
-     * 
-     * @param fileName
-     *            the name of the image file
-     * @param nw
-     *            the NW corner for the image placement
-     */
-    public boolean drawImage(String fileName, Posn nw) {
-        ((CanvasPanel) panel).drawImage(fileName, nw.x, nw.y);
-        return true;
-    }
-
-    /**
-     * Draw the image provided by the <code>{@link ImageMaker ImageMaker}</code>
-     * on the <code>{@link WorldCanvas Canvas}</code> at the given NW corner
-     * 
-     * @param image
-     *            the image maker for the image file
-     * @param nw
-     *            the NW corner for the image placement
-     */
-    public boolean drawImage(ImageMaker image, Posn nw) {
-        ((CanvasPanel) panel).drawImagePixels(image, nw.x, nw.y);
-
-        // ((CanvasPanel)panel).drawImage(image, nw.x, nw.y);
-        return true;
-    }
-
-    /**
-     * Draw the image on the <code>{@link WorldCanvas Canvas}</code> at its
-     * pinhole location.
-     * 
-     * @param image
-     *            the image to be drawn
-     * @return <code>true</code>
-     */
-    public boolean drawImage(WorldImage image) {
-        ((CanvasPanel) panel).drawImage(image);
+    
+    public boolean drawScene(WorldScene scene) {
+        if (f.getWidth() != scene.width || f.getHeight() != scene.height) {
+            f.setSize(scene.width, scene.height);
+        }
+        ((CanvasPanel) panel).drawScene(scene);
         return true;
     }
 
@@ -279,16 +244,20 @@ public class WorldCanvas {
 
         nextStep("To show the canvas ... ");
         sm1.show();
-
+        
+        WorldScene scene1 = new WorldScene(200, 200);
+        
         nextStep("Canvas shown - should be blank - add red and blue disk");
-        sm1.drawImage(new CircleImage(new Posn(50, 50), 20, new Red()));
-        sm1.drawImage(new CircleImage(new Posn(150, 50), 50, new Blue()));
+        scene1.placeImageXY(new CircleImage(20, "outline", Color.red), 50, 50);
+        scene1.placeImageXY(new CircleImage(20, "outline", Color.blue), 150, 50);
+        sm1.drawScene(scene1);
 
         nextStep("Show the canvas again - it should not do anything");
         sm1.show();
-
+        
         nextStep("Draw a green disk");
-        sm1.drawImage(new CircleImage(new Posn(50, 150), 50, new Green()));
+        scene1.placeImageXY(new CircleImage(50, "outline", Color.green), 50, 150);
+        sm1.drawScene(scene1);
 
         nextStep("Close the Canvas");
         sm1.close();
@@ -297,7 +266,10 @@ public class WorldCanvas {
         sm1.show();
 
         nextStep("Paint one disks on the canvas");
-        sm1.drawImage(new CircleImage(new Posn(50, 150), 25, new Black()));
+        
+        WorldScene scene2 = new WorldScene(200, 200);
+        scene2.placeImageXY(new CircleImage(25, "outline", Color.black), 50, 150);
+        sm1.drawScene(scene2);
 
         nextStep("Construct a second canvas with the name Smiley");
         WorldCanvas sm2 = new WorldCanvas(200, 200, "Smiley");
@@ -306,17 +278,23 @@ public class WorldCanvas {
         sm2.show();
 
         nextStep("Paint two disks on the Smiley canvas");
-        sm2.drawImage(new CircleImage(new Posn(50, 50), 20, new Red()));
-        sm2.drawImage(new CircleImage(new Posn(150, 150), 50, new Blue()));
+        WorldScene scene3 = new WorldScene(200, 200);
+        
+        scene3.placeImageXY(new CircleImage(20, "outline", Color.red), 50, 50);
+        scene3.placeImageXY(new CircleImage(50, "outline", Color.blue), 150, 50);
+        sm2.drawScene(scene3);
 
         nextStep("Manually close the 'Canvas' window"
                 + "and see if we can bring it back to life");
         sm1.show();
 
         nextStep("The first canvas should be shown - cleared");
-        sm1.drawImage(new CircleImage(new Posn(50, 50), 30, new Red()));
-        sm1.drawImage(new CircleImage(new Posn(150, 50), 30, new Blue()));
-        sm1.drawImage(new CircleImage(new Posn(50, 150), 30, new Green()));
+        WorldScene scene4 = new WorldScene(200, 200);
+        scene4.placeImageXY(new CircleImage(30, "outline", Color.red), 50, 50);
+        scene4.placeImageXY(new CircleImage(30, "outline", Color.blue), 150, 50);
+        scene4.placeImageXY(new CircleImage(30, "outline", Color.green), 50, 150);
+        sm1.drawScene(scene4);
+        
         nextStep("The first canvas has three disks drawn");
 
         System.out.println("Close both canvas windows to end the program");

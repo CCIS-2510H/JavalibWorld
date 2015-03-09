@@ -1,7 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -28,6 +26,9 @@ public class EllipseImage extends WorldImage {
     /** the height of this ellipse */
     public int height;
 
+    /** Outline mode of the ellipse */
+    public OutlineMode fill;
+
     /**
      * A full constructor for this ellipse image.
      * 
@@ -40,29 +41,20 @@ public class EllipseImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public EllipseImage(Posn pinhole, int width, int height, Color color) {
+    protected EllipseImage(Posn pinhole, int width, int height,
+            OutlineMode mode, Color color) {
         super(pinhole, color);
         this.width = width;
         this.height = height;
+        this.fill = mode;
     }
 
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param width
-     *            the width of this ellipse
-     * @param height
-     *            the height of this ellipse
-     * @param color
-     *            the color for this image
-     */
-    public EllipseImage(Posn pinhole, int width, int height, IColor color) {
-        super(pinhole, color);
-        this.width = width;
-        this.height = height;
+    public EllipseImage(int width, int height, OutlineMode mode, Color color) {
+        this(new Posn(0, 0), width, height, mode, color);
+    }
+
+    public EllipseImage(int width, int height, String outlineMode, Color color) {
+        this(width, height, OutlineMode.fromString(outlineMode), color);
     }
 
     /**
@@ -71,7 +63,7 @@ public class EllipseImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -84,8 +76,13 @@ public class EllipseImage extends WorldImage {
         // set the paint to the given color
         g.setPaint(this.color);
         // draw the object
-        g.draw(new Ellipse2D.Double(this.pinhole.x - this.width / 2,
-                this.pinhole.y - this.height / 2, this.width, this.height));
+        if (this.fill == OutlineMode.SOLID) {
+            g.fill(new Ellipse2D.Double(x - this.width / 2,
+                    y - this.height / 2, this.width, this.height));
+        } else if (this.fill == OutlineMode.OUTLINE) {
+            g.draw(new Ellipse2D.Double(x - this.width / 2,
+                    y - this.height / 2, this.width, this.height));
+        }
         // reset the original paint
         g.setPaint(oldPaint);
     }
@@ -99,8 +96,7 @@ public class EllipseImage extends WorldImage {
      *            the vertical offset
      */
     public WorldImage getMovedImage(int dx, int dy) {
-        return new EllipseImage(new Posn(this.pinhole.x + dx, this.pinhole.y
-                + dy), this.width, this.height, this.color);
+        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
     }
 
     /**
@@ -110,7 +106,8 @@ public class EllipseImage extends WorldImage {
      *            the given location
      */
     public WorldImage getMovedTo(Posn p) {
-        return new EllipseImage(p, this.width, this.height, this.color);
+        return new EllipseImage(p, this.width, this.height, this.fill,
+                this.color);
     }
 
     /**
@@ -136,7 +133,8 @@ public class EllipseImage extends WorldImage {
      */
     public String toString() {
         return "new EllipseImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
+                + this.pinhole.y + "), \nthis.fill = " + this.fill
+                + ", \nthis.color = " + this.color.toString()
                 + "\nthis.width = " + width + ", this.height = " + height
                 + ")\n";
     }
@@ -152,7 +150,8 @@ public class EllipseImage extends WorldImage {
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "EllipseImage")
-                + pinholeString(indent, this.pinhole)
+                + pinholeString(indent, this.pinhole) + "\n" + indent
+                + "this.fill = " + this.fill + "\n" + indent
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.width = " + width + ", this.height = " + height + ")\n";
     }
@@ -166,7 +165,7 @@ public class EllipseImage extends WorldImage {
             return this.pinhole.x == that.pinhole.x
                     && this.pinhole.y == that.pinhole.y
                     && this.width == that.width && this.height == that.height
-                    && this.color.equals(that.color);
+                    && this.fill == that.fill && this.color.equals(that.color);
         } else
             return false;
     }

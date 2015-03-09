@@ -1,7 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -23,6 +21,7 @@ import java.awt.geom.*;
 public class RectangleImage extends WorldImage {
     public int width;
     public int height;
+    public OutlineMode fill;
 
     /**
      * A full constructor for this rectangle image.
@@ -36,29 +35,20 @@ public class RectangleImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public RectangleImage(Posn pinhole, int width, int height, Color color) {
+    protected RectangleImage(Posn pinhole, int width, int height,
+            OutlineMode fill, Color color) {
         super(pinhole, color);
         this.width = width;
         this.height = height;
+        this.fill = fill;
     }
 
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param width
-     *            the width of this rectangle
-     * @param height
-     *            the height of this rectangle
-     * @param color
-     *            the color for this image
-     */
-    public RectangleImage(Posn pinhole, int width, int height, IColor color) {
-        super(pinhole, color);
-        this.width = width;
-        this.height = height;
+    public RectangleImage(int width, int height, OutlineMode fill, Color color) {
+        this(new Posn(0, 0), width, height, fill, color);
+    }
+
+    public RectangleImage(int width, int height, String fill, Color color) {
+        this(new Posn(0, 0), width, height, OutlineMode.fromString(fill), color);
     }
 
     /**
@@ -67,7 +57,7 @@ public class RectangleImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -80,8 +70,13 @@ public class RectangleImage extends WorldImage {
         // set the paint to the given color
         g.setPaint(this.color);
         // draw the object
-        g.fill(new Rectangle2D.Double(this.pinhole.x - this.width / 2,
-                this.pinhole.y - this.height / 2, this.width, this.height));
+        if (this.fill == OutlineMode.OUTLINE) {
+            g.draw(new Rectangle2D.Double(x - this.width / 2, y - this.height
+                    / 2, this.width, this.height));
+        } else if (this.fill == OutlineMode.SOLID) {
+            g.fill(new Rectangle2D.Double(x - this.width / 2, y - this.height
+                    / 2, this.width, this.height));
+        }
         // reset the original paint
         g.setPaint(oldPaint);
     }
@@ -95,8 +90,7 @@ public class RectangleImage extends WorldImage {
      *            the vertical offset
      */
     public WorldImage getMovedImage(int dx, int dy) {
-        return new RectangleImage(new Posn(this.pinhole.x + dx, this.pinhole.y
-                + dy), this.width, this.height, this.color);
+        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
     }
 
     /**
@@ -106,7 +100,8 @@ public class RectangleImage extends WorldImage {
      *            the given location
      */
     public WorldImage getMovedTo(Posn p) {
-        return new RectangleImage(p, this.width, this.height, this.color);
+        return new RectangleImage(p, this.width, this.height, this.fill,
+                this.color);
     }
 
     /**

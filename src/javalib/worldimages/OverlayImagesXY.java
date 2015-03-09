@@ -76,7 +76,7 @@ public class OverlayImagesXY extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -85,9 +85,9 @@ public class OverlayImagesXY extends WorldImage {
         // set the paint to the given color
         g.setPaint(color);
         // draw the two objects
-        this.bot.draw(g);
+        this.bot.drawAt(g, x, y);
         this.top.getMovedImage(dx, dy);
-        this.top.draw(g);
+        this.top.drawAt(g, x, y);
         this.top.getMovedImage(-dx, -dy);
 
         // reset the original paint
@@ -119,31 +119,6 @@ public class OverlayImagesXY extends WorldImage {
         int dx = p.x - pinhole.x;
         int dy = p.y - pinhole.y;
         return this.getMovedImage(dx, dy);
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image by the given offset.
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public void movePinhole(int dx, int dy) {
-        this.bot.movePinhole(dx, dy);
-        this.top.movePinhole(dx, dy);
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image to the given location.
-     * 
-     * @param p
-     *            the given location
-     */
-    public void moveTo(Posn p) {
-        int dx = p.x - pinhole.x;
-        int dy = p.y - pinhole.y;
-        this.movePinhole(dx, dy);
     }
 
     /**

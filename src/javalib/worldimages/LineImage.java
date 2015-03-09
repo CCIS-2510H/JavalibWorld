@@ -1,7 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -22,10 +20,9 @@ import java.awt.geom.*;
  */
 public class LineImage extends WorldImage {
 
-    /** the starting point of this line */
-    public Posn startPoint;
-
-    /** the starting point of this line */
+    /**
+     * the ending point of this line the starting point is (0, 0)
+     */
     public Posn endPoint;
 
     /**
@@ -38,27 +35,11 @@ public class LineImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public LineImage(Posn startPoint, Posn endPoint, Color color) {
-        super(startPoint, color);
-        this.startPoint = new Posn(startPoint.x, startPoint.y);
-        this.endPoint = new Posn(endPoint.x, endPoint.y);
-        this.pinhole.x = (this.startPoint.x + this.endPoint.x) / 2;
-        this.pinhole.y = (this.startPoint.y + this.endPoint.y) / 2;
-    }
-
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param startPoint
-     *            the starting point of this line
-     * @param endPoint
-     *            the ending point of this line
-     * @param color
-     *            the color for this image
-     */
-    public LineImage(Posn startPoint, Posn endPoint, IColor color) {
-        this(startPoint, endPoint, color.thisColor());
+    public LineImage(Posn endPoint, Color color) {
+        super(new Posn(0, 0), color);
+        this.endPoint = endPoint;
+        this.pinhole.x = this.endPoint.x / 2;
+        this.pinhole.y = this.endPoint.y / 2;
     }
 
     /**
@@ -67,7 +48,7 @@ public class LineImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -76,8 +57,7 @@ public class LineImage extends WorldImage {
         // set the paint to the given color
         g.setPaint(color);
         // draw the object
-        g.draw(new Line2D.Double(this.startPoint.x, this.startPoint.y,
-                this.endPoint.x, this.endPoint.y));
+        g.draw(new Line2D.Double(x, y, this.endPoint.x + x, this.endPoint.y + y));
         // reset the original paint
         g.setPaint(oldPaint);
     }
@@ -91,8 +71,7 @@ public class LineImage extends WorldImage {
      *            the vertical offset
      */
     public WorldImage getMovedImage(int dx, int dy) {
-        return new LineImage(this.movePosn(this.startPoint, dx, dy),
-                this.movePosn(this.endPoint, dx, dy), this.color);
+        return new LineImage(this.movePosn(this.endPoint, dx, dy), this.color);
     }
 
     /**
@@ -118,8 +97,6 @@ public class LineImage extends WorldImage {
     public void movePinhole(int dx, int dy) {
         this.pinhole.x = this.pinhole.x + dx;
         this.pinhole.y = this.pinhole.y + dy;
-        this.startPoint.x = this.startPoint.x + dx;
-        this.startPoint.y = this.startPoint.y + dy;
         this.endPoint.x = this.endPoint.x + dx;
         this.endPoint.y = this.endPoint.y + dy;
     }
@@ -142,7 +119,7 @@ public class LineImage extends WorldImage {
      * @return the width of this image
      */
     public int getWidth() {
-        return Math.abs(this.startPoint.x - this.endPoint.x);
+        return Math.abs(this.endPoint.x);
     }
 
     /**
@@ -151,7 +128,7 @@ public class LineImage extends WorldImage {
      * @return the height of this image
      */
     public int getHeight() {
-        return Math.abs(this.startPoint.y - this.endPoint.y);
+        return Math.abs(this.endPoint.y);
     }
 
     /**
@@ -160,9 +137,8 @@ public class LineImage extends WorldImage {
     public String toString() {
         return "new LineImage(this.pinhole = (" + this.pinhole.x + ", "
                 + this.pinhole.y + "), \nthis.color = " + this.color.toString()
-                + "\nthis.startPoint = (" + this.startPoint.x + ", "
-                + this.startPoint.y + "), \nthis.endPoint = ("
-                + this.endPoint.x + ", " + this.endPoint.y + "))\n";
+                + "\nthis.endPoint = (" + this.endPoint.x + ", "
+                + this.endPoint.y + "))\n";
     }
 
     /**
@@ -178,9 +154,8 @@ public class LineImage extends WorldImage {
         return classNameString(indent, "LineImage")
                 + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
-                + "this.startPoint = (" + this.startPoint.x + ", "
-                + this.startPoint.y + "), \n" + indent + "this.endPoint = ("
-                + this.endPoint.x + ", " + this.endPoint.y + "))\n";
+                + "this.endPoint = (" + this.endPoint.x + ", "
+                + this.endPoint.y + "))\n";
     }
 
     /**
@@ -191,8 +166,6 @@ public class LineImage extends WorldImage {
             LineImage that = (LineImage) o;
             return this.pinhole.x == that.pinhole.x
                     && this.pinhole.y == that.pinhole.y
-                    && this.startPoint.x == that.startPoint.x
-                    && this.startPoint.y == that.startPoint.y
                     && this.endPoint.x == that.endPoint.x
                     && this.endPoint.y == that.endPoint.y
                     && this.color.equals(that.color);
@@ -205,7 +178,6 @@ public class LineImage extends WorldImage {
      */
     public int hashCode() {
         return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.startPoint.x + this.startPoint.y + this.endPoint.x
-                + this.endPoint.y;
+                + this.endPoint.x + this.endPoint.y;
     }
 }

@@ -1,9 +1,9 @@
 package javalib.funworld;
 
 import javalib.worldcanvas.WorldCanvas;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
-import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,11 +55,10 @@ abstract public class World {
     private transient WindowListener windowClosing;
 
     /** a blank image, to avoid <code>null</code> in the <code>lastWorld</code> */
-    private transient WorldImage blankImage = new CircleImage(new Posn(0, 0),
-            1, Color.white);
+    private transient WorldScene blankScene = new WorldScene(0, 0);
 
     /** the last world - if needed */
-    public WorldEnd lastWorld = new WorldEnd(false, this.blankImage);
+    public WorldEnd lastWorld = new WorldEnd(false, this.blankScene);
 
     /**
      * The default constructor. To start the world one must invoke the
@@ -183,7 +182,7 @@ abstract public class World {
 
             // draw the final scene of the world with the end of time message
             this.theCanvas.clear();
-            this.theCanvas.drawImage(this.lastWorld.lastImage);
+            this.theCanvas.drawScene(this.lastWorld.lastScene);
         }
     }
 
@@ -200,7 +199,7 @@ abstract public class World {
      * @return pair (true, last image) or (false, any image)
      */
     public WorldEnd worldEnds() {
-        return new WorldEnd(false, this.makeImage());
+        return new WorldEnd(false, this.makeScene());
     }
 
     /**
@@ -213,7 +212,7 @@ abstract public class World {
      */
     public World endOfWorld(String s) {
         // set up the last world pair and finish as usual
-        this.lastWorld = new WorldEnd(true, this.lastImage(s));
+        this.lastWorld = new WorldEnd(true, this.lastScene(s));
         this.stopWorld();
 
         return this;
@@ -601,11 +600,11 @@ abstract public class World {
     protected synchronized boolean drawWorld(String s) {
         if (this.worldExists) {
             this.theCanvas.clear();
-            this.theCanvas.drawImage(this.makeImage());
+            this.theCanvas.drawScene(this.makeScene());
             return true;
         } else {
             this.theCanvas.clear();
-            this.theCanvas.drawImage(this.lastImage(s));
+            this.theCanvas.drawScene(this.lastScene(s));
             return true;
         }
     }
@@ -620,7 +619,7 @@ abstract public class World {
      * 
      * @return the image that represents this world at this moment
      */
-    abstract public WorldImage makeImage();
+    abstract public WorldScene makeScene();
 
     /**
      * <P>
@@ -632,8 +631,8 @@ abstract public class World {
      * 
      * @return the image that represents the last world to be drawn
      */
-    public WorldImage lastImage(String s) {
-        return this.makeImage();
+    public WorldScene lastScene(String s) {
+        return this.makeScene();
     }
 }
 

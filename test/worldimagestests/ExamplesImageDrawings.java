@@ -1,7 +1,7 @@
 package worldimagestests;
 
-import javalib.colors.*;
 import javalib.worldcanvas.WorldCanvas;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.*;
@@ -30,88 +30,70 @@ public class ExamplesImageDrawings {
 
     // a text inside a red rectangle with a yellow dot in its pinhole location
     public static WorldImage makeText(Posn pos, int size) {
-        WorldImage hello = new TextImage(pos,
-                "quickbrownfoxjumpedoveralazydog", size, 3, new Blue());
+        WorldImage hello = new TextImage("quickbrownfoxjumpedoveralazydog",
+                size, 3, Color.blue);
 
-        WorldImage helloRed = new OverlayImages(new RectangleImage(pos,
-                hello.getWidth(), hello.getHeight(), new Red()), hello);
-        return new OverlayImages(helloRed, new DiskImage(hello.pinhole, 2,
-                new Yellow()));
+        WorldImage helloRed = new OverlayImages(new RectangleImage(
+                hello.getWidth(), hello.getHeight(), "solid", Color.red), hello);
+        return new OverlayImages(helloRed, new CircleImage(2,
+                OutlineMode.SOLID, Color.yellow));
     }
 
-    WorldImage circleText = new TextImage(new Posn(200, 20),
-            "CircleImage(new Posn(200, 60), 10, new Red())", Color.red);
-    WorldImage circle = new CircleImage(new Posn(200, 60), 10, new Red());
-    WorldImage circleFrame = new FrameImage(circle.pinhole, circle.getWidth(),
-            circle.getHeight(), Color.black);
+    // Images
+    WorldScene scene = new WorldScene(800, 600);
 
-    WorldImage diskText = new TextImage(new Posn(200, 100),
-            "DiskImage(new Posn(200, 140), 10, new Red())", Color.red);
-    WorldImage disk = new DiskImage(new Posn(200, 140), 10, new Red());
-    WorldImage diskFrame = new FrameImage(disk.pinhole, disk.getWidth(),
-            disk.getHeight(), Color.black);
+    WorldImage circle = new CircleImage(10, OutlineMode.OUTLINE, Color.red);
+    WorldImage circleText = new TextImage(
+            "CircleImage(10, \"outline\", Color.red)", Color.red);
 
-    WorldImage lineText = new TextImage(new Posn(220, 180),
-            "LineImage(new Posn(200, 220), new Posn(280, 230), Color.green)",
-            Color.green);
-    WorldImage line = new LineImage(new Posn(200, 220), new Posn(280, 230),
-            Color.green);
-    WorldImage lineFrame = new FrameImage(line.pinhole, line.getWidth(),
-            line.getHeight(), Color.black);
+    WorldImage disc = new CircleImage(10, "solid", Color.red);
+    WorldImage discText = new TextImage(
+            "CircleImage(10, \"solid\", Color.red)", Color.red);
 
+    WorldImage rectangle = new RectangleImage(60, 20, OutlineMode.SOLID,
+            Color.orange);
+    WorldImage rectangleText = new TextImage(
+            "RectangleImage(60, 20, \"solid\", Color.orange)", Color.orange);
+
+    WorldImage frame = new RectangleImage(60, 20, "outline", Color.black);
+    WorldImage frameText = new TextImage(
+            "RectangleImage(60, 20, \"outline\", Color.black)", Color.black);
+
+    WorldImage line = new LineImage(new Posn(80, 10), Color.green);
+    WorldImage lineText = new TextImage(
+            "LineImage(new Posn(80, 10), Color.green)", Color.green);
+
+    WorldImage triangle = new TriangleImage(new Posn(50, 0), new Posn(0, 40),
+            new Posn(-50, 10), "solid", Color.cyan);
     WorldImage triangleText = new TextImage(
-            new Posn(280, 260),
-            "TriangleImage(new Posn(250, 300), new Posn(200, 340), new Posn(150, 310), Color.cyan)",
-            Color.cyan);
-    WorldImage triangle = new TriangleImage(new Posn(250, 300), new Posn(200,
-            340), new Posn(150, 310), Color.cyan);
-    WorldImage triangleFrame = new FrameImage(triangle.pinhole,
-            triangle.getWidth(), triangle.getHeight(), Color.black);
+            "TriangleImage(new Posn(50, 0), new Posn(0, 40), new Posn(-50, 10),\n"
+                    + "\"solid\", Color.cyan)", Color.cyan);
 
-    WorldImage ellipseText = new TextImage(new Posn(600, 20),
-            "EllipseImage(new Posn(600, 60), 60, 20, new Blue())", new Blue());
-    WorldImage ellipse = new EllipseImage(new Posn(600, 60), 60, 20, new Blue());
-    WorldImage ellipseFrame = new FrameImage(ellipse.pinhole,
-            ellipse.getWidth(), ellipse.getHeight(), Color.black);
+    WorldImage ellipse = new EllipseImage(60, 20, OutlineMode.OUTLINE,
+            Color.blue);
+    WorldImage ellipseText = new TextImage(
+            "EllipseImage(60, 20, \"outline\" Color.blue)", Color.blue);
 
-    WorldImage frameText = new TextImage(new Posn(600, 100),
-            "FrameImage(new Posn(600, 120), 60, 20, new Black())", new Black());
-    WorldImage frame = new FrameImage(new Posn(600, 120), 60, 20, new Black());
+    WorldImage oval = new EllipseImage(60, 20, "solid", Color.yellow);
+    WorldImage ovalText = new TextImage(
+            "OvalImage(60, 20, \"solid\", Color.yellow)", Color.yellow);
 
-    WorldImage ovalText = new TextImage(new Posn(600, 180),
-            "OvalImage(new Posn(600, 220), 60, 20, new Yellow())", new Yellow());
-    WorldImage oval = new OvalImage(new Posn(600, 220), 60, 20, new Yellow());
-    WorldImage ovalFrame = new FrameImage(oval.pinhole, oval.getWidth(),
-            oval.getHeight(), Color.black);
+    WorldImage hexagon = new HexagonImage(20.0, 0.72, "solid", Color.darkGray);
+    WorldImage hexagonText = new TextImage(
+            "HexagonImage(20.0, 0.72, \"solid\", Color.darkGray)", Color.darkGray);
 
-    WorldImage rectangleText = new TextImage(new Posn(600, 300),
-            "RectangleImage(new Posn(600, 330), 60, 20, Color.orange)",
-            Color.orange);
-    WorldImage rectangle = new RectangleImage(new Posn(600, 330), 60, 20,
-            Color.orange);
-    WorldImage rectFrame = new FrameImage(rectangle.pinhole,
-            rectangle.getWidth(), rectangle.getHeight(), Color.black);
-
-    WorldImage fromFileText = new TextImage(new Posn(600, 420),
-            "FromFileImage(new Posn(600, 480), Images/fish.png)", Color.black);
-    WorldImage fish = new FromFileImage(new Posn(600, 480), "Images/fish.png");
-
-    WorldImage rectangle2 = new RectangleImage(new Posn(620, 490), 10, 10,
-            Color.red);
-    WorldImage triangle2 = new TriangleImage(new Posn(600, 480), new Posn(600,
-            530), new Posn(630, 530), Color.blue);
-    WorldImage overlay = new OverlayImages(rectangle2, triangle2);
-    WorldImage overlayFrame = new FrameImage(overlay.pinhole,
-            overlay.getWidth(), overlay.getHeight(), Color.black);
-
-    WorldImage combined = this.circleText.overlayImages(this.circle,
-            this.circleFrame, this.diskText, this.disk, this.diskFrame,
-            this.lineText, this.line, this.lineFrame, this.triangleText,
-            this.triangle, this.triangleFrame, this.ellipseText, this.ellipse,
-            this.ellipseFrame, this.frameText, this.frame, this.ovalText,
-            this.oval, this.ovalFrame, this.rectangleText, this.rectangle,
-            this.rectFrame, this.fromFileText, this.fish, this.overlay,
-            this.overlayFrame);
+    WorldScene combined = scene.placeImageXY(rectangle, 600, 330)
+            .placeImageXY(rectangleText, 600, 300)
+            .placeImageXY(frame, 600, 130).placeImageXY(frameText, 600, 100)
+            .placeImageXY(circleText, 200, 20).placeImageXY(circle, 200, 60)
+            .placeImageXY(discText, 200, 100).placeImageXY(disc, 200, 140)
+            .placeImageXY(line, 200, 220).placeImageXY(lineText, 220, 180)
+            .placeImageXY(triangle, 200, 300)
+            .placeImageXY(triangleText, 250, 260)
+            .placeImageXY(ellipse, 600, 60).placeImageXY(ellipseText, 600, 20)
+            .placeImageXY(oval, 600, 220).placeImageXY(ovalText, 600, 180)
+            .placeImageXY(hexagon, 200, 410)
+            .placeImageXY(hexagonText, 200, 380);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -123,12 +105,12 @@ public class ExamplesImageDrawings {
 
         WorldCanvas c = new WorldCanvas(800, 600);
 
-        WorldImage pic = ExamplesImageDrawings.makeText(new Posn(300, 400), 15);
+        // WorldImage pic = ExamplesImageDrawings.makeText(new Posn(300, 400),
+        // 15);
 
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-        boolean makeDrawing = c.show() && c.drawImage(e.combined)
-                && c.drawImage(pic);
+        boolean makeDrawing = c.show() && c.drawScene(e.combined);
     }
 }

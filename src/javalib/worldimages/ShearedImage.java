@@ -5,12 +5,12 @@ import java.awt.geom.AffineTransform;
 
 import javalib.colors.*;
 
-class ShearedImage extends WorldImage {
+public class ShearedImage extends WorldImage {
     WorldImage img;
     Posn shearOrigin;
     double sx, sy;
 
-    ShearedImage(WorldImage img, Posn shearOrigin, double sx, double sy) {
+    public ShearedImage(WorldImage img, Posn shearOrigin, double sx, double sy) {
         super(img.pinhole, new White());
         this.shearOrigin = shearOrigin;
         this.img = img;
@@ -19,18 +19,23 @@ class ShearedImage extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D ctx) {
-        AffineTransform t = ctx.getTransform();
-        ctx.translate(this.shearOrigin.x, this.shearOrigin.y);
-        ctx.shear(this.sx, this.sy);
-        ctx.translate(-this.shearOrigin.x, -this.shearOrigin.y);
-        this.img.draw(ctx);
-        ctx.setTransform(t);
+    public void drawAt(Graphics2D g, int x, int y) {
+        AffineTransform t = g.getTransform();
+        g.translate(this.shearOrigin.x, this.shearOrigin.y);
+        g.shear(this.sx, this.sy);
+        g.translate(-this.shearOrigin.x, -this.shearOrigin.y);
+        this.img.drawAt(g, x, y);
+        g.setTransform(t);
+    }
+
+    @Override
+    public int getWidth() {
+        return (int) (this.img.getWidth() * (1.0 + Math.abs(this.sx)));
     }
 
     @Override
     public int getHeight() {
-        return (int) (this.img.getHeight() * (1.0 + this.sy));
+        return (int) (this.img.getHeight() * (1.0 + Math.abs(this.sy)));
     }
 
     @Override
@@ -46,27 +51,6 @@ class ShearedImage extends WorldImage {
                 this.shearOrigin.x + pinhole.x - this.pinhole.x,
                 this.shearOrigin.y + pinhole.y - this.pinhole.y), this.sx,
                 this.sy);
-    }
-
-    @Override
-    public void movePinhole(int dx, int dy) {
-        super.movePinhole(dx, dy);
-        this.img.movePinhole(dx, dy);
-        this.shearOrigin.x += dx;
-        this.shearOrigin.y += dy;
-    }
-
-    @Override
-    public void moveTo(Posn p) {
-        super.moveTo(p);
-        this.img.moveTo(p);
-        this.shearOrigin.x += p.x - this.pinhole.x;
-        this.shearOrigin.y += p.y - this.pinhole.y;
-    }
-
-    @Override
-    public int getWidth() {
-        return (int) (this.img.getWidth() * (1.0 + this.sx));
     }
 
     @Override

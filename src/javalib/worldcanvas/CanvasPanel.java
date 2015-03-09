@@ -1,6 +1,5 @@
 package javalib.worldcanvas;
 
-import javalib.colors.*;
 import javalib.worldimages.*;
 
 import java.awt.*;
@@ -209,7 +208,7 @@ public class CanvasPanel extends JPanel {
      */
     public final void clearPanel() {
         Graphics2D g2 = getBufferGraphics();
-        g2.setPaint((new White()).thisColor());
+        g2.setPaint(Color.white);
         g2.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
     }
 
@@ -312,15 +311,30 @@ public class CanvasPanel extends JPanel {
     }
 
     /**
-     * Draw the given image into this panel
+     * Draw the given image into this panel in the center
      * 
      * @param image
      *            the image to draw
      */
     public void drawImage(WorldImage image) {
+        drawImageAt(image, buffer.getWidth() / 2, buffer.getHeight() / 2);
+    }
+    
+    public void drawScene(WorldScene scene) {
+        scene.draw(getBufferGraphics());
+        repaint();
+    }
+    
+    /**
+     * Draw the given image into this panel at the specified coordinates
+     * 
+     * @param image
+     *            the image to draw
+     */
+    public void drawImageAt(WorldImage image, int x, int y) {
         Graphics2D g = getBufferGraphics();
 
-        image.draw(g);
+        image.drawAt(g, x, y);
         repaint();
     }
 

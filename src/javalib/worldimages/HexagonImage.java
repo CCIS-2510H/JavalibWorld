@@ -1,7 +1,5 @@
 package javalib.worldimages;
 
-import javalib.colors.*;
-
 import java.awt.*;
 
 /**
@@ -28,6 +26,7 @@ class RegularPolyImage extends WorldImage {
     public int sides;
     public double sideLen;
     public double angle;
+    public OutlineMode fill;
     private Polygon poly;
 
     /**
@@ -45,13 +44,14 @@ class RegularPolyImage extends WorldImage {
      * @param color
      *            -- the color for this regular polygon
      */
-    public RegularPolyImage(Posn center, double sideLen, int numSides,
-            double angle, Color color) {
+    protected RegularPolyImage(Posn center, double sideLen, int numSides,
+            double angle, OutlineMode fill, Color color) {
         super(center, color);
         this.sideLen = sideLen;
         this.sides = numSides;
         this.angle = angle;
         this.center = center;
+        this.fill = fill;
         this.setPoly(center);
 
         // set the pinhole in the center of the triangle
@@ -63,32 +63,14 @@ class RegularPolyImage extends WorldImage {
         int[] yCoord = new int[this.sides];
         double internalAngle = (2.0 * Math.PI) / this.sides;
         for (int i = 0; i < this.sides; i = i + 1) {
-            xCoord[i] = (int) (center.x + Math.cos(angle + i * internalAngle)
-                    * sideLen);
-            yCoord[i] = (int) (center.y + Math.sin(angle + i * internalAngle)
-                    * sideLen);
+            xCoord[i] = (int) Math.round((center.x + Math.cos(angle + i
+                    * internalAngle)
+                    * sideLen));
+            yCoord[i] = (int) Math.round((center.y + Math.sin(angle + i
+                    * internalAngle)
+                    * sideLen));
         }
         this.poly = new Polygon(xCoord, yCoord, this.sides);
-    }
-
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param center
-     *            -- the central point of the regular polygon
-     * @param sideLen
-     *            -- the length of one of the sides
-     * @param numSides
-     *            -- the number of sides of the polygon
-     * @param angle
-     *            -- the angle of rotation in radians
-     * @param color
-     *            the color for this image
-     */
-    public RegularPolyImage(Posn center, double sideLen, int numSides,
-            double angle, IColor color) {
-        this(center, sideLen, numSides, angle, color.thisColor());
     }
 
     /**
@@ -97,7 +79,7 @@ class RegularPolyImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void draw(Graphics2D g) {
+    public void drawAt(Graphics2D g, int x, int y) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -105,8 +87,19 @@ class RegularPolyImage extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
-        // draw the triangle
-        g.fill(poly);
+        // Create an adjusted polygon that centers on (x, y)
+        int[] xCoord = new int[this.poly.npoints];
+        int[] yCoord = new int[this.poly.npoints];
+        for (int i = 0; i < this.poly.npoints; i++) {
+            xCoord[i] = this.poly.xpoints[i] + x;
+            yCoord[i] = this.poly.ypoints[i] + y;
+        }
+        Polygon p = new Polygon(xCoord, yCoord, this.poly.npoints);
+        if (this.fill == OutlineMode.OUTLINE) {
+            g.draw(p);
+        } else if (this.fill == OutlineMode.SOLID) {
+            g.fill(p);
+        }
         // reset the original paint
         g.setPaint(oldPaint);
     }
@@ -121,7 +114,7 @@ class RegularPolyImage extends WorldImage {
      */
     public WorldImage getMovedImage(int dx, int dy) {
         return new RegularPolyImage(this.movePosn(this.center, dx, dy),
-                this.sideLen, this.sides, this.angle, this.color);
+                this.sideLen, this.sides, this.angle, this.fill, this.color);
     }
 
     /**
@@ -248,7 +241,7 @@ class RegularPolyImage extends WorldImage {
  * Represents a filled Hexagon, a special case of a filled regular polygon
  * 
  */
-class HexagonImage extends RegularPolyImage {
+public class HexagonImage extends RegularPolyImage {
     /**
      * The full constructor for an equilateral hexagon, whose top and bottom are
      * rotated from the horizontal
@@ -262,24 +255,12 @@ class HexagonImage extends RegularPolyImage {
      * @param color
      *            -- the color for this hexagon
      */
-    public HexagonImage(Posn center, double sideLen, double angle, Color color) {
-        super(center, sideLen, 6, angle, color);
+    public HexagonImage(double sideLen, double angle, OutlineMode fill,
+            Color color) {
+        super(new Posn(0, 0), sideLen, 6, angle, fill, color);
     }
 
-    /**
-     * A convenience constructor to supply the color in the form of
-     * <code>{@link IColor IColor}</code>.
-     * 
-     * @param center
-     *            -- the central point of the hexagon
-     * @param sideLen
-     *            -- the length of one of the sides
-     * @param angle
-     *            -- the angle of rotation in radians
-     * @param color
-     *            the color for this image
-     */
-    public HexagonImage(Posn center, double sideLen, double angle, IColor color) {
-        this(center, sideLen, angle, color.thisColor());
+    public HexagonImage(double sideLen, double angle, String fill, Color color) {
+        this(sideLen, angle, OutlineMode.fromString(fill), color);
     }
 }
