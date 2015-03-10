@@ -80,7 +80,7 @@ public class ScaleImageXY extends WorldImage {
     }
 
     /**
-     * Is this <code>RotateImage</code> same as the given object?
+     * Is this <code>ScaleImage</code> same as the given object?
      */
     public boolean equals(Object o) {
         if (o instanceof ScaleImageXY) {
