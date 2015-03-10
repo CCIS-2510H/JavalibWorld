@@ -98,25 +98,14 @@ public abstract class WorldImage {
     public WorldImage overlayImages(WorldImage... args) {
         WorldImage image = this;
 
-        // start adding up all x and y pinhole coordinates
-        int xTotal = this.pinhole.x;
-        int yTotal = this.pinhole.y;
-
         // compute the length of the argument list
         int length = (args != null) ? args.length : 0;
 
         // add each of the images to this one
+        // They should all align on their respective centers
         for (int i = 0; i < length; i++) {
             image = new OverlayImages(image, args[i]);
-
-            // add to the pinhole coordinates calculation
-            xTotal = xTotal + args[i].pinhole.x;
-            yTotal = yTotal + args[i].pinhole.y;
         }
-
-        // set the pinhole to the middle of all images
-        image.pinhole.x = xTotal / (length + 1);
-        image.pinhole.y = yTotal / (length + 1);
 
         return image;
     }
