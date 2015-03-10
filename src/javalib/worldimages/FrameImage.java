@@ -9,18 +9,19 @@ public class FrameImage extends RectangleImage {
     public WorldImage img;
 
     protected FrameImage(Posn pinhole, WorldImage img, Color color) {
-        super(pinhole, img.getWidth(), img.getHeight(), OutlineMode.OUTLINE, color);
+        super(pinhole, img.getWidth(), img.getHeight(), OutlineMode.OUTLINE,
+                color);
         this.img = img;
     }
-    
+
     public FrameImage(WorldImage img) {
         this(new Posn(0, 0), img, Color.black);
     }
-    
+
     public FrameImage(WorldImage img, Color c) {
         this(new Posn(0, 0), img, c);
     }
-    
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -42,8 +43,8 @@ public class FrameImage extends RectangleImage {
         g.setPaint(this.color);
         // draw the object
         this.img.drawAt(g, x, y);
-        g.draw(new Rectangle2D.Double(x - this.width / 2, y - this.height
-                / 2, this.width, this.height));
+        g.draw(new Rectangle2D.Double(Math.ceil(x - (this.width / 2.0)), Math
+                .ceil(y - (this.height / 2.0)), this.width, this.height));
         // reset the original paint
         g.setPaint(oldPaint);
     }

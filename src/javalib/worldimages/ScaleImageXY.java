@@ -5,21 +5,20 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 
-public class RotateImage extends WorldImage {
+public class ScaleImageXY extends WorldImage {
     public WorldImage img;
-    public double rotationDegrees;
-    private int width, height;
+    public double scaleX, scaleY;
 
-    protected RotateImage(Posn pinhole, WorldImage img, double rotationDegrees) {
+    protected ScaleImageXY(Posn pinhole, WorldImage img, double scaleX,
+            double scaleY) {
         super(pinhole, Color.black);
         this.img = img;
-        this.rotationDegrees = rotationDegrees;
-        this.width = img.getWidth();
-        this.height = img.getHeight();
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
     }
 
-    public RotateImage(WorldImage img, int rotationDegrees) {
-        this(new Posn(0, 0), img, rotationDegrees);
+    public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
+        this(new Posn(0, 0), img, scaleX, scaleY);
     }
 
     /**
@@ -30,9 +29,9 @@ public class RotateImage extends WorldImage {
      */
     @Override
     public void drawAt(Graphics2D g, int x, int y) {
-        if (this.width <= 0)
+        if (this.getWidth() <= 0)
             return;
-        if (this.height <= 0)
+        if (this.getHeight() <= 0)
             return;
         if (this.color == null)
             this.color = new Color(0, 0, 0);
@@ -44,16 +43,15 @@ public class RotateImage extends WorldImage {
         // draw the object
         AffineTransform old = g.getTransform();
         AffineTransform trans = new AffineTransform();
-        trans.setToRotation(Math.toRadians(this.rotationDegrees), x, y);
+        trans.scale(this.scaleX, this.scaleY);
         g.setTransform(trans);
 
-        // draw rotated shape/image
-        this.img.drawAt(g, x, y);
+        // draw scaled shape/image
+        this.img.drawAt(g, (int) Math.round(x / this.scaleX),
+                (int) Math.round(y / this.scaleY));
 
+        // reset the original paint/scale
         g.setTransform(old);
-        // things you draw after here will not be rotated
-
-        // reset the original paint
         g.setPaint(oldPaint);
     }
 
@@ -61,9 +59,8 @@ public class RotateImage extends WorldImage {
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return "new RotateImage(this.pinhole = (" + this.pinhole.x + ", "
+        return "new ScaleImageXY(this.pinhole = (" + this.pinhole.x + ", "
                 + this.pinhole.y + "), \nthis.color = " + this.color.toString()
-                + "\nthis.width = " + width + ", this.height = " + height
                 + ")\n";
     }
 
@@ -77,22 +74,20 @@ public class RotateImage extends WorldImage {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "RotateImage")
+        return classNameString(indent, "ScaleImageXY")
                 + pinholeString(indent, this.pinhole) + "this.img = "
-                + this.img.toIndentedString(indent) + "\n" + indent
-                + "this.width = " + width + ", this.height = " + height + ")\n";
+                + this.img.toIndentedString(indent) + "\n" + indent + ")\n";
     }
 
     /**
      * Is this <code>RotateImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof RotateImage) {
-            RotateImage that = (RotateImage) o;
+        if (o instanceof ScaleImageXY) {
+            ScaleImageXY that = (ScaleImageXY) o;
             return this.pinhole.x == that.pinhole.x
                     && this.pinhole.y == that.pinhole.y
-                    && this.width == that.width && this.height == that.height
-                    && this.rotationDegrees == that.rotationDegrees
+                    && this.scaleX == that.scaleX && this.scaleY == that.scaleY
                     && this.img.equals(that.img);
         } else
             return false;
@@ -102,8 +97,7 @@ public class RotateImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.width + this.height;
+        return this.pinhole.x + this.pinhole.y + this.color.hashCode();
     }
 
     @Override
@@ -113,22 +107,16 @@ public class RotateImage extends WorldImage {
 
     @Override
     public WorldImage getMovedTo(Posn p) {
-        return new RotateImage(p, this.img, this.rotationDegrees);
+        return new ScaleImageXY(p, this.img, this.scaleX, this.scaleY);
     }
 
     @Override
     public int getWidth() {
-        return (int) Math.round(Math.abs(this.img.getHeight()
-                * Math.sin(Math.toRadians(this.rotationDegrees)))
-                + Math.abs(this.img.getWidth()
-                        * Math.cos(Math.toRadians(this.rotationDegrees))));
+        return (int) Math.round(this.img.getWidth() * this.scaleX);
     }
 
     @Override
     public int getHeight() {
-        return (int) Math.round(Math.abs(this.img.getWidth()
-                * Math.sin(Math.toRadians(this.rotationDegrees)))
-                + Math.abs(this.img.getHeight()
-                        * Math.cos(Math.toRadians(this.rotationDegrees))));
+        return (int) Math.round(this.img.getHeight() * this.scaleY);
     }
 }

@@ -40,7 +40,7 @@ public class ExamplesImageDrawings {
     }
 
     // Images
-    WorldScene scene = new WorldScene(800, 600);
+    WorldScene scene = new WorldScene(800, 800);
 
     WorldImage circle = new CircleImage(10, OutlineMode.OUTLINE, Color.red);
     WorldImage circleText = new TextImage(
@@ -104,6 +104,16 @@ public class ExamplesImageDrawings {
             "OverlayImagesXY(disc, rectangle, -50, -30)", Color.black);
 
     WorldImage rotate35 = new RotateImage(new FrameImage(overlayXY), 35);
+    WorldImage rotate35Text = new TextImage("RotateImage(overlayXY, 35)",
+            Color.black);
+    
+    WorldImage scale2 = new ScaleImage(overlay, 2);
+    WorldImage scale2Text = new TextImage("ScaleImage(overlay, 2)",
+            Color.black);
+    
+    WorldImage scale2Y = new ScaleImageXY(overlay, 1, 2);
+    WorldImage scale2YText = new TextImage("ScaleImageXY(overlay, 1, 2)",
+            Color.black);
 
     WorldScene combined = scene
             .placeImageXY(new FrameImage(rectangle), 600, 330)
@@ -125,14 +135,19 @@ public class ExamplesImageDrawings {
             .placeImageXY(hexagonText, 200, 370)
             .placeImageXY(polygonText, 200, 450)
             .placeImageXY(overlayText, 600, 380)
-            .placeImageXY(new FrameImage(overlayXY), 600, 460)
-            .placeImageXY(overlayXYText, 600, 420)
-            .placeImageXY(new FrameImage(rotate35), 720, 480)
+            .placeImageXY(new FrameImage(overlayXY), 600, 470)
+            .placeImageXY(overlayXYText, 600, 430)
             .placeImageXY(new FrameImage(polygon1), 150, 480)
             .placeImageXY(new FrameImage(polygon2), 200, 480)
             .placeImageXY(new FrameImage(polygon3), 250, 480)
             .placeImageXY(new FrameImage(polygon4), 300, 480)
-            .placeImageXY(new FrameImage(overlay), 600, 400);
+            .placeImageXY(new FrameImage(overlay), 600, 400)
+            .placeImageXY(new FrameImage(rotate35), 600, 580)
+            .placeImageXY(rotate35Text, 600, 520)
+            .placeImageXY(scale2Text, 125, 530)
+            .placeImageXY(new FrameImage(scale2), 125, 560)
+            .placeImageXY(scale2YText, 325, 530)
+            .placeImageXY(new FrameImage(scale2Y), 325, 560);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -142,7 +157,7 @@ public class ExamplesImageDrawings {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
-        WorldCanvas c = new WorldCanvas(800, 600);
+        WorldCanvas c = new WorldCanvas(800, 800);
 
         // WorldImage pic = ExamplesImageDrawings.makeText(new Posn(300, 400),
         // 15);

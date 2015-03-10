@@ -143,6 +143,7 @@ public class WorldCanvas {
     public boolean drawScene(WorldScene scene) {
         if (f.getWidth() != scene.width || f.getHeight() != scene.height) {
             f.setSize(scene.width, scene.height);
+            ((CanvasPanel) panel).setSize(scene.width, scene.height);
         }
         ((CanvasPanel) panel).drawScene(scene);
         return true;
