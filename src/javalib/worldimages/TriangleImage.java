@@ -46,19 +46,21 @@ public class TriangleImage extends WorldImage {
         this.p2 = p2;
         this.p3 = p3;
         this.fill = fill;
-        int[] xCoord = new int[] { p1.x, p2.x, p3.x };
-        int[] yCoord = new int[] { p1.y, p2.y, p3.y };
-        this.poly = new Polygon(xCoord, yCoord, 3);
 
         // set the pinhole in the center of the triangle
         this.pinhole.x = Math.min(this.p1.x, Math.min(this.p2.x, this.p3.x))
                 + (this.getWidth() / 2);
         this.pinhole.y = Math.min(this.p1.y, Math.min(this.p2.y, this.p3.y))
                 + (this.getHeight() / 2);
+
+        int[] xCoord = new int[] { p1.x - this.pinhole.x,
+                p2.x - this.pinhole.x, p3.x - this.pinhole.x };
+        int[] yCoord = new int[] { p1.y - this.pinhole.y,
+                p2.y - this.pinhole.y, p3.y - this.pinhole.y };
+        this.poly = new Polygon(xCoord, yCoord, 3);
     }
-    
-    public TriangleImage(Posn p1, Posn p2, Posn p3, String fill,
-            Color color) {
+
+    public TriangleImage(Posn p1, Posn p2, Posn p3, String fill, Color color) {
         this(p1, p2, p3, OutlineMode.fromString(fill), color);
     }
 
@@ -90,6 +92,7 @@ public class TriangleImage extends WorldImage {
         } else if (this.fill == OutlineMode.SOLID) {
             g.fill(p);
         }
+
         // reset the original paint
         g.setPaint(oldPaint);
     }

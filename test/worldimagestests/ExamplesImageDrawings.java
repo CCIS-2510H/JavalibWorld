@@ -103,8 +103,6 @@ public class ExamplesImageDrawings {
     WorldImage overlayXYText = new TextImage(
             "OverlayImagesXY(disc, rectangle, -50, -30)", Color.black);
 
-    WorldImage overlayFrame = new FrameImage(overlayXY);
-
     WorldScene combined = scene
             .placeImageXY(new FrameImage(rectangle), 600, 330)
             .placeImageXY(rectangleText, 600, 300)
@@ -130,9 +128,8 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(polygon4), 300, 480)
             .placeImageXY(new FrameImage(overlay), 600, 400)
             .placeImageXY(overlayText, 600, 380)
-            .placeImageXY(overlayXY, 550, 460)
-            .placeImageXY(overlayXYText, 600, 420)
-            .placeImageXY(overlayFrame, 650, 460);
+            .placeImageXY(new FrameImage(overlayXY), 600, 460)
+            .placeImageXY(overlayXYText, 600, 420);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
