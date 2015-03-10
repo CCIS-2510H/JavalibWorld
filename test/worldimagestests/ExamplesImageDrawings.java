@@ -68,7 +68,6 @@ public class ExamplesImageDrawings {
     WorldImage triangleText = new TextImage(
             "TriangleImage(new Posn(50, 0), new Posn(0, 40), new Posn(-50, 10),\n"
                     + "\"solid\", Color.cyan)", Color.cyan);
-    WorldImage triangle2 = new EquilateralTriangleImage(20, "solid", Color.cyan);
 
     WorldImage ellipse = new EllipseImage(60, 20, OutlineMode.OUTLINE,
             Color.blue);
@@ -79,14 +78,30 @@ public class ExamplesImageDrawings {
     WorldImage ovalText = new TextImage(
             "OvalImage(60, 20, \"solid\", Color.yellow)", Color.yellow);
 
-    WorldImage hexagon = new HexagonImage(20.0, "solid", Color.darkGray);
+    WorldImage hexagon = new HexagonImage(20.0, "solid", Color.pink);
     WorldImage hexagonText = new TextImage(
-            "HexagonImage(20.0, \"solid\", Color.darkGray)", Color.darkGray);
+            "HexagonImage(20.0, \"solid\", Color.pink)", Color.pink);
+
+    WorldImage polygonText = new TextImage(
+            "RegularPolyImage(20.0, <# sides>, \"outline\", Color.darkGray)",
+            Color.darkGray);
+    WorldImage polygon1 = new RegularPolyImage(20.0, 3, "outline",
+            Color.darkGray);
+    WorldImage polygon2 = new RegularPolyImage(20.0, 4, "outline",
+            Color.darkGray);
+    WorldImage polygon3 = new RegularPolyImage(20.0, 5, "outline",
+            Color.darkGray);
+    WorldImage polygon4 = new RegularPolyImage(20.0, 6, "outline",
+            Color.darkGray);
+
+    WorldImage overlay = new OverlayImages(disc, new OverlayImages(oval,
+            rectangle));
+    WorldImage overlayText = new TextImage(
+            "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.black);
     
-    WorldImage polygon1 = new RegularPolyImage(20.0, 3, "solid", Color.darkGray);
-    WorldImage polygon2 = new RegularPolyImage(20.0, 4, "solid", Color.darkGray);
-    WorldImage polygon3 = new RegularPolyImage(20.0, 5, "solid", Color.darkGray);
-    WorldImage polygon4 = new RegularPolyImage(20.0, 6, "solid", Color.darkGray);
+    WorldImage overlayXY = new OverlayImagesXY(disc, rectangle, -50, -30);
+    WorldImage overlayXYText = new TextImage(
+            "OverlayImagesXY(disc, rectangle, -50, -30)", Color.black);
 
     WorldScene combined = scene.placeImageXY(rectangle, 600, 330)
             .placeImageXY(rectangleText, 600, 300)
@@ -98,13 +113,15 @@ public class ExamplesImageDrawings {
             .placeImageXY(triangleText, 250, 260)
             .placeImageXY(ellipse, 600, 60).placeImageXY(ellipseText, 600, 20)
             .placeImageXY(oval, 600, 220).placeImageXY(ovalText, 600, 180)
-            .placeImageXY(hexagon, 200, 410)
-            .placeImageXY(hexagonText, 200, 380)
-            .placeImageXY(triangle2, 200, 460)
-            .placeImageXY(polygon1, 250, 460)
-            .placeImageXY(polygon2, 300, 460)
-            .placeImageXY(polygon3, 350, 460)
-            .placeImageXY(polygon4, 400, 460);
+            .placeImageXY(hexagon, 200, 400)
+            .placeImageXY(hexagonText, 200, 370)
+            .placeImageXY(polygonText, 200, 450)
+            .placeImageXY(polygon1, 150, 480).placeImageXY(polygon2, 200, 480)
+            .placeImageXY(polygon3, 250, 480).placeImageXY(polygon4, 300, 480)
+            .placeImageXY(overlay, 600, 400)
+            .placeImageXY(overlayText, 600, 380)
+            .placeImageXY(overlayXY, 600, 460)
+            .placeImageXY(overlayXYText, 600, 420);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};

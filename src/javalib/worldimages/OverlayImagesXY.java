@@ -33,9 +33,15 @@ public class OverlayImagesXY extends WorldImage {
     /** the vertical offset for the top image */
     public int dy;
 
+    private Posn center;
+
+    private int width, height;
+
     /**
      * The full constructor that produces the top image overlaid over the bottom
      * one with the given offset.
+     * 
+     * 
      * 
      * @param bot
      *            the bottom image for the combined image
@@ -46,28 +52,32 @@ public class OverlayImagesXY extends WorldImage {
      * @param dy
      *            the vertical offset for the top image
      */
-    public OverlayImagesXY(WorldImage bot, WorldImage top, int dx, int dy) {
-        super(bot.pinhole, Color.white);
+    protected OverlayImagesXY(Posn pinhole, WorldImage top, WorldImage bot,
+            int dx, int dy) {
+        super(pinhole, Color.white);
         this.bot = bot;
         this.top = top;
         this.dx = dx;
         this.dy = dy;
-        
-        // Calculate proper pinhole
+
+        // Calculate proper center point
+        // TODO: This is under the assumption that the pinhole is (0, 0)
+        // for each image, which may not be true
         int botWidth = this.bot.getWidth();
         int topWidth = this.top.getWidth();
         int botHeight = this.bot.getHeight();
         int topHeight = this.top.getHeight();
-        int rightX = Math.max(this.bot.pinhole.x + botWidth / 2,
-                this.top.pinhole.x + topWidth / 2);
-        int leftX = Math.min(this.bot.pinhole.x - botWidth / 2,
-                this.top.pinhole.x - topWidth / 2);
-        int bottomY = Math.max(this.bot.pinhole.y + botHeight / 2,
-                this.top.pinhole.y + topHeight / 2);
-        int topY = Math.min(this.bot.pinhole.y - botHeight / 2,
-                this.top.pinhole.y - topHeight / 2);
-        this.pinhole.x = (rightX + leftX) / 2;
-        this.pinhole.y = (bottomY + topY) / 2;
+        int rightX = Math.max(botWidth / 2, this.dx + (topWidth / 2));
+        int leftX = Math.min(-botWidth / 2, this.dx - (topWidth / 2));
+        int bottomY = Math.max(botHeight / 2, this.dy + (topHeight / 2));
+        int topY = Math.min(-botHeight / 2, this.dy - (topHeight / 2));
+        this.center = new Posn((rightX + leftX) / 2, (bottomY + topY) / 2);
+        this.width = Math.abs(rightX) + Math.abs(leftX);
+        this.height = Math.abs(bottomY) + Math.abs(topY);
+    }
+
+    public OverlayImagesXY(WorldImage top, WorldImage bot, int dx, int dy) {
+        this(new Posn(0, 0), top, bot, dx, dy);
     }
 
     /**
@@ -85,10 +95,9 @@ public class OverlayImagesXY extends WorldImage {
         // set the paint to the given color
         g.setPaint(color);
         // draw the two objects
-        this.bot.drawAt(g, x, y);
-        this.top.getMovedImage(dx, dy);
-        this.top.drawAt(g, x, y);
-        this.top.getMovedImage(-dx, -dy);
+        this.bot.drawAt(g, x - this.center.x, y - this.center.y);
+        this.top.drawAt(g, x + this.dx - this.center.x, y + this.dy
+                - this.center.y);
 
         // reset the original paint
         g.setPaint(oldPaint);
@@ -104,8 +113,8 @@ public class OverlayImagesXY extends WorldImage {
      *            the vertical offset
      */
     public WorldImage getMovedImage(int ddx, int ddy) {
-        return new OverlayImagesXY(this.bot.getMovedImage(ddx, ddy),
-                this.top.getMovedImage(ddx, ddy), this.dx, this.dy);
+        return new OverlayImagesXY(this.top.getMovedImage(ddx, ddy),
+                this.bot.getMovedImage(ddx, ddy), this.dx, this.dy);
     }
 
     /**
@@ -127,11 +136,7 @@ public class OverlayImagesXY extends WorldImage {
      * @return the width of this image
      */
     public int getWidth() {
-        int leftBot = this.bot.pinhole.x - this.bot.getWidth() / 2;
-        int leftTop = this.top.pinhole.x - this.top.getWidth() / 2;
-        int rightBot = this.bot.pinhole.x + this.bot.getWidth() / 2;
-        int rightTop = this.top.pinhole.x + this.top.getWidth() / 2;
-        return Math.max(rightBot, rightTop) - Math.min(leftBot, leftTop);
+        return width;
     }
 
     /**
@@ -140,11 +145,7 @@ public class OverlayImagesXY extends WorldImage {
      * @return the height of this image
      */
     public int getHeight() {
-        int upperBot = this.bot.pinhole.y - this.bot.getHeight() / 2;
-        int upperTop = this.top.pinhole.y - this.top.getHeight() / 2;
-        int lowerBot = this.bot.pinhole.y + this.bot.getHeight() / 2;
-        int lowerTop = this.top.pinhole.y + this.top.getHeight() / 2;
-        return Math.max(lowerBot, lowerTop) - Math.min(upperBot, upperTop);
+        return height;
     }
 
     /**

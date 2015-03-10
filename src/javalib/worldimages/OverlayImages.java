@@ -32,8 +32,8 @@ public class OverlayImages extends OverlayImagesXY {
      * @param top
      *            the bottom image for the combined image
      */
-    public OverlayImages(WorldImage bot, WorldImage top) {
-        super(bot, top, 0, 0);
+    public OverlayImages(WorldImage top, WorldImage bot) {
+        super(top, bot, 0, 0);
     }
 
     /**
@@ -46,8 +46,8 @@ public class OverlayImages extends OverlayImagesXY {
      *            the vertical offset
      */
     public WorldImage getMovedImage(int dx, int dy) {
-        return new OverlayImages(this.bot.getMovedImage(dx, dy),
-                this.top.getMovedImage(dx, dy));
+        return new OverlayImages(this.top.getMovedImage(dx, dy), 
+                this.bot.getMovedImage(dx, dy));
     }
 
     /**
