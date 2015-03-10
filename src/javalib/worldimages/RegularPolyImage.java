@@ -75,28 +75,30 @@ public class RegularPolyImage extends WorldImage {
         int[] yCoord = new int[this.sides];
         double internalAngle = (2.0 * Math.PI) / this.sides;
         double rotation = ((this.sides - 2) * (Math.PI / this.sides)) / 2;
-        
+
         // Rotation adjustment for polygons:
         // This adjustment makes the output polygons look a lot nicer
-        
+
         // There are 2 angles to care about:
         // The angle as seen from the pinhole/center (adds up to 360)
         // Each individual angle at the edge ((numSides - 2) * 180 / numSides)
-        // The second angle is what matters to determine how much to rotate 
+        // The second angle is what matters to determine how much to rotate
         // the polygon
 
-        // Shape     | Sides | Rotation     | rotationAngle
+        // Shape | Sides | Rotation | rotationAngle
         // -------------------------------------------------
-        // Triangle  |   3   |  pi / 6      | pi / 3
-        // Square    |   4   |  pi / 4      | pi * 2 / 4
-        // Pentagram |   5   |  pi * 3 / 10 | pi * 3 / 5
-        // ...       |  ...  |  ...         | ...
-        
+        // Triangle | 3 | pi / 6 | pi / 3
+        // Square | 4 | pi / 4 | pi * 2 / 4
+        // Pentagram | 5 | pi * 3 / 10 | pi * 3 / 5
+        // ... | ... | ... | ...
+
         for (int i = 0; i < this.sides; i++) {
-            xCoord[i] = (int) Math.round((center.x + Math
-                    .cos(i * internalAngle + rotation) * sideLen));
-            yCoord[i] = (int) Math.round((center.y + Math
-                    .sin(i * internalAngle + rotation) * sideLen));
+            xCoord[i] = (int) Math.round((center.x + Math.cos(i * internalAngle
+                    + rotation)
+                    * sideLen));
+            yCoord[i] = (int) Math.round((center.y + Math.sin(i * internalAngle
+                    + rotation)
+                    * sideLen));
         }
 
         this.poly = new Polygon(xCoord, yCoord, this.sides);
@@ -116,20 +118,31 @@ public class RegularPolyImage extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
-        // Create an adjusted polygon that centers on (x, y)
+        // Create a translated polygon that centers on (x, y)
+        int h = this.getHeight();
         int[] xCoord = new int[this.poly.npoints];
         int[] yCoord = new int[this.poly.npoints];
         for (int i = 0; i < this.poly.npoints; i++) {
             xCoord[i] = this.poly.xpoints[i] + x;
             yCoord[i] = this.poly.ypoints[i] + y;
         }
+
+        // Some polygons don't shift as well as they need to
+        // TODO: This is a hack. Make this better
+        if (yCoord[0] < y + (h / 2)) {
+            int moveDist = (y + (h / 2)) - yCoord[0];
+            for (int i = 0; i < this.poly.npoints; i++) {
+                yCoord[i] += moveDist;
+            }
+        }
+
         Polygon p = new Polygon(xCoord, yCoord, this.poly.npoints);
         if (this.fill == OutlineMode.OUTLINE) {
             g.draw(p);
         } else if (this.fill == OutlineMode.SOLID) {
             g.fill(p);
         }
-        
+
         // reset the original paint
         g.setPaint(oldPaint);
     }
