@@ -9,7 +9,7 @@ public class ShearedImage extends WorldImage {
     double sx, sy;
 
     public ShearedImage(WorldImage img, double sx, double sy) {
-        super(img.pinhole, Color.white);
+        super(img.pinhole, Color.WHITE);
         this.img = img;
         this.sx = sx;
         this.sy = sy;

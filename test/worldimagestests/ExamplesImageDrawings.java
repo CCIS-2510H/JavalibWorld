@@ -31,89 +31,89 @@ public class ExamplesImageDrawings {
     // a text inside a red rectangle with a yellow dot in its pinhole location
     public static WorldImage makeText(Posn pos, int size) {
         WorldImage hello = new TextImage("quickbrownfoxjumpedoveralazydog",
-                size, 3, Color.blue);
+                size, 3, Color.BLUE);
 
         WorldImage helloRed = new OverlayImages(new RectangleImage(
-                hello.getWidth(), hello.getHeight(), "solid", Color.red), hello);
+                hello.getWidth(), hello.getHeight(), "solid", Color.RED), hello);
         return new OverlayImages(helloRed, new CircleImage(2,
-                OutlineMode.SOLID, Color.yellow));
+                OutlineMode.SOLID, Color.YELLOW));
     }
 
     // Images
     WorldScene scene = new WorldScene(800, 800);
 
-    WorldImage circle = new CircleImage(10, OutlineMode.OUTLINE, Color.red);
+    WorldImage circle = new CircleImage(10, OutlineMode.OUTLINE, Color.RED);
     WorldImage circleText = new TextImage(
-            "CircleImage(10, \"outline\", Color.red)", Color.red);
+            "CircleImage(10, \"outline\", Color.RED)", Color.RED);
 
-    WorldImage disc = new CircleImage(10, "solid", Color.red);
+    WorldImage disc = new CircleImage(10, "solid", Color.RED);
     WorldImage discText = new TextImage(
-            "CircleImage(10, \"solid\", Color.red)", Color.red);
+            "CircleImage(10, \"solid\", Color.RED)", Color.RED);
 
     WorldImage rectangle = new RectangleImage(60, 20, OutlineMode.SOLID,
-            Color.orange);
+            Color.ORANGE);
     WorldImage rectangleText = new TextImage(
-            "RectangleImage(60, 20, \"solid\", Color.orange)", Color.orange);
+            "RectangleImage(60, 20, \"solid\", Color.ORANGE)", Color.ORANGE);
 
-    WorldImage frame = new RectangleImage(60, 20, "outline", Color.black);
+    WorldImage frame = new RectangleImage(60, 20, "outline", Color.BLACK);
     WorldImage frameText = new TextImage(
-            "RectangleImage(60, 20, \"outline\", Color.black)", Color.black);
+            "RectangleImage(60, 20, \"outline\", Color.BLACK)", Color.BLACK);
 
-    WorldImage line = new LineImage(new Posn(80, 30), Color.green);
+    WorldImage line = new LineImage(new Posn(80, 30), Color.GREEN);
     WorldImage lineText = new TextImage(
-            "LineImage(new Posn(80, 30), Color.green)", Color.green);
+            "LineImage(new Posn(80, 30), Color.GREEN)", Color.GREEN);
 
     WorldImage triangle = new TriangleImage(new Posn(50, 0), new Posn(0, 40),
-            new Posn(-50, 10), "solid", Color.cyan);
+            new Posn(-50, 10), "solid", Color.CYAN);
     WorldImage triangleText = new TextImage(
             "TriangleImage(new Posn(50, 0), new Posn(0, 40), new Posn(-50, 10),\n"
-                    + "\"solid\", Color.cyan)", Color.cyan);
+                    + "\"solid\", Color.CYAN)", Color.CYAN);
 
     WorldImage ellipse = new EllipseImage(60, 20, OutlineMode.OUTLINE,
-            Color.blue);
+            Color.BLUE);
     WorldImage ellipseText = new TextImage(
-            "EllipseImage(60, 20, \"outline\" Color.blue)", Color.blue);
+            "EllipseImage(60, 20, \"outline\" Color.BLUE)", Color.BLUE);
 
-    WorldImage oval = new EllipseImage(60, 20, "solid", Color.yellow);
+    WorldImage oval = new EllipseImage(60, 20, "solid", Color.YELLOW);
     WorldImage ovalText = new TextImage(
-            "OvalImage(60, 20, \"solid\", Color.yellow)", Color.yellow);
+            "OvalImage(60, 20, \"solid\", Color.YELLOW)", Color.YELLOW);
 
-    WorldImage hexagon = new HexagonImage(20.0, "solid", Color.pink);
+    WorldImage hexagon = new HexagonImage(20.0, "solid", Color.PINK);
     WorldImage hexagonText = new TextImage(
-            "HexagonImage(20.0, \"solid\", Color.pink)", Color.pink);
+            "HexagonImage(20.0, \"solid\", Color.PINK)", Color.PINK);
 
     WorldImage polygonText = new TextImage(
-            "RegularPolyImage(20.0, <# sides>, \"outline\", Color.darkGray)",
-            Color.darkGray);
+            "RegularPolyImage(20.0, <# sides>, \"outline\", Color.DARK_GRAY)",
+            Color.DARK_GRAY);
     WorldImage polygon1 = new RegularPolyImage(20.0, 3, "outline",
-            Color.darkGray);
+            Color.DARK_GRAY);
     WorldImage polygon2 = new RegularPolyImage(20.0, 4, "outline",
-            Color.darkGray);
+            Color.DARK_GRAY);
     WorldImage polygon3 = new RegularPolyImage(20.0, 5, "outline",
-            Color.darkGray);
+            Color.DARK_GRAY);
     WorldImage polygon4 = new RegularPolyImage(20.0, 6, "outline",
-            Color.darkGray);
+            Color.DARK_GRAY);
 
     WorldImage overlay = new OverlayImages(disc, new OverlayImages(oval,
             rectangle));
     WorldImage overlayText = new TextImage(
-            "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.black);
+            "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.BLACK);
 
     WorldImage overlayXY = new OverlayImagesXY(disc, rectangle, -50, -30);
     WorldImage overlayXYText = new TextImage(
-            "OverlayImagesXY(disc, rectangle, -50, -30)", Color.black);
+            "OverlayImagesXY(disc, rectangle, -50, -30)", Color.BLACK);
 
     WorldImage rotate35 = new RotateImage(new FrameImage(overlayXY), 35);
     WorldImage rotate35Text = new TextImage("RotateImage(overlayXY, 35)",
-            Color.black);
+            Color.BLACK);
     
     WorldImage scale2 = new ScaleImage(overlay, 2);
     WorldImage scale2Text = new TextImage("ScaleImage(overlay, 2)",
-            Color.black);
+            Color.BLACK);
     
     WorldImage scale2Y = new ScaleImageXY(overlay, 1, 2);
     WorldImage scale2YText = new TextImage("ScaleImageXY(overlay, 1, 2)",
-            Color.black);
+            Color.BLACK);
 
     WorldScene combined = scene
             .placeImageXY(new FrameImage(rectangle), 600, 330)
