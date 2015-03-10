@@ -53,8 +53,7 @@ public class FrameImage extends RectangleImage {
      */
     public String toString() {
         return "new FrameImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
-                + "\nthis.width = " + width + ", this.height = " + height
+                + this.pinhole.y + "), \nthis.img = " + this.img.toString()
                 + ")\n";
     }
 
