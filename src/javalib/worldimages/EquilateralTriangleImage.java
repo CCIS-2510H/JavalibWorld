@@ -12,7 +12,7 @@ import java.awt.*;
  * Represents a Hexagon, a special case of a regular polygon
  * 
  */
-public class HexagonImage extends RegularPolyImage {
+public class EquilateralTriangleImage extends RegularPolyImage {
     /**
      * The full constructor for an equilateral hexagon, whose top and bottom are
      * rotated from the horizontal
@@ -26,11 +26,13 @@ public class HexagonImage extends RegularPolyImage {
      * @param color
      *            -- the color for this hexagon
      */
-    public HexagonImage(double sideLen, OutlineMode fill, Color color) {
-        super(new Posn(0, 0), sideLen, 6, fill, color);
+    public EquilateralTriangleImage(double sideLen, OutlineMode fill,
+            Color color) {
+        super(new Posn(0, 0), sideLen, 3, fill, color);
     }
 
-    public HexagonImage(double sideLen, String fill, Color color) {
+    public EquilateralTriangleImage(double sideLen, String fill, Color color) {
         this(sideLen, OutlineMode.fromString(fill), color);
     }
+
 }

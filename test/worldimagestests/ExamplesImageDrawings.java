@@ -68,6 +68,7 @@ public class ExamplesImageDrawings {
     WorldImage triangleText = new TextImage(
             "TriangleImage(new Posn(50, 0), new Posn(0, 40), new Posn(-50, 10),\n"
                     + "\"solid\", Color.cyan)", Color.cyan);
+    WorldImage triangle2 = new EquilateralTriangleImage(20, "solid", Color.cyan);
 
     WorldImage ellipse = new EllipseImage(60, 20, OutlineMode.OUTLINE,
             Color.blue);
@@ -78,9 +79,14 @@ public class ExamplesImageDrawings {
     WorldImage ovalText = new TextImage(
             "OvalImage(60, 20, \"solid\", Color.yellow)", Color.yellow);
 
-    WorldImage hexagon = new HexagonImage(20.0, 0.72, "solid", Color.darkGray);
+    WorldImage hexagon = new HexagonImage(20.0, "solid", Color.darkGray);
     WorldImage hexagonText = new TextImage(
-            "HexagonImage(20.0, 0.72, \"solid\", Color.darkGray)", Color.darkGray);
+            "HexagonImage(20.0, \"solid\", Color.darkGray)", Color.darkGray);
+    
+    WorldImage polygon1 = new RegularPolyImage(20.0, 3, "solid", Color.darkGray);
+    WorldImage polygon2 = new RegularPolyImage(20.0, 4, "solid", Color.darkGray);
+    WorldImage polygon3 = new RegularPolyImage(20.0, 5, "solid", Color.darkGray);
+    WorldImage polygon4 = new RegularPolyImage(20.0, 6, "solid", Color.darkGray);
 
     WorldScene combined = scene.placeImageXY(rectangle, 600, 330)
             .placeImageXY(rectangleText, 600, 300)
@@ -93,7 +99,12 @@ public class ExamplesImageDrawings {
             .placeImageXY(ellipse, 600, 60).placeImageXY(ellipseText, 600, 20)
             .placeImageXY(oval, 600, 220).placeImageXY(ovalText, 600, 180)
             .placeImageXY(hexagon, 200, 410)
-            .placeImageXY(hexagonText, 200, 380);
+            .placeImageXY(hexagonText, 200, 380)
+            .placeImageXY(triangle2, 200, 460)
+            .placeImageXY(polygon1, 250, 460)
+            .placeImageXY(polygon2, 300, 460)
+            .placeImageXY(polygon3, 350, 460)
+            .placeImageXY(polygon4, 400, 460);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};

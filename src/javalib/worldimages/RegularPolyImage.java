@@ -1,0 +1,268 @@
+package javalib.worldimages;
+
+import java.awt.*;
+
+/**
+ * <p>Copyright 2014 Benjamin Lerner</p>
+ * <p>This program is distributed under the terms of the 
+ * GNU Lesser General Public License (LGPL)</p>
+ */
+
+/**
+ * <p>
+ * The class to represent filled regular polygon images drawn by the world when
+ * drawing on its <code>Canvas</code>.
+ * </p>
+ * <p>
+ * The pinhole for the polygon is in the center of the polygon.
+ * </p>
+ * 
+ * @author Benjamin Lerner
+ * @since November 14 2014
+ */
+
+public class RegularPolyImage extends WorldImage {
+    public Posn center;
+    public int sides;
+    public double sideLen;
+    public OutlineMode fill;
+    private Polygon poly;
+
+    /**
+     * The full constructor for an equilateral regular polygon, whose rightmost
+     * point is rotated from the horizontal
+     * 
+     * @param center
+     *            -- the central point of the regular polygon
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param angle
+     *            -- the angle of rotation in radians
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    protected RegularPolyImage(Posn center, double sideLen, int numSides,
+            OutlineMode fill, Color color) {
+        super(center, color);
+
+        if (numSides < 3) {
+            throw new IllegalArgumentException(
+                    "There must be at least 3 sides in a polygon");
+        }
+
+        this.sideLen = sideLen;
+        this.sides = numSides;
+        this.center = center;
+        this.fill = fill;
+        this.setPoly(center);
+    }
+
+    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
+            Color color) {
+        this(new Posn(0, 0), sideLen, numSides, fill, color);
+    }
+
+    public RegularPolyImage(double sideLen, int numSides, String fill,
+            Color color) {
+        this(new Posn(0, 0), sideLen, numSides, OutlineMode.fromString(fill),
+                color);
+    }
+
+    private void setPoly(Posn center) {
+        int[] xCoord = new int[this.sides];
+        int[] yCoord = new int[this.sides];
+        double internalAngle = (2.0 * Math.PI) / this.sides;
+        double rotation = ((this.sides - 2) * (Math.PI / this.sides)) / 2;
+        
+        // Rotation adjustment for polygons:
+        // This adjustment makes the output polygons look a lot nicer
+        
+        // There are 2 angles to care about:
+        // The angle as seen from the pinhole/center (adds up to 360)
+        // Each individual angle at the edge ((numSides - 2) * 180 / numSides)
+        // The second angle is what matters to determine how much to rotate 
+        // the polygon
+
+        // Shape     | Sides | Rotation     | rotationAngle
+        // -------------------------------------------------
+        // Triangle  |   3   |  pi / 6      | pi / 3
+        // Square    |   4   |  pi / 4      | pi * 2 / 4
+        // Pentagram |   5   |  pi * 3 / 10 | pi * 3 / 5
+        // ...       |  ...  |  ...         | ...
+        
+        for (int i = 0; i < this.sides; i++) {
+            xCoord[i] = (int) Math.round((center.x + Math
+                    .cos(i * internalAngle + rotation) * sideLen));
+            yCoord[i] = (int) Math.round((center.y + Math
+                    .sin(i * internalAngle + rotation) * sideLen));
+        }
+
+        this.poly = new Polygon(xCoord, yCoord, this.sides);
+    }
+
+    /**
+     * Draw this image in the provided <code>Graphics2D</code> context.
+     * 
+     * @param g
+     *            the provided <code>Graphics2D</code> context
+     */
+    public void drawAt(Graphics2D g, int x, int y) {
+        if (color == null)
+            color = new Color(0, 0, 0);
+
+        // save the current paint
+        Paint oldPaint = g.getPaint();
+        // set the paint to the given color
+        g.setPaint(color);
+        // Create an adjusted polygon that centers on (x, y)
+        int[] xCoord = new int[this.poly.npoints];
+        int[] yCoord = new int[this.poly.npoints];
+        for (int i = 0; i < this.poly.npoints; i++) {
+            xCoord[i] = this.poly.xpoints[i] + x;
+            yCoord[i] = this.poly.ypoints[i] + y;
+        }
+        Polygon p = new Polygon(xCoord, yCoord, this.poly.npoints);
+        if (this.fill == OutlineMode.OUTLINE) {
+            g.draw(p);
+        } else if (this.fill == OutlineMode.SOLID) {
+            g.fill(p);
+        }
+        
+        // reset the original paint
+        g.setPaint(oldPaint);
+    }
+
+    /**
+     * Produce the regular polygon with the pinhole moved by the given (dx, dy)
+     * 
+     * @param dx
+     *            the horizontal offset
+     * @param dy
+     *            the vertical offset
+     */
+    public WorldImage getMovedImage(int dx, int dy) {
+        return new RegularPolyImage(this.movePosn(this.center, dx, dy),
+                this.sideLen, this.sides, this.fill, this.color);
+    }
+
+    /**
+     * Produce the regular polygon with the pinhole moved to the given location
+     * 
+     * @param p
+     *            the given location
+     */
+    public WorldImage getMovedTo(Posn p) {
+        int dx = p.x - this.pinhole.x;
+        int dy = p.y - this.pinhole.y;
+        return this.getMovedImage(dx, dy);
+    }
+
+    /**
+     * EFFECT: Move the pinhole for this image by the given offset.
+     * 
+     * @param dx
+     *            the horizontal offset
+     * @param dy
+     *            the vertical offset
+     */
+    public void movePinhole(int dx, int dy) {
+        this.pinhole.x = this.pinhole.x + dx;
+        this.pinhole.y = this.pinhole.y + dy;
+        this.center = this.pinhole;
+        this.setPoly(this.pinhole);
+    }
+
+    /**
+     * EFFECT: Move the pinhole for this image to the given location.
+     * 
+     * @param p
+     *            the given location
+     */
+    public void moveTo(Posn p) {
+        int dx = p.x - this.pinhole.x;
+        int dy = p.y - this.pinhole.y;
+        this.movePinhole(dx, dy);
+    }
+
+    /**
+     * Produce the width of this triangle image
+     * 
+     * @return the width of this image
+     */
+    public int getWidth() {
+        int minX = this.poly.xpoints[0];
+        int maxX = this.poly.xpoints[0];
+        for (int i = 0; i < this.sides; i = i + 1) {
+            minX = Math.min(minX, this.poly.xpoints[i]);
+            maxX = Math.max(maxX, this.poly.xpoints[i]);
+        }
+        return maxX - minX;
+    }
+
+    /**
+     * Produce the height of this triangle image
+     * 
+     * @return the height of this image
+     */
+    public int getHeight() {
+        int minY = this.poly.ypoints[0];
+        int maxY = this.poly.ypoints[0];
+        for (int i = 0; i < this.sides; i = i + 1) {
+            minY = Math.min(minY, this.poly.ypoints[i]);
+            maxY = Math.max(maxY, this.poly.ypoints[i]);
+        }
+        return maxY - minY;
+    }
+
+    /**
+     * Produce a <code>String</code> representation of this triangle image
+     */
+    public String toString() {
+        return "new RegularPolyImage(" + "this.pinhole = (" + this.pinhole.x
+                + ", " + this.pinhole.y + "),\n" + "this.sideLen = "
+                + Double.toString(this.sideLen) + ",\n" + "this.sides = "
+                + Integer.toString(this.sides) + ",\n" + "this.color = "
+                + this.color.toString() + "))\n";
+    }
+
+    /**
+     * Produce a <code>String</code> that represents this image, indented by the
+     * given <code>indent</code>
+     * 
+     * @param indent
+     *            the given prefix representing the desired indentation
+     * @return the <code>String</code> representation of this image
+     */
+    public String toIndentedString(String indent) {
+        indent = indent + " ";
+        return classNameString(indent, "RegularPolyImage")
+                + pinholeString(indent, this.pinhole) + indent
+                + "this.sideLen = " + Double.toString(this.sideLen) + ",\n"
+                + indent + "this.sides = " + Integer.toString(this.sides)
+                + ",\n" + colorString(indent, this.color) + "))\n";
+    }
+
+    /**
+     * Is this <code>RegularPolyImage</code> same as the given object?
+     */
+    public boolean equals(Object o) {
+        if (o instanceof RegularPolyImage) {
+            RegularPolyImage that = (RegularPolyImage) o;
+            return this.pinhole.x == that.pinhole.x
+                    && this.pinhole.y == that.pinhole.y
+                    && this.sideLen == that.sideLen && this.sides == that.sides
+                    && this.color.equals(that.color);
+        } else
+            return false;
+    }
+
+    /**
+     * The hashCode to match the equals method
+     */
+    public int hashCode() {
+        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
+                + (int) this.sideLen + this.sides;
+    }
+}
