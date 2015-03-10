@@ -39,10 +39,10 @@ public class FrameImage extends RectangleImage {
 
         // save the current paint
         Paint oldPaint = g.getPaint();
-        // set the paint to the given color
-        g.setPaint(this.color);
         // draw the object
         this.img.drawAt(g, x, y);
+        // set the paint to the given color
+        g.setPaint(this.color);
         g.draw(new Rectangle2D.Double(Math.ceil(x - (this.width / 2.0)), Math
                 .ceil(y - (this.height / 2.0)), this.width, this.height));
         // reset the original paint
