@@ -52,9 +52,7 @@ public class RotateImage extends WorldImage {
 
         g.setTransform(old);
         // things you draw after here will not be rotated
-        //
-        // new RectangleImage(this.width, this.height, "outline", Color.black)
-        // .drawAt(g, x, y);
+
         // reset the original paint
         g.setPaint(oldPaint);
     }
@@ -63,7 +61,7 @@ public class RotateImage extends WorldImage {
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return "new RectangleImage(this.pinhole = (" + this.pinhole.x + ", "
+        return "new RotateImage(this.pinhole = (" + this.pinhole.x + ", "
                 + this.pinhole.y + "), \nthis.color = " + this.color.toString()
                 + "\nthis.width = " + width + ", this.height = " + height
                 + ")\n";
@@ -86,7 +84,7 @@ public class RotateImage extends WorldImage {
     }
 
     /**
-     * Is this <code>RectangleImage</code> same as the given object?
+     * Is this <code>RotateImage</code> same as the given object?
      */
     public boolean equals(Object o) {
         if (o instanceof RotateImage) {
@@ -110,12 +108,13 @@ public class RotateImage extends WorldImage {
 
     @Override
     public WorldImage getMovedImage(int dx, int dy) {
-        return this;
+        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
     }
 
     @Override
     public WorldImage getMovedTo(Posn p) {
-        return this;
+        return new RotateImage(p,
+                this.img, this.rotationDegrees);
     }
 
     @Override

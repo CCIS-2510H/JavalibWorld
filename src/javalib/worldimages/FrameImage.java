@@ -74,7 +74,7 @@ public class FrameImage extends RectangleImage {
     }
 
     /**
-     * Is this <code>FrameeImage</code> same as the given object?
+     * Is this <code>FrameImage</code> same as the given object?
      */
     public boolean equals(Object o) {
         if (o instanceof FrameImage) {
