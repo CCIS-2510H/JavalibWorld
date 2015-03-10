@@ -1,9 +1,8 @@
 package javalib.worldimages;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-
-import javalib.colors.*;
 
 public class ShearedImage extends WorldImage {
     WorldImage img;
@@ -11,7 +10,7 @@ public class ShearedImage extends WorldImage {
     double sx, sy;
 
     public ShearedImage(WorldImage img, Posn shearOrigin, double sx, double sy) {
-        super(img.pinhole, new White());
+        super(img.pinhole, Color.white);
         this.shearOrigin = shearOrigin;
         this.img = img;
         this.sx = sx;
