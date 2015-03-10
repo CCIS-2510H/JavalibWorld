@@ -57,7 +57,8 @@ public class LineImage extends WorldImage {
         // set the paint to the given color
         g.setPaint(color);
         // draw the object
-        g.draw(new Line2D.Double(x, y, this.endPoint.x + x, this.endPoint.y + y));
+        g.draw(new Line2D.Double(x - this.pinhole.x, y - this.pinhole.y,
+                this.pinhole.x + x, this.pinhole.y + y));
         // reset the original paint
         g.setPaint(oldPaint);
     }

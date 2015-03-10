@@ -59,9 +59,9 @@ public class ExamplesImageDrawings {
     WorldImage frameText = new TextImage(
             "RectangleImage(60, 20, \"outline\", Color.black)", Color.black);
 
-    WorldImage line = new LineImage(new Posn(80, 10), Color.green);
+    WorldImage line = new LineImage(new Posn(80, 30), Color.green);
     WorldImage lineText = new TextImage(
-            "LineImage(new Posn(80, 10), Color.green)", Color.green);
+            "LineImage(new Posn(80, 30), Color.green)", Color.green);
 
     WorldImage triangle = new TriangleImage(new Posn(50, 0), new Posn(0, 40),
             new Posn(-50, 10), "solid", Color.cyan);
@@ -98,30 +98,41 @@ public class ExamplesImageDrawings {
             rectangle));
     WorldImage overlayText = new TextImage(
             "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.black);
-    
+
     WorldImage overlayXY = new OverlayImagesXY(disc, rectangle, -50, -30);
     WorldImage overlayXYText = new TextImage(
             "OverlayImagesXY(disc, rectangle, -50, -30)", Color.black);
 
-    WorldScene combined = scene.placeImageXY(rectangle, 600, 330)
+    WorldImage overlayFrame = new FrameImage(overlayXY);
+
+    WorldScene combined = scene
+            .placeImageXY(new FrameImage(rectangle), 600, 330)
             .placeImageXY(rectangleText, 600, 300)
             .placeImageXY(frame, 600, 130).placeImageXY(frameText, 600, 100)
-            .placeImageXY(circleText, 200, 20).placeImageXY(circle, 200, 60)
-            .placeImageXY(discText, 200, 100).placeImageXY(disc, 200, 140)
-            .placeImageXY(line, 200, 220).placeImageXY(lineText, 220, 180)
-            .placeImageXY(triangle, 200, 300)
+            .placeImageXY(circleText, 200, 20)
+            .placeImageXY(new FrameImage(circle), 200, 60)
+            .placeImageXY(discText, 200, 100)
+            .placeImageXY(new FrameImage(disc), 200, 140)
+            .placeImageXY(new FrameImage(line), 200, 220)
+            .placeImageXY(lineText, 220, 180)
+            .placeImageXY(new FrameImage(triangle), 200, 300)
             .placeImageXY(triangleText, 250, 260)
-            .placeImageXY(ellipse, 600, 60).placeImageXY(ellipseText, 600, 20)
-            .placeImageXY(oval, 600, 220).placeImageXY(ovalText, 600, 180)
-            .placeImageXY(hexagon, 200, 400)
+            .placeImageXY(new FrameImage(ellipse), 600, 60)
+            .placeImageXY(ellipseText, 600, 20)
+            .placeImageXY(new FrameImage(oval), 600, 220)
+            .placeImageXY(ovalText, 600, 180)
+            .placeImageXY(new FrameImage(hexagon), 200, 400)
             .placeImageXY(hexagonText, 200, 370)
             .placeImageXY(polygonText, 200, 450)
-            .placeImageXY(polygon1, 150, 480).placeImageXY(polygon2, 200, 480)
-            .placeImageXY(polygon3, 250, 480).placeImageXY(polygon4, 300, 480)
-            .placeImageXY(overlay, 600, 400)
+            .placeImageXY(new FrameImage(polygon1), 150, 480)
+            .placeImageXY(new FrameImage(polygon2), 200, 480)
+            .placeImageXY(new FrameImage(polygon3), 250, 480)
+            .placeImageXY(new FrameImage(polygon4), 300, 480)
+            .placeImageXY(new FrameImage(overlay), 600, 400)
             .placeImageXY(overlayText, 600, 380)
-            .placeImageXY(overlayXY, 600, 460)
-            .placeImageXY(overlayXYText, 600, 420);
+            .placeImageXY(overlayXY, 550, 460)
+            .placeImageXY(overlayXYText, 600, 420)
+            .placeImageXY(overlayFrame, 650, 460);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
