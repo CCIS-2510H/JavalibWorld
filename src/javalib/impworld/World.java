@@ -3,7 +3,6 @@ package javalib.impworld;
 import javalib.worldimages.*;
 import javalib.worldcanvas.*;
 
-import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
