@@ -70,7 +70,7 @@ public class TriangleImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -78,19 +78,11 @@ public class TriangleImage extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
-        // Create an adjusted polygon that centers on (x, y)
-        int[] xCoord = new int[3];
-        int[] yCoord = new int[3];
-        for (int i = 0; i < 3; i++) {
-            xCoord[i] = this.poly.xpoints[i] + x;
-            yCoord[i] = this.poly.ypoints[i] + y;
-        }
-        Polygon p = new Polygon(xCoord, yCoord, 3);
         // draw the triangle
         if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(p);
+            g.draw(this.poly);
         } else if (this.fill == OutlineMode.SOLID) {
-            g.fill(p);
+            g.fill(this.poly);
         }
 
         // reset the original paint

@@ -48,7 +48,7 @@ public class LineImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -57,8 +57,8 @@ public class LineImage extends WorldImage {
         // set the paint to the given color
         g.setPaint(color);
         // draw the object
-        g.draw(new Line2D.Double(x - this.pinhole.x, y - this.pinhole.y,
-                this.pinhole.x + x, this.pinhole.y + y));
+        g.draw(new Line2D.Double(-this.pinhole.x, -this.pinhole.y,
+                this.pinhole.x, this.pinhole.y));
         // reset the original paint
         g.setPaint(oldPaint);
     }

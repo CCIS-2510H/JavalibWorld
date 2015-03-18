@@ -110,7 +110,7 @@ public class RegularPolyImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -123,14 +123,14 @@ public class RegularPolyImage extends WorldImage {
         int[] xCoord = new int[this.poly.npoints];
         int[] yCoord = new int[this.poly.npoints];
         for (int i = 0; i < this.poly.npoints; i++) {
-            xCoord[i] = this.poly.xpoints[i] + x;
-            yCoord[i] = this.poly.ypoints[i] + y;
+            xCoord[i] = this.poly.xpoints[i];
+            yCoord[i] = this.poly.ypoints[i];
         }
 
         // Some polygons don't shift as well as they need to
         // TODO: This is a hack. Make this better
-        if (yCoord[0] < y + (h / 2)) {
-            int moveDist = (y + (h / 2)) - yCoord[0];
+        if (yCoord[0] < (h / 2)) {
+            int moveDist = (h / 2) - yCoord[0];
             for (int i = 0; i < this.poly.npoints; i++) {
                 yCoord[i] += moveDist;
             }

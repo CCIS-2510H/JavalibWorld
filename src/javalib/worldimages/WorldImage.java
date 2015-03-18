@@ -43,7 +43,7 @@ public abstract class WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    abstract public void drawAt(Graphics2D g, int x, int y);
+    abstract public void draw(Graphics2D g);
 
     /**
      * Produce the image with the pinhole moved by the given (dx, dy)

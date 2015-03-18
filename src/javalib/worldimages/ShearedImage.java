@@ -16,21 +16,25 @@ public class ShearedImage extends WorldImage {
     }
 
     @Override
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         AffineTransform old = g.getTransform();
+        AffineTransform trans = new AffineTransform();
+        trans.setTransform(old);
         g.shear(this.sx, this.sy);
-        this.img.drawAt(g, x, y);
+        this.img.draw(g);
         g.setTransform(old);
     }
 
     @Override
     public int getWidth() {
-        return (int) (this.img.getWidth() * (1.0 + Math.abs(this.sx)));
+        return (int) (this.img.getHeight() * Math.abs(this.sx)
+                + this.img.getWidth() + 1.0);
     }
 
     @Override
     public int getHeight() {
-        return (int) (this.img.getHeight() * (1.0 + Math.abs(this.sy)));
+        return (int) (this.img.getWidth() * Math.abs(this.sy)
+                + this.img.getHeight() + 1.0);
     }
 
     @Override
@@ -46,7 +50,6 @@ public class ShearedImage extends WorldImage {
     @Override
     public String toIndentedString(String indent) {
         return "new ShearedImage(" + this.img.toIndentedString(indent) + ",\n"
-                + indent + this.sx + ", " + this.sy
-                + ")";
+                + indent + this.sx + ", " + this.sy + ")";
     }
 }

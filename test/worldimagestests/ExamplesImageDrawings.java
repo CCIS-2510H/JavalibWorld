@@ -29,7 +29,7 @@ public class ExamplesImageDrawings {
     public static ExamplesImageDrawings examplesInstance = new ExamplesImageDrawings();
 
     // a text inside a red rectangle with a yellow dot in its pinhole location
-    public static WorldImage makeText(Posn pos, int size) {
+    public static WorldImage makeText(int size) {
         WorldImage hello = new TextImage("quickbrownfoxjumpedoveralazydog",
                 size, 3, Color.BLUE);
 
@@ -106,48 +106,59 @@ public class ExamplesImageDrawings {
     WorldImage rotate35 = new RotateImage(new FrameImage(overlayXY), 35);
     WorldImage rotate35Text = new TextImage("RotateImage(overlayXY, 35)",
             Color.BLACK);
-    
+
     WorldImage scale2 = new ScaleImage(overlay, 2);
-    WorldImage scale2Text = new TextImage("ScaleImage(overlay, 2)",
-            Color.BLACK);
-    
+    WorldImage scale2Text = new TextImage("ScaleImage(overlay, 2)", Color.BLACK);
+
     WorldImage scale2Y = new ScaleImageXY(overlay, 1, 2);
     WorldImage scale2YText = new TextImage("ScaleImageXY(overlay, 1, 2)",
             Color.BLACK);
 
-    WorldScene combined = scene
-            .placeImageXY(new FrameImage(rectangle), 600, 330)
-            .placeImageXY(rectangleText, 600, 300)
-            .placeImageXY(frame, 600, 130).placeImageXY(frameText, 600, 100)
-            .placeImageXY(circleText, 200, 20)
-            .placeImageXY(new FrameImage(circle), 200, 60)
-            .placeImageXY(discText, 200, 100)
-            .placeImageXY(new FrameImage(disc), 200, 140)
-            .placeImageXY(new FrameImage(line), 200, 220)
-            .placeImageXY(lineText, 220, 180)
-            .placeImageXY(new FrameImage(triangle), 200, 300)
-            .placeImageXY(triangleText, 250, 260)
-            .placeImageXY(new FrameImage(ellipse), 600, 60)
-            .placeImageXY(ellipseText, 600, 20)
-            .placeImageXY(new FrameImage(oval), 600, 220)
-            .placeImageXY(ovalText, 600, 180)
-            .placeImageXY(new FrameImage(hexagon), 200, 400)
-            .placeImageXY(hexagonText, 200, 370)
-            .placeImageXY(polygonText, 200, 450)
-            .placeImageXY(overlayText, 600, 380)
-            .placeImageXY(new FrameImage(overlayXY), 600, 470)
-            .placeImageXY(overlayXYText, 600, 430)
-            .placeImageXY(new FrameImage(polygon1), 150, 480)
-            .placeImageXY(new FrameImage(polygon2), 200, 480)
-            .placeImageXY(new FrameImage(polygon3), 250, 480)
-            .placeImageXY(new FrameImage(polygon4), 300, 480)
-            .placeImageXY(new FrameImage(overlay), 600, 400)
-            .placeImageXY(new FrameImage(rotate35), 600, 580)
-            .placeImageXY(rotate35Text, 600, 520)
-            .placeImageXY(scale2Text, 125, 530)
-            .placeImageXY(new FrameImage(scale2), 125, 560)
-            .placeImageXY(scale2YText, 325, 530)
-            .placeImageXY(new FrameImage(scale2Y), 325, 560);
+    WorldImage sheared = new ShearedImage(rotate35, 1.5, -0.9);
+
+//    WorldScene combined = scene
+//            .placeImageXY(new FrameImage(rectangle), 600, 330)
+//            .placeImageXY(rectangleText, 600, 300)
+//            .placeImageXY(frame, 600, 130)
+//            .placeImageXY(frameText, 600, 100)
+//            .placeImageXY(circleText, 200, 20)
+//            .placeImageXY(new FrameImage(circle), 200, 60)
+//            .placeImageXY(discText, 200, 100)
+//            .placeImageXY(new FrameImage(disc), 200, 140)
+//            .placeImageXY(new FrameImage(line), 200, 220)
+//            .placeImageXY(lineText, 220, 180)
+//            .placeImageXY(new FrameImage(triangle), 200, 300)
+//            .placeImageXY(triangleText, 250, 260)
+//            .placeImageXY(new FrameImage(ellipse), 600, 60)
+//            .placeImageXY(ellipseText, 600, 20)
+//            .placeImageXY(new FrameImage(oval), 600, 220)
+//            .placeImageXY(ovalText, 600, 180)
+//            .placeImageXY(new FrameImage(hexagon), 200, 400)
+//            .placeImageXY(hexagonText, 200, 370)
+//            .placeImageXY(polygonText, 200, 450)
+//            .placeImageXY(overlayText, 600, 380)
+//            .placeImageXY(new FrameImage(overlayXY), 600, 470)
+//            .placeImageXY(overlayXYText, 600, 430)
+//            .placeImageXY(new FrameImage(polygon1), 150, 480)
+//            .placeImageXY(new FrameImage(polygon2), 200, 480)
+//            .placeImageXY(new FrameImage(polygon3), 250, 480)
+//            .placeImageXY(new FrameImage(polygon4), 300, 480)
+//            .placeImageXY(new FrameImage(overlay), 600, 400)
+//            .placeImageXY(new FrameImage(rotate35), 600, 580)
+//            .placeImageXY(rotate35Text, 600, 520)
+//            .placeImageXY(scale2Text, 125, 530)
+//            .placeImageXY(new FrameImage(scale2), 125, 560)
+//            .placeImageXY(scale2YText, 325, 530)
+//            .placeImageXY(new FrameImage(scale2Y), 325, 560)
+//            .placeImageXY(
+//                    new ShearedImage(new ScaleImage(overlay, 2), 0.5, 0.5),
+//                    400, 200)
+//            .placeImageXY(new FrameImage(sheared), 400, 400)
+//            .placeImageXY(
+//                    new FrameImage(new ScaleImage(new ShearedImage(overlay,
+//                            -0.5, -0.5), 2)), 400, 600);
+    
+    WorldScene combined2 = scene.placeImageXY(new FrameImage(sheared), 400, 400);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -159,12 +170,11 @@ public class ExamplesImageDrawings {
 
         WorldCanvas c = new WorldCanvas(800, 800);
 
-        // WorldImage pic = ExamplesImageDrawings.makeText(new Posn(300, 400),
-        // 15);
+        // WorldImage pic = ExamplesImageDrawings.makeText(15);
 
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-        boolean makeDrawing = c.show() && c.drawScene(e.combined);
+        boolean makeDrawing = c.show() && c.drawScene(e.combined2);
     }
 }

@@ -67,7 +67,7 @@ public class FromFileImage extends WorldImage {
                 - this.imread.width / 2, this.pinhole.y - this.imread.height
                 / 2);
     }
-    
+
     public FromFileImage(String fileName) {
         this(new Posn(0, 0), fileName);
     }
@@ -78,10 +78,10 @@ public class FromFileImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
-        // recompute the affine transform, as teh pinhole may have moved
-        this.at = AffineTransform.getTranslateInstance(x - this.imread.width
-                / 2, y - this.imread.height / 2);
+    public void draw(Graphics2D g) {
+        // recompute the affine transform, as the pinhole may have moved
+        this.at = AffineTransform.getTranslateInstance(-this.imread.width / 2,
+                -this.imread.height / 2);
         // save the current paint
         Paint oldPaint = g.getPaint();
         // set the paint to the given color

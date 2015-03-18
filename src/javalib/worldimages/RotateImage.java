@@ -29,7 +29,7 @@ public class RotateImage extends WorldImage {
      *            the provided <code>Graphics2D</code> context
      */
     @Override
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -43,15 +43,13 @@ public class RotateImage extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         AffineTransform old = g.getTransform();
-        AffineTransform trans = new AffineTransform();
-        trans.setToRotation(Math.toRadians(this.rotationDegrees), x, y);
-        g.setTransform(trans);
+        g.rotate(Math.toRadians(this.rotationDegrees));
 
         // draw rotated shape/image
-        this.img.drawAt(g, x, y);
+        this.img.draw(g);
 
+        // Reset the transform to the old transform
         g.setTransform(old);
-        // things you draw after here will not be rotated
 
         // reset the original paint
         g.setPaint(oldPaint);

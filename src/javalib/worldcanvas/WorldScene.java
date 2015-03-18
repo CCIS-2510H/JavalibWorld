@@ -28,7 +28,9 @@ public class WorldScene {
 
     protected void draw(Graphics2D g) {
         for (PlaceImage i : imgs) {
-            i.img.drawAt(g, i.x, i.y);
+            g.translate(i.x, i.y);
+            i.img.draw(g);
+            g.translate(-i.x, -i.y);
         }
     }
 }

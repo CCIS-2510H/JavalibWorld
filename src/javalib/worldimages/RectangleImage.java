@@ -57,7 +57,7 @@ public class RectangleImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -71,11 +71,11 @@ public class RectangleImage extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(new Rectangle2D.Double(x - this.width / 2, y - this.height
-                    / 2, this.width, this.height));
+            g.draw(new Rectangle2D.Double(-this.width / 2, -this.height / 2,
+                    this.width, this.height));
         } else if (this.fill == OutlineMode.SOLID) {
-            g.fill(new Rectangle2D.Double(x - this.width / 2, y - this.height
-                    / 2, this.width, this.height));
+            g.fill(new Rectangle2D.Double(-this.width / 2, -this.height / 2,
+                    this.width, this.height));
         }
         // reset the original paint
         g.setPaint(oldPaint);

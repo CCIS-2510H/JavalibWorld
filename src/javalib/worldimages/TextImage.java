@@ -160,7 +160,7 @@ public class TextImage extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (this.text == null)
             this.text = "";
         if (this.color == null)
@@ -177,7 +177,7 @@ public class TextImage extends WorldImage {
 
         if (alignment == 1) {
             // draw the object
-            g.drawString(this.text, x - this.width / 2, y + this.height / 4);
+            g.drawString(this.text, -this.width / 2, this.height / 4);
         }
 
         // reset the original paint and font

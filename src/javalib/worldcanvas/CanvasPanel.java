@@ -309,16 +309,6 @@ public class CanvasPanel extends JPanel {
         return (c.getRed() == 255) && (c.getBlue() == 255)
                 && (c.getGreen() == 255);
     }
-
-    /**
-     * Draw the given image into this panel in the center
-     * 
-     * @param image
-     *            the image to draw
-     */
-    public void drawImage(WorldImage image) {
-        drawImageAt(image, buffer.getWidth() / 2, buffer.getHeight() / 2);
-    }
     
     public void drawScene(WorldScene scene) {
         scene.draw(getBufferGraphics());
@@ -331,10 +321,9 @@ public class CanvasPanel extends JPanel {
      * @param image
      *            the image to draw
      */
-    public void drawImageAt(WorldImage image, int x, int y) {
+    public void drawImage(WorldImage image) {
         Graphics2D g = getBufferGraphics();
-
-        image.drawAt(g, x, y);
+        image.draw(g);
         repaint();
     }
 

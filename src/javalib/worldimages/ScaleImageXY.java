@@ -28,7 +28,7 @@ public class ScaleImageXY extends WorldImage {
      *            the provided <code>Graphics2D</code> context
      */
     @Override
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (this.getWidth() <= 0)
             return;
         if (this.getHeight() <= 0)
@@ -42,13 +42,10 @@ public class ScaleImageXY extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         AffineTransform old = g.getTransform();
-        AffineTransform trans = new AffineTransform();
-        trans.scale(this.scaleX, this.scaleY);
-        g.setTransform(trans);
+        g.scale(this.scaleX, this.scaleY);
 
         // draw scaled shape/image
-        this.img.drawAt(g, (int) Math.round(x / this.scaleX),
-                (int) Math.round(y / this.scaleY));
+        this.img.draw(g);
 
         // reset the original paint/scale
         g.setTransform(old);

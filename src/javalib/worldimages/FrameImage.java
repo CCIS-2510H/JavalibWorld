@@ -29,7 +29,7 @@ public class FrameImage extends RectangleImage {
      *            the provided <code>Graphics2D</code> context
      */
     @Override
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -40,11 +40,11 @@ public class FrameImage extends RectangleImage {
         // save the current paint
         Paint oldPaint = g.getPaint();
         // draw the object
-        this.img.drawAt(g, x, y);
+        this.img.draw(g);
         // set the paint to the given color
         g.setPaint(this.color);
-        g.draw(new Rectangle2D.Double(Math.ceil(x - (this.width / 2.0)), Math
-                .ceil(y - (this.height / 2.0)), this.width, this.height));
+        g.draw(new Rectangle2D.Double(Math.ceil(-(this.width / 2.0)), Math
+                .ceil(-(this.height / 2.0)), this.width, this.height));
         // reset the original paint
         g.setPaint(oldPaint);
     }

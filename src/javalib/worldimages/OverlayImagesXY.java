@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * <p>Copyright 2012 Viera K. Proulx</p>
@@ -61,8 +62,6 @@ public class OverlayImagesXY extends WorldImage {
         this.dy = dy;
 
         // Calculate proper center point
-        // TODO: This is under the assumption that the pinhole is (0, 0)
-        // for each image, which may not be true
         int botWidth = this.bot.getWidth();
         int topWidth = this.top.getWidth();
         int botHeight = this.bot.getHeight();
@@ -86,7 +85,7 @@ public class OverlayImagesXY extends WorldImage {
      * @param g
      *            the provided <code>Graphics2D</code> context
      */
-    public void drawAt(Graphics2D g, int x, int y) {
+    public void draw(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -94,10 +93,18 @@ public class OverlayImagesXY extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
+        
+        // Save the old transform state
+        AffineTransform old = g.getTransform();
+        
         // draw the two objects
-        this.bot.drawAt(g, x - this.center.x, y - this.center.y);
-        this.top.drawAt(g, x + this.dx - this.center.x, y + this.dy
-                - this.center.y);
+        g.translate(-this.center.x, -this.center.y);
+        this.bot.draw(g);
+        g.translate(this.dx, this.dy);
+        this.top.draw(g);
+        
+        // Reset the transformation matrix
+        g.setTransform(old);
 
         // reset the original paint
         g.setPaint(oldPaint);
@@ -155,6 +162,7 @@ public class OverlayImagesXY extends WorldImage {
         return "new OverlayImagesXY(this.pinhole = (" + this.pinhole.x + ", "
                 + this.pinhole.y + "), \nthis.color = " + this.color.toString()
                 + "\nthis.dx = " + this.dx + ", this.dy = " + this.dy + ","
+                + "\nthis.width = " + this.width + ", this.height = " + this.height + ","
                 + "\nthis.bot = " + this.bot.toString() + "\nthis.top = "
                 + this.top.toString() + ")\n";
     }
