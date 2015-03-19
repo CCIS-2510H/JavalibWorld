@@ -122,15 +122,26 @@ public class ExamplesImageDrawings {
     WorldImage duckText = new TextImage("FromFileImage(\"rubberduck.jpg\")",
             Color.BLACK);
 
-    WorldImage allTransforms = new ScaleImage(new ShearedImage(new FrameImage(rotate35,
-            Color.RED), 0.5, 0), 0.9);
-    WorldImage allTransforms2 = new ScaleImage(new ShearedImage(polygon3, 0.5, 0), 0.9);
+    WorldImage allTransforms = new ScaleImage(new ShearedImage(new FrameImage(
+            rotate35, Color.RED), 0.5, 0), 0.9);
+    WorldImage allTransforms2 = new ScaleImage(new ShearedImage(polygon3, 0.5,
+            0), 0.9);
+
+    WorldImage beside = new BesideAlignImage("top", new EllipseImage(20, 70,
+            "solid", Color.blue), new EllipseImage(20, 50, "outline",
+            Color.blue), new EllipseImage(20, 30, "solid", Color.blue),
+            new EllipseImage(20, 10, "outline", Color.blue));
+
+    WorldImage above = new AboveAlignImage("right", new EllipseImage(70, 20,
+            "solid", Color.LIGHT_GRAY), new EllipseImage(50, 20, "outline",
+            Color.LIGHT_GRAY), new EllipseImage(30, 20, "solid",
+            Color.LIGHT_GRAY), new EllipseImage(10, 20, "outline",
+            Color.LIGHT_GRAY));
 
     WorldScene combined = scene
             .placeImageXY(new FrameImage(rectangle), 600, 330)
             .placeImageXY(rectangleText, 600, 300)
-            .placeImageXY(frame, 600, 130)
-            .placeImageXY(frameText, 600, 100)
+            .placeImageXY(frame, 600, 130).placeImageXY(frameText, 600, 100)
             .placeImageXY(circleText, 200, 20)
             .placeImageXY(new FrameImage(circle), 200, 60)
             .placeImageXY(discText, 200, 100)
@@ -164,6 +175,8 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(sheared), 600, 690)
             .placeImageXY(new FrameImage(duck), 200, 660)
             .placeImageXY(duckText, 200, 610)
+            .placeImageXY(new FrameImage(beside), 400, 100)
+            .placeImageXY(new FrameImage(above), 400, 200)
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
             .placeImageXY(new FrameImage(allTransforms2), 400, 400);
 
