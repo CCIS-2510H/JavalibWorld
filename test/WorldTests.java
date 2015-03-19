@@ -4,7 +4,6 @@ import java.lang.reflect.Array;
 import tester.Tester;
 import funworldtests.*;
 import impworldtests.*;
-import tunestests.*;
 import worldimagestests.ExamplesImageDrawings;
 import worldimagestests.ExamplesImageMethods;
 import worldimagestests.ExamplesTextImages;
@@ -20,13 +19,6 @@ public class WorldTests {
 
     BlobWorldFun.examplesInstance, TickyTackFun.examplesInstance,
             BlobWorldImp.examplesInstance, TickyTackImp.examplesInstance,
-
-            ExamplesNoteTests.examplesInstance,
-            ExamplesChordTests.examplesInstance,
-            ExamplesSoundTests.examplesInstance,
-            ExamplesTuneBucketTests.examplesInstance,
-            ExamplesTuneTests.examplesInstance,
-
             ExamplesImageDrawings.examplesInstance,
             ExamplesImageMethods.examplesInstance,
             ExamplesTextImages.examplesInstance };
