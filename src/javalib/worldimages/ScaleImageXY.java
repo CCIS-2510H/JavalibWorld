@@ -1,24 +1,17 @@
 package javalib.worldimages;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 
 public class ScaleImageXY extends WorldImage {
     public WorldImage img;
     public double scaleX, scaleY;
 
-    protected ScaleImageXY(Posn pinhole, WorldImage img, double scaleX,
-            double scaleY) {
-        super(pinhole, Color.black);
+    public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
+        super();
         this.img = img;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
-    }
-
-    public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
-        this(new Posn(0, 0), img, scaleX, scaleY);
     }
 
     /**
@@ -33,13 +26,7 @@ public class ScaleImageXY extends WorldImage {
             return;
         if (this.getHeight() <= 0)
             return;
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
 
-        // save the current paint
-        Paint oldPaint = g.getPaint();
-        // set the paint to the given color
-        g.setPaint(this.color);
         // draw the object
         AffineTransform old = g.getTransform();
         g.scale(this.scaleX, this.scaleY);
@@ -49,16 +36,14 @@ public class ScaleImageXY extends WorldImage {
 
         // reset the original paint/scale
         g.setTransform(old);
-        g.setPaint(oldPaint);
     }
 
     /**
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return "new ScaleImageXY(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
-                + ")\n";
+        return "new ScaleImageXY(this.scaleX=" + this.scaleX + ", this.scaleY="
+                + this.scaleY + ")\n";
     }
 
     /**
@@ -71,8 +56,7 @@ public class ScaleImageXY extends WorldImage {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "ScaleImageXY")
-                + pinholeString(indent, this.pinhole) + "this.img = "
+        return classNameString(indent, "ScaleImageXY") + "this.img = "
                 + this.img.toIndentedString(indent) + "\n" + indent + ")\n";
     }
 
@@ -82,9 +66,7 @@ public class ScaleImageXY extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof ScaleImageXY) {
             ScaleImageXY that = (ScaleImageXY) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.scaleX == that.scaleX && this.scaleY == that.scaleY
+            return this.scaleX == that.scaleX && this.scaleY == that.scaleY
                     && this.img.equals(that.img);
         } else
             return false;
@@ -94,17 +76,7 @@ public class ScaleImageXY extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode();
-    }
-
-    @Override
-    public WorldImage getMovedImage(int dx, int dy) {
-        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
-    }
-
-    @Override
-    public WorldImage getMovedTo(Posn p) {
-        return new ScaleImageXY(p, this.img, this.scaleX, this.scaleY);
+        return (int) (this.scaleX * 42 + this.scaleY * -57);
     }
 
     @Override

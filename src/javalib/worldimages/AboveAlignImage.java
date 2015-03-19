@@ -1,8 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 
 public class AboveAlignImage extends WorldImage {
@@ -10,7 +8,7 @@ public class AboveAlignImage extends WorldImage {
     AlignModeX mode;
 
     public AboveAlignImage(AlignModeX mode, WorldImage im1, WorldImage... ims) {
-        super(new Posn(0, 0), Color.BLACK);
+        super();
         this.mode = mode;
         this.im1 = im1;
         if (ims.length == 1) {
@@ -28,14 +26,6 @@ public class AboveAlignImage extends WorldImage {
 
     @Override
     public void draw(Graphics2D g) {
-        if (color == null)
-            color = new Color(0, 0, 0);
-
-        // save the current paint
-        Paint oldPaint = g.getPaint();
-        // set the paint to the given color
-        g.setPaint(color);
-
         // Save the old transform state
         AffineTransform old = g.getTransform();
 
@@ -46,15 +36,13 @@ public class AboveAlignImage extends WorldImage {
             int x = xMoveDist();
             g.translate(0, -(this.im2.getHeight() / 2));
             this.im1.draw(g);
-            g.translate(x, (this.im2.getHeight() / 2) + this.im1.getHeight() / 2);
+            g.translate(x, (this.im2.getHeight() / 2) + this.im1.getHeight()
+                    / 2);
             this.im2.draw(g);
         }
 
         // Reset the transformation matrix
         g.setTransform(old);
-
-        // reset the original paint
-        g.setPaint(oldPaint);
     }
 
     private int xMoveDist() {
@@ -68,18 +56,6 @@ public class AboveAlignImage extends WorldImage {
             }
         }
         return 0;
-    }
-
-    @Override
-    public WorldImage getMovedImage(int dx, int dy) {
-        throw new UnsupportedOperationException(
-                "getMovedImage not currently supported");
-    }
-
-    @Override
-    public WorldImage getMovedTo(Posn p) {
-        throw new UnsupportedOperationException(
-                "getMovedTo not currently supported");
     }
 
     @Override
@@ -103,25 +79,18 @@ public class AboveAlignImage extends WorldImage {
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "AboveAlignImage")
-                + pinholeString(indent, this.pinhole) + ")\n" + indent
+        return classNameString(indent, "AboveAlignImage") + indent
                 + "this.mode = " + this.mode + ")\n";
     }
 
     /**
      * <p>
      * Provide a method for comparing two images constructed from
-     * BesideAlignImages to be used by the <em>tester</em> library.
-     * </p>
-     * 
-     * <p>
-     * This requires the import of the tester library.
+     * BesideAlignImages.
      * </p>
      */
     public boolean same(AboveAlignImage that) {
-        return this.pinhole.x == that.pinhole.x
-                && this.pinhole.y == that.pinhole.y
-                && this.mode == that.mode
+        return this.mode == that.mode
                 && this.im1.equals(that.im1)
                 && ((this.im2 == null && that.im2 == null) || (this.im2 != null
                         && that.im2 != null && this.im2.equals(that.im2)));
@@ -142,8 +111,7 @@ public class AboveAlignImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.mode.hashCode();
+        return this.mode.hashCode();
     }
 
 }

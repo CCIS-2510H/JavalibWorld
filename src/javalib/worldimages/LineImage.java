@@ -25,6 +25,9 @@ public class LineImage extends WorldImage {
      */
     public Posn endPoint;
 
+    /** The color of the line */
+    public Color color;
+
     /**
      * A full constructor for this line image.
      * 
@@ -36,10 +39,10 @@ public class LineImage extends WorldImage {
      *            the color for this image
      */
     public LineImage(Posn endPoint, Color color) {
-        super(new Posn(0, 0), color);
+        super();
         this.endPoint = endPoint;
-        this.pinhole.x = this.endPoint.x / 2;
-        this.pinhole.y = this.endPoint.y / 2;
+        this.color = color;
+
     }
 
     /**
@@ -52,66 +55,17 @@ public class LineImage extends WorldImage {
         if (color == null)
             color = new Color(0, 0, 0);
 
+        Posn midpoint = new Posn(this.endPoint.x / 2, this.endPoint.y / 2);
+
         // save the current paint
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
         // draw the object
-        g.draw(new Line2D.Double(-this.pinhole.x, -this.pinhole.y,
-                this.pinhole.x, this.pinhole.y));
+        g.draw(new Line2D.Double(-midpoint.x, -midpoint.y, midpoint.x,
+                midpoint.y));
         // reset the original paint
         g.setPaint(oldPaint);
-    }
-
-    /**
-     * Produce the line image with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new LineImage(this.movePosn(this.endPoint, dx, dy), this.color);
-    }
-
-    /**
-     * Produce the line image with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        int dx = p.x - this.pinhole.x;
-        int dy = p.y - this.pinhole.y;
-        return this.getMovedImage(dx, dy);
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image by the given offset.
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public void movePinhole(int dx, int dy) {
-        this.pinhole.x = this.pinhole.x + dx;
-        this.pinhole.y = this.pinhole.y + dy;
-        this.endPoint.x = this.endPoint.x + dx;
-        this.endPoint.y = this.endPoint.y + dy;
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image to the given location.
-     * 
-     * @param p
-     *            the given location
-     */
-    public void moveTo(Posn p) {
-        int dx = p.x - pinhole.x;
-        int dy = p.y - pinhole.y;
-        this.movePinhole(dx, dy);
     }
 
     /**
@@ -136,8 +90,7 @@ public class LineImage extends WorldImage {
      * Produce a <code>String</code> representation of this triangle image
      */
     public String toString() {
-        return "new LineImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
+        return "new LineImage(this.color = " + this.color.toString()
                 + "\nthis.endPoint = (" + this.endPoint.x + ", "
                 + this.endPoint.y + "))\n";
     }
@@ -153,7 +106,6 @@ public class LineImage extends WorldImage {
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "LineImage")
-                + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.endPoint = (" + this.endPoint.x + ", "
                 + this.endPoint.y + "))\n";
@@ -165,9 +117,7 @@ public class LineImage extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof LineImage) {
             LineImage that = (LineImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.endPoint.x == that.endPoint.x
+            return this.endPoint.x == that.endPoint.x
                     && this.endPoint.y == that.endPoint.y
                     && this.color.equals(that.color);
         } else
@@ -178,7 +128,6 @@ public class LineImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.endPoint.x + this.endPoint.y;
+        return this.color.hashCode() + this.endPoint.x + this.endPoint.y;
     }
 }

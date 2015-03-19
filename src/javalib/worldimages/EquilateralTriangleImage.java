@@ -9,26 +9,23 @@ import java.awt.*;
  */
 
 /**
- * Represents a Hexagon, a special case of a regular polygon
+ * Represents a Triangle, a special case of a regular polygon
  * 
  */
 public class EquilateralTriangleImage extends RegularPolyImage {
     /**
-     * The full constructor for an equilateral hexagon, whose top and bottom are
-     * rotated from the horizontal
+     * The full constructor for an equilateral triangle
      * 
-     * @param center
-     *            -- the central point of the hexagon
      * @param sideLen
      *            -- the length of one of the sides
-     * @param angle
-     *            -- the angle of rotation in radians
+     * @param fill
+     *            -- outline or solid
      * @param color
-     *            -- the color for this hexagon
+     *            -- the color for this triangle
      */
     public EquilateralTriangleImage(double sideLen, OutlineMode fill,
             Color color) {
-        super(new Posn(0, 0), sideLen, 3, fill, color);
+        super(sideLen, 3, fill, color);
     }
 
     public EquilateralTriangleImage(double sideLen, String fill, Color color) {

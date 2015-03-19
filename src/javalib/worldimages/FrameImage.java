@@ -8,18 +8,13 @@ import java.awt.geom.Rectangle2D;
 public class FrameImage extends RectangleImage {
     public WorldImage img;
 
-    protected FrameImage(Posn pinhole, WorldImage img, Color color) {
-        super(pinhole, img.getWidth(), img.getHeight(), OutlineMode.OUTLINE,
-                color);
+    public FrameImage(WorldImage img, Color color) {
+        super(img.getWidth(), img.getHeight(), OutlineMode.OUTLINE, color);
         this.img = img;
     }
 
     public FrameImage(WorldImage img) {
-        this(new Posn(0, 0), img, Color.black);
-    }
-
-    public FrameImage(WorldImage img, Color c) {
-        this(new Posn(0, 0), img, c);
+        this(img, Color.black);
     }
 
     /**
@@ -53,9 +48,7 @@ public class FrameImage extends RectangleImage {
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return "new FrameImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.img = " + this.img.toString()
-                + ")\n";
+        return "new FrameImage(this.img = " + this.img.toString() + ")\n";
     }
 
     /**
@@ -69,7 +62,6 @@ public class FrameImage extends RectangleImage {
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "FrameImage")
-                + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.width = " + width + ", this.height = " + height + ")\n";
     }
@@ -80,9 +72,7 @@ public class FrameImage extends RectangleImage {
     public boolean equals(Object o) {
         if (o instanceof FrameImage) {
             FrameImage that = (FrameImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.width == that.width && this.height == that.height
+            return this.width == that.width && this.height == that.height
                     && this.color.equals(that.color)
                     && this.img.equals(that.img);
         } else
@@ -93,7 +83,6 @@ public class FrameImage extends RectangleImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.width + this.height;
+        return this.color.hashCode() + this.width + this.height;
     }
 }

@@ -37,27 +37,11 @@ public class OverlayImages extends OverlayImagesXY {
     }
 
     /**
-     * Produce the overlay of images with the pinhole moved by the given (dx,
-     * dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new OverlayImages(this.top.getMovedImage(dx, dy), 
-                this.bot.getMovedImage(dx, dy));
-    }
-
-    /**
      * Produce a <code>String</code> representation of this overlay of images
      */
     public String toString() {
-        return "new OverlayImages(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
-                + "\nthis.bot = " + this.bot.toString() + "\nthis.top = "
-                + this.top.toString() + ")\n";
+        return "new OverlayImages(this.bot = " + this.bot.toString()
+                + "\nthis.top = " + this.top.toString() + ")\n";
     }
 
     /**
@@ -70,8 +54,7 @@ public class OverlayImages extends OverlayImagesXY {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "OverlayImages")
-                + pinholeString(indent, this.pinhole) + "\n" + indent
+        return classNameString(indent, "OverlayImages") + indent
                 + "this.bot = " + this.bot.toIndentedString(indent) + "\n"
                 + indent + "this.top = " + this.top.toIndentedString(indent)
                 + indent + ")\n";
@@ -83,9 +66,7 @@ public class OverlayImages extends OverlayImagesXY {
     public boolean equals(Object o) {
         if (o instanceof OverlayImages) {
             OverlayImages that = (OverlayImages) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.bot.equals(that.bot) && this.top.equals(that.top);
+            return this.bot.equals(that.bot) && this.top.equals(that.top);
         } else
             return false;
     }
@@ -94,7 +75,6 @@ public class OverlayImages extends OverlayImagesXY {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.bot.hashCode() + this.top.hashCode();
+        return this.bot.hashCode() + this.top.hashCode();
     }
 }

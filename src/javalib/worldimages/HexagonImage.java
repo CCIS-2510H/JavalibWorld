@@ -17,17 +17,15 @@ public class HexagonImage extends RegularPolyImage {
      * The full constructor for an equilateral hexagon, whose top and bottom are
      * rotated from the horizontal
      * 
-     * @param center
-     *            -- the central point of the hexagon
      * @param sideLen
      *            -- the length of one of the sides
-     * @param angle
-     *            -- the angle of rotation in radians
+     * @param fill
+     *            -- outline or solid
      * @param color
      *            -- the color for this hexagon
      */
     public HexagonImage(double sideLen, OutlineMode fill, Color color) {
-        super(new Posn(0, 0), sideLen, 6, fill, color);
+        super(sideLen, 6, fill, color);
     }
 
     public HexagonImage(double sideLen, String fill, Color color) {

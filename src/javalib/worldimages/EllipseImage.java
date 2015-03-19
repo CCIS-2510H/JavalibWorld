@@ -29,6 +29,9 @@ public class EllipseImage extends WorldImage {
     /** Outline mode of the ellipse */
     public OutlineMode fill;
 
+    /** Color of the ellipse */
+    public Color color;
+
     /**
      * A full constructor for this ellipse image.
      * 
@@ -41,16 +44,12 @@ public class EllipseImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    protected EllipseImage(Posn pinhole, int width, int height,
-            OutlineMode mode, Color color) {
-        super(pinhole, color);
+    public EllipseImage(int width, int height, OutlineMode mode, Color color) {
+        super();
         this.width = width;
         this.height = height;
         this.fill = mode;
-    }
-
-    public EllipseImage(int width, int height, OutlineMode mode, Color color) {
-        this(new Posn(0, 0), width, height, mode, color);
+        this.color = color;
     }
 
     public EllipseImage(int width, int height, String outlineMode, Color color) {
@@ -77,37 +76,14 @@ public class EllipseImage extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         if (this.fill == OutlineMode.SOLID) {
-            g.fill(new Ellipse2D.Double(-this.width / 2,
-                    -this.height / 2, this.width, this.height));
+            g.fill(new Ellipse2D.Double(-this.width / 2, -this.height / 2,
+                    this.width, this.height));
         } else if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(new Ellipse2D.Double(-this.width / 2,
-                    -this.height / 2, this.width, this.height));
+            g.draw(new Ellipse2D.Double(-this.width / 2, -this.height / 2,
+                    this.width, this.height));
         }
         // reset the original paint
         g.setPaint(oldPaint);
-    }
-
-    /**
-     * Produce the ellipse with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
-    }
-
-    /**
-     * Produce the ellipse with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        return new EllipseImage(p, this.width, this.height, this.fill,
-                this.color);
     }
 
     /**
@@ -132,8 +108,7 @@ public class EllipseImage extends WorldImage {
      * Produce a <code>String</code> representation of this ellipse image
      */
     public String toString() {
-        return "new EllipseImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.fill = " + this.fill
+        return "new EllipseImage(this.fill = " + this.fill
                 + ", \nthis.color = " + this.color.toString()
                 + "\nthis.width = " + width + ", this.height = " + height
                 + ")\n";
@@ -149,8 +124,7 @@ public class EllipseImage extends WorldImage {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "EllipseImage")
-                + pinholeString(indent, this.pinhole) + "\n" + indent
+        return classNameString(indent, "EllipseImage") + indent
                 + "this.fill = " + this.fill + "\n" + indent
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.width = " + width + ", this.height = " + height + ")\n";
@@ -162,9 +136,7 @@ public class EllipseImage extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof EllipseImage) {
             EllipseImage that = (EllipseImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.width == that.width && this.height == that.height
+            return this.width == that.width && this.height == that.height
                     && this.fill == that.fill && this.color.equals(that.color);
         } else
             return false;
@@ -174,7 +146,6 @@ public class EllipseImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.width + this.height;
+        return this.color.hashCode() + this.width + this.height;
     }
 }

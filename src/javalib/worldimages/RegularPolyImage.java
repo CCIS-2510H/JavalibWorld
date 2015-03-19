@@ -27,6 +27,7 @@ public class RegularPolyImage extends WorldImage {
     public double sideLen;
     public OutlineMode fill;
     private Polygon poly;
+    public Color color;
 
     /**
      * The full constructor for an equilateral regular polygon, whose rightmost
@@ -43,9 +44,9 @@ public class RegularPolyImage extends WorldImage {
      * @param color
      *            -- the color for this regular polygon
      */
-    protected RegularPolyImage(Posn center, double sideLen, int numSides,
-            OutlineMode fill, Color color) {
-        super(center, color);
+    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
+            Color color) {
+        super();
 
         if (numSides < 3) {
             throw new IllegalArgumentException(
@@ -54,23 +55,17 @@ public class RegularPolyImage extends WorldImage {
 
         this.sideLen = sideLen;
         this.sides = numSides;
-        this.center = center;
+        this.color = color;
         this.fill = fill;
-        this.setPoly(center);
-    }
-
-    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
-            Color color) {
-        this(new Posn(0, 0), sideLen, numSides, fill, color);
+        this.generatePoly();
     }
 
     public RegularPolyImage(double sideLen, int numSides, String fill,
             Color color) {
-        this(new Posn(0, 0), sideLen, numSides, OutlineMode.fromString(fill),
-                color);
+        this(sideLen, numSides, OutlineMode.fromString(fill), color);
     }
 
-    private void setPoly(Posn center) {
+    private void generatePoly() {
         int[] xCoord = new int[this.sides];
         int[] yCoord = new int[this.sides];
         double internalAngle = (2.0 * Math.PI) / this.sides;
@@ -80,7 +75,7 @@ public class RegularPolyImage extends WorldImage {
         // This adjustment makes the output polygons look a lot nicer
 
         // There are 2 angles to care about:
-        // The angle as seen from the pinhole/center (adds up to 360)
+        // The angle as seen from the center (adds up to 360)
         // Each individual angle at the edge ((numSides - 2) * 180 / numSides)
         // The second angle is what matters to determine how much to rotate
         // the polygon
@@ -93,12 +88,10 @@ public class RegularPolyImage extends WorldImage {
         // ... | ... | ... | ...
 
         for (int i = 0; i < this.sides; i++) {
-            xCoord[i] = (int) Math.round((center.x + Math.cos(i * internalAngle
-                    + rotation)
-                    * sideLen));
-            yCoord[i] = (int) Math.round((center.y + Math.sin(i * internalAngle
-                    + rotation)
-                    * sideLen));
+            xCoord[i] = (int) Math.round((Math
+                    .cos(i * internalAngle + rotation) * sideLen));
+            yCoord[i] = (int) Math.round((Math
+                    .sin(i * internalAngle + rotation) * sideLen));
         }
 
         this.poly = new Polygon(xCoord, yCoord, this.sides);
@@ -148,58 +141,6 @@ public class RegularPolyImage extends WorldImage {
     }
 
     /**
-     * Produce the regular polygon with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new RegularPolyImage(this.movePosn(this.center, dx, dy),
-                this.sideLen, this.sides, this.fill, this.color);
-    }
-
-    /**
-     * Produce the regular polygon with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        int dx = p.x - this.pinhole.x;
-        int dy = p.y - this.pinhole.y;
-        return this.getMovedImage(dx, dy);
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image by the given offset.
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public void movePinhole(int dx, int dy) {
-        this.pinhole.x = this.pinhole.x + dx;
-        this.pinhole.y = this.pinhole.y + dy;
-        this.center = this.pinhole;
-        this.setPoly(this.pinhole);
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image to the given location.
-     * 
-     * @param p
-     *            the given location
-     */
-    public void moveTo(Posn p) {
-        int dx = p.x - this.pinhole.x;
-        int dy = p.y - this.pinhole.y;
-        this.movePinhole(dx, dy);
-    }
-
-    /**
      * Produce the width of this triangle image
      * 
      * @return the width of this image
@@ -233,8 +174,7 @@ public class RegularPolyImage extends WorldImage {
      * Produce a <code>String</code> representation of this triangle image
      */
     public String toString() {
-        return "new RegularPolyImage(" + "this.pinhole = (" + this.pinhole.x
-                + ", " + this.pinhole.y + "),\n" + "this.sideLen = "
+        return "new RegularPolyImage(this.sideLen = "
                 + Double.toString(this.sideLen) + ",\n" + "this.sides = "
                 + Integer.toString(this.sides) + ",\n" + "this.color = "
                 + this.color.toString() + "))\n";
@@ -250,8 +190,7 @@ public class RegularPolyImage extends WorldImage {
      */
     public String toIndentedString(String indent) {
         indent = indent + " ";
-        return classNameString(indent, "RegularPolyImage")
-                + pinholeString(indent, this.pinhole) + indent
+        return classNameString(indent, "RegularPolyImage") + indent
                 + "this.sideLen = " + Double.toString(this.sideLen) + ",\n"
                 + indent + "this.sides = " + Integer.toString(this.sides)
                 + ",\n" + colorString(indent, this.color) + "))\n";
@@ -263,9 +202,7 @@ public class RegularPolyImage extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof RegularPolyImage) {
             RegularPolyImage that = (RegularPolyImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.sideLen == that.sideLen && this.sides == that.sides
+            return this.sideLen == that.sideLen && this.sides == that.sides
                     && this.color.equals(that.color);
         } else
             return false;
@@ -275,7 +212,6 @@ public class RegularPolyImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + (int) this.sideLen + this.sides;
+        return this.color.hashCode() + (int) this.sideLen + this.sides;
     }
 }

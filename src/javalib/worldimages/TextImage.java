@@ -31,6 +31,9 @@ public class TextImage extends WorldImage {
     /** the size of the font to use: the default here is 13 */
     public float size;
 
+    /** the color of the text */
+    public Color color;
+
     /**
      * the style of the font: 0 = regular, 1 = bold, 2 = italic, 3 = italic bold
      */
@@ -59,9 +62,8 @@ public class TextImage extends WorldImage {
     /** the current default font in our graphics context */
     protected static Font font = g.getFont();
 
-    private TextImage(Posn pinhole, String text, float size, int style,
-            Color color) {
-        super(pinhole, color);
+    public TextImage(String text, float size, int style, Color color) {
+        super();
         // bad things happen if we want to display a null String
         // or a String of length 0
         if (text == null || text.equals(""))
@@ -69,25 +71,8 @@ public class TextImage extends WorldImage {
         this.text = text;
         this.size = size;
         this.style = style;
+        this.color = color;
         this.setWidthHeight();
-    }
-
-    /**
-     * A full constructor for this text image.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param size
-     *            the size of the font to use (the default is 13)
-     * @param style
-     *            the style of the font: (regular, bold, italic, italic/bold)
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(String text, float size, int style, Color color) {
-        this(new Posn(0, 0), text, size, style, color);
     }
 
     /**
@@ -186,30 +171,6 @@ public class TextImage extends WorldImage {
     }
 
     /**
-     * Produce the file-based images with the pinhole moved by the given (dx,
-     * dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new TextImage(this.movePosn(this.pinhole, dx, dy), this.text,
-                this.size, this.style, this.color);
-    }
-
-    /**
-     * Produce the file-based image with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        return new TextImage(p, this.text, this.size, this.style, this.color);
-    }
-
-    /**
      * Compute and set the width and the height for this text in the given style
      * and size
      */
@@ -268,8 +229,7 @@ public class TextImage extends WorldImage {
      */
     public String toString() {
         char c = '"';
-        return "new TextImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
+        return "new TextImage(this.color = " + this.color.toString()
                 + "\nthis.size = " + this.size + ", this.style = " + this.style
                 + ", this.alignment = " + this.alignment + "\n" + c + this.text
                 + c + ")\n";
@@ -287,7 +247,6 @@ public class TextImage extends WorldImage {
         char c = '"';
         indent = indent + "  ";
         return classNameString(indent, "TextImage")
-                + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.size = " + this.size + "\n" + indent + "this.style = "
                 + this.style + "\n" + indent + "this.alignment = "
@@ -300,9 +259,7 @@ public class TextImage extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof TextImage) {
             TextImage that = (TextImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.size == that.size && this.style == that.style
+            return this.size == that.size && this.style == that.style
                     && this.alignment == that.alignment
                     && this.text.equals(that.text)
                     && this.color.equals(that.color);
@@ -314,8 +271,7 @@ public class TextImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + (int) this.size + this.style + this.alignment
-                + this.text.hashCode();
+        return this.color.hashCode() + (int) this.size + this.style
+                + this.alignment + this.text.hashCode();
     }
 }

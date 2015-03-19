@@ -19,8 +19,8 @@ import java.awt.geom.*;
  * @since February 4 2012
  */
 public class RectangleImage extends WorldImage {
-    public int width;
-    public int height;
+    public int width, height;
+    public Color color;
     public OutlineMode fill;
 
     /**
@@ -35,20 +35,16 @@ public class RectangleImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    protected RectangleImage(Posn pinhole, int width, int height,
-            OutlineMode fill, Color color) {
-        super(pinhole, color);
+    public RectangleImage(int width, int height, OutlineMode fill, Color color) {
+        super();
         this.width = width;
         this.height = height;
         this.fill = fill;
-    }
-
-    public RectangleImage(int width, int height, OutlineMode fill, Color color) {
-        this(new Posn(0, 0), width, height, fill, color);
+        this.color = color;
     }
 
     public RectangleImage(int width, int height, String fill, Color color) {
-        this(new Posn(0, 0), width, height, OutlineMode.fromString(fill), color);
+        this(width, height, OutlineMode.fromString(fill), color);
     }
 
     /**
@@ -82,29 +78,6 @@ public class RectangleImage extends WorldImage {
     }
 
     /**
-     * Produce the rectangle with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
-    }
-
-    /**
-     * Produce the rectangle with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        return new RectangleImage(p, this.width, this.height, this.fill,
-                this.color);
-    }
-
-    /**
      * Produce the width of this image
      * 
      * @return the width of this image
@@ -126,8 +99,7 @@ public class RectangleImage extends WorldImage {
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return "new RectangleImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
+        return "new RectangleImage(this.color = " + this.color.toString()
                 + "\nthis.width = " + width + ", this.height = " + height
                 + ")\n";
     }
@@ -143,7 +115,6 @@ public class RectangleImage extends WorldImage {
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "RectangleImage")
-                + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.width = " + width + ", this.height = " + height + ")\n";
     }
@@ -154,9 +125,7 @@ public class RectangleImage extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof RectangleImage) {
             RectangleImage that = (RectangleImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.width == that.width && this.height == that.height
+            return this.width == that.width && this.height == that.height
                     && this.color.equals(that.color);
         } else
             return false;
@@ -166,7 +135,6 @@ public class RectangleImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.width + this.height;
+        return this.color.hashCode() + this.width + this.height;
     }
 }

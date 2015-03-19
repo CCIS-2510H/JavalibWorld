@@ -18,8 +18,6 @@ import java.awt.*;
  * @since February 4 2012, April 25 2012
  */
 public abstract class WorldImage {
-    public Posn pinhole;
-    public Color color;
 
     /**
      * Every image has a pinhole (<code>Posn</code>) and a color (
@@ -32,9 +30,7 @@ public abstract class WorldImage {
      * @param color
      *            the color for this image
      */
-    public WorldImage(Posn pinhole, Color color) {
-        this.pinhole = new Posn(pinhole.x, pinhole.y);
-        this.color = color;
+    public WorldImage() {
     }
 
     /**
@@ -44,40 +40,6 @@ public abstract class WorldImage {
      *            the provided <code>Graphics2D</code> context
      */
     abstract public void draw(Graphics2D g);
-
-    /**
-     * Produce the image with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    abstract public WorldImage getMovedImage(int dx, int dy);
-
-    /**
-     * Produce the image with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    abstract public WorldImage getMovedTo(Posn p);
-
-
-    /**
-     * Helper method to produce a <code>Posn</code> moved by the given (dx, dy)
-     * 
-     * @param p
-     *            the given <code>Posn</code>
-     * @param dx
-     *            the horizontal distance to move by
-     * @param dy
-     *            the vertical distance to move by
-     * @return the moved <code>Posn</code>
-     */
-    protected Posn movePosn(Posn p, int dx, int dy) {
-        return new Posn(p.x + dx, p.y + dy);
-    }
 
     /**
      * <p>
@@ -151,10 +113,6 @@ public abstract class WorldImage {
 
     protected static String classNameString(String indent, String className) {
         return "\n" + indent + "new " + className + "(";
-    }
-
-    protected static String pinholeString(String indent, Posn pin) {
-        return "\n" + indent + "this.pinhole = (" + pin.x + ", " + pin.y + "),";
     }
 
     public static void main(String[] argv) {

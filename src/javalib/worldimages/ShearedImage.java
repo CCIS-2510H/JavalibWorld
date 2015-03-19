@@ -1,6 +1,5 @@
 package javalib.worldimages;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
@@ -9,7 +8,7 @@ public class ShearedImage extends WorldImage {
     double sx, sy;
 
     public ShearedImage(WorldImage img, double sx, double sy) {
-        super(img.pinhole, Color.WHITE);
+        super();
         this.img = img;
         this.sx = sx;
         this.sy = sy;
@@ -35,16 +34,6 @@ public class ShearedImage extends WorldImage {
     public int getHeight() {
         return (int) (this.img.getWidth() * Math.abs(this.sy)
                 + this.img.getHeight() + 1.0);
-    }
-
-    @Override
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new ShearedImage(img.getMovedImage(dx, dy), this.sx, this.sy);
-    }
-
-    @Override
-    public WorldImage getMovedTo(Posn pinhole) {
-        return new ShearedImage(img.getMovedTo(pinhole), this.sx, this.sy);
     }
 
     @Override

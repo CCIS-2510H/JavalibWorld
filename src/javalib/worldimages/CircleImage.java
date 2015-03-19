@@ -31,40 +31,12 @@ public class CircleImage extends EllipseImage {
      *            the color for this image
      */
     public CircleImage(int radius, OutlineMode fill, Color color) {
-        this(new Posn(0, 0), radius, fill, color);
+        super(radius * 2, radius * 2, fill, color);
+        this.radius = radius;
     }
 
     public CircleImage(int radius, String fill, Color color) {
-        this(new Posn(0, 0), radius, OutlineMode.fromString(fill), color);
-    }
-
-    protected CircleImage(Posn pinhole, int radius, OutlineMode fill,
-            Color color) {
-        super(pinhole, radius * 2, radius * 2, fill, color);
-        this.radius = radius;
-        this.fill = fill;
-    }
-
-    /**
-     * Produce the circle with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return getMovedTo(new Posn(this.pinhole.x + dx, this.pinhole.y + dy));
-    }
-
-    /**
-     * Produce the circle with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        return new CircleImage(p, this.radius, this.fill, this.color);
+        this(radius, OutlineMode.fromString(fill), color);
     }
 
     /**
@@ -89,8 +61,7 @@ public class CircleImage extends EllipseImage {
      * Produce a <code>String</code> representation of this circle image
      */
     public String toString() {
-        return "new CircleImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
+        return "new CircleImage(this.color = " + this.color.toString()
                 + "\nthis.radius = " + this.radius + "\nthis.fill = "
                 + this.fill + ")\n";
     }
@@ -106,7 +77,6 @@ public class CircleImage extends EllipseImage {
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "CircleImage")
-                + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.radius = " + this.radius + indent + "this.fill = "
                 + this.fill + ")\n";
@@ -118,9 +88,7 @@ public class CircleImage extends EllipseImage {
     public boolean equals(Object o) {
         if (o instanceof CircleImage) {
             CircleImage that = (CircleImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.radius == that.radius && this.fill == that.fill
+            return this.radius == that.radius && this.fill == that.fill
                     && this.color.equals(that.color);
         } else
             return false;
@@ -130,7 +98,6 @@ public class CircleImage extends EllipseImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.radius;
+        return this.color.hashCode() + this.radius;
     }
 }

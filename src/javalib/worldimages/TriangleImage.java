@@ -25,6 +25,7 @@ public class TriangleImage extends WorldImage {
     public Posn p2;
     public Posn p3;
     public OutlineMode fill;
+    public Color color;
     private Polygon poly;
 
     /**
@@ -41,22 +42,23 @@ public class TriangleImage extends WorldImage {
      */
     public TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill,
             Color color) {
-        super(p1, color);
+        super();
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
+        this.color = color;
         this.fill = fill;
 
-        // set the pinhole in the center of the triangle
-        this.pinhole.x = Math.min(this.p1.x, Math.min(this.p2.x, this.p3.x))
+        // find the center of the triangle
+        int centerX = Math.min(this.p1.x, Math.min(this.p2.x, this.p3.x))
                 + (this.getWidth() / 2);
-        this.pinhole.y = Math.min(this.p1.y, Math.min(this.p2.y, this.p3.y))
+        int centerY = Math.min(this.p1.y, Math.min(this.p2.y, this.p3.y))
                 + (this.getHeight() / 2);
 
-        int[] xCoord = new int[] { p1.x - this.pinhole.x,
-                p2.x - this.pinhole.x, p3.x - this.pinhole.x };
-        int[] yCoord = new int[] { p1.y - this.pinhole.y,
-                p2.y - this.pinhole.y, p3.y - this.pinhole.y };
+        int[] xCoord = new int[] { p1.x - centerX, p2.x - centerX,
+                p3.x - centerX };
+        int[] yCoord = new int[] { p1.y - centerY, p2.y - centerY,
+                p3.y - centerY };
         this.poly = new Polygon(xCoord, yCoord, 3);
     }
 
@@ -90,63 +92,6 @@ public class TriangleImage extends WorldImage {
     }
 
     /**
-     * Produce the triangle with the pinhole moved by the given (dx, dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new TriangleImage(this.movePosn(this.p1, dx, dy), this.movePosn(
-                this.p2, dx, dy), this.movePosn(this.p3, dx, dy), this.fill,
-                this.color);
-    }
-
-    /**
-     * Produce the triangle with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        int dx = p.x - this.pinhole.x;
-        int dy = p.y - this.pinhole.y;
-        return this.getMovedImage(dx, dy);
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image by the given offset.
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public void movePinhole(int dx, int dy) {
-        this.pinhole.x = this.pinhole.x + dx;
-        this.pinhole.y = this.pinhole.y + dy;
-        this.p1.x = this.p1.x + dx;
-        this.p1.y = this.p1.y + dy;
-        this.p2.x = this.p2.x + dx;
-        this.p2.y = this.p2.y + dy;
-        this.p3.x = this.p3.x + dx;
-        this.p3.y = this.p3.y + dy;
-    }
-
-    /**
-     * EFFECT: Move the pinhole for this image to the given location.
-     * 
-     * @param p
-     *            the given location
-     */
-    public void moveTo(Posn p) {
-        int dx = p.x - this.pinhole.x;
-        int dy = p.y - this.pinhole.y;
-        this.movePinhole(dx, dy);
-    }
-
-    /**
      * Produce the width of this triangle image
      * 
      * @return the width of this image
@@ -170,8 +115,7 @@ public class TriangleImage extends WorldImage {
      * Produce a <code>String</code> representation of this triangle image
      */
     public String toString() {
-        return "new TriangleImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + "), \nthis.color = " + this.color.toString()
+        return "new TriangleImage(this.color = " + this.color.toString()
                 + "\nthis.p1 = (" + this.p1.x + ", " + this.p1.y
                 + "), \nthis.p2 = (" + this.p2.x + ", " + this.p2.y
                 + "), \nthis.p3 = (" + this.p3.x + ", " + this.p3.y + "))\n";
@@ -188,7 +132,6 @@ public class TriangleImage extends WorldImage {
     public String toIndentedString(String indent) {
         indent = indent + " ";
         return classNameString(indent, "TriangleImage")
-                + pinholeString(indent, this.pinhole)
                 + colorString(indent, this.color) + "\n" + indent
                 + "this.p1 = (" + this.p1.x + ", " + this.p1.y + "), \n"
                 + indent + "this.p2 = (" + this.p2.x + ", " + this.p2.y
@@ -202,9 +145,7 @@ public class TriangleImage extends WorldImage {
     public boolean equals(Object o) {
         if (o instanceof TriangleImage) {
             TriangleImage that = (TriangleImage) o;
-            return this.pinhole.x == that.pinhole.x
-                    && this.pinhole.y == that.pinhole.y
-                    && this.p1.x == that.p1.x && this.p1.y == that.p1.y
+            return this.p1.x == that.p1.x && this.p1.y == that.p1.y
                     && this.p2.x == that.p2.x && this.p2.y == that.p2.y
                     && this.p3.x == that.p3.x && this.p3.y == that.p3.y
                     && this.color.equals(that.color);
@@ -216,8 +157,7 @@ public class TriangleImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.p1.x * this.p1.y + this.p2.x * this.p2.y + this.p3.x
-                * this.p3.y;
+        return this.color.hashCode() + this.p1.x * this.p1.y + this.p2.x
+                * this.p2.y + this.p3.x * this.p3.y;
     }
 }

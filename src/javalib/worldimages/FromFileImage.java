@@ -37,8 +37,8 @@ public class FromFileImage extends WorldImage {
      * @param fileName
      *            the file name for the image source
      */
-    protected FromFileImage(Posn pinhole, String fileName) {
-        super(pinhole, Color.white);
+    public FromFileImage(String fileName) {
+        super();
 
         // determine how to read the file name
         // then read the image, or verify that it has been read already
@@ -60,10 +60,6 @@ public class FromFileImage extends WorldImage {
         this.fileName = fileName;
     }
 
-    public FromFileImage(String fileName) {
-        this(new Posn(0, 0), fileName);
-    }
-
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -74,7 +70,7 @@ public class FromFileImage extends WorldImage {
         g.translate(-this.imread.width / 2, -this.imread.height / 2);
 
         g.drawRenderedImage(this.imread.image, new AffineTransform());
-        
+
         // Reset to original position
         g.translate(this.imread.width / 2, this.imread.height / 2);
     }
@@ -91,35 +87,7 @@ public class FromFileImage extends WorldImage {
      * </p>
      */
     public boolean same(FromFileImage that) {
-        return this.fileName.equals(that.fileName)
-                && this.pinhole.x == that.pinhole.x
-                && this.pinhole.y == that.pinhole.y;
-    }
-
-    /**
-     * Produce the file-based images with the pinhole moved by the given (dx,
-     * dy)
-     * 
-     * @param dx
-     *            the horizontal offset
-     * @param dy
-     *            the vertical offset
-     */
-    public WorldImage getMovedImage(int dx, int dy) {
-        return new FromFileImage(this.movePosn(this.pinhole, dx, dy),
-                this.fileName);
-    }
-
-    /**
-     * Produce the file-based with the pinhole moved to the given location
-     * 
-     * @param p
-     *            the given location
-     */
-    public WorldImage getMovedTo(Posn p) {
-        int dx = p.x - pinhole.x;
-        int dy = p.y - pinhole.y;
-        return this.getMovedImage(dx, dy);
+        return this.fileName.equals(that.fileName);
     }
 
     /**
@@ -144,9 +112,7 @@ public class FromFileImage extends WorldImage {
      * Produce a <code>String</code> representation of this from-file image
      */
     public String toString() {
-        return "new FromFileImage(this.pinhole = (" + this.pinhole.x + ", "
-                + this.pinhole.y + ")\nthis.fileName = " + this.fileName
-                + ")\n";
+        return "new FromFileImage(this.fileName = " + this.fileName + ")\n";
     }
 
     /**
@@ -159,8 +125,7 @@ public class FromFileImage extends WorldImage {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "FromFileImage")
-                + pinholeString(indent, this.pinhole) + ")\n" + indent
+        return classNameString(indent, "FromFileImage") + indent
                 + "this.fileName = " + this.fileName + ")\n";
     }
 
@@ -179,7 +144,6 @@ public class FromFileImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.pinhole.x + this.pinhole.y + this.color.hashCode()
-                + this.fileName.hashCode();
+        return this.fileName.hashCode();
     }
 }
