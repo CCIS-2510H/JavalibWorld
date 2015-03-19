@@ -93,16 +93,16 @@ public class OverlayImagesXY extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
-        
+
         // Save the old transform state
         AffineTransform old = g.getTransform();
-        
+
         // draw the two objects
         g.translate(-this.center.x, -this.center.y);
         this.bot.draw(g);
         g.translate(this.dx, this.dy);
         this.top.draw(g);
-        
+
         // Reset the transformation matrix
         g.setTransform(old);
 

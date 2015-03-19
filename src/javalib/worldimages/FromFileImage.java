@@ -29,9 +29,6 @@ public class FromFileImage extends WorldImage {
      */
     protected volatile ImageMaker imread;
 
-    /** the affine transform for moving the images to their pinhole locations */
-    protected transient AffineTransform at;
-
     /**
      * A full constructor for this image created from the file input
      * 
@@ -61,11 +58,6 @@ public class FromFileImage extends WorldImage {
 
         // initialize the filename and the affine transform
         this.fileName = fileName;
-
-        // for drawing we supply the coordinates of the NW corner of the image
-        this.at = AffineTransform.getTranslateInstance(this.pinhole.x
-                - this.imread.width / 2, this.pinhole.y - this.imread.height
-                / 2);
     }
 
     public FromFileImage(String fileName) {
@@ -79,19 +71,12 @@ public class FromFileImage extends WorldImage {
      *            the provided <code>Graphics2D</code> context
      */
     public void draw(Graphics2D g) {
-        // recompute the affine transform, as the pinhole may have moved
-        this.at = AffineTransform.getTranslateInstance(-this.imread.width / 2,
-                -this.imread.height / 2);
-        // save the current paint
-        Paint oldPaint = g.getPaint();
-        // set the paint to the given color
-        // g.setPaint(color);
+        g.translate(-this.imread.width / 2, -this.imread.height / 2);
 
-        // draw the given image at the given location
-        g.drawRenderedImage(this.imread.image, this.at);
-
-        // reset the original paint
-        g.setPaint(oldPaint);
+        g.drawRenderedImage(this.imread.image, new AffineTransform());
+        
+        // Reset to original position
+        g.translate(this.imread.width / 2, this.imread.height / 2);
     }
 
     /**

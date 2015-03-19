@@ -114,51 +114,58 @@ public class ExamplesImageDrawings {
     WorldImage scale2YText = new TextImage("ScaleImageXY(overlay, 1, 2)",
             Color.BLACK);
 
-    WorldImage sheared = new ShearedImage(rotate35, 1.5, -0.9);
+    WorldImage sheared = new ShearedImage(overlay, -0.5, -0.5);
+    WorldImage shearedText = new TextImage("ShearedImage(overlay, -0.5, -0.5)",
+            Color.BLACK);
 
-//    WorldScene combined = scene
-//            .placeImageXY(new FrameImage(rectangle), 600, 330)
-//            .placeImageXY(rectangleText, 600, 300)
-//            .placeImageXY(frame, 600, 130)
-//            .placeImageXY(frameText, 600, 100)
-//            .placeImageXY(circleText, 200, 20)
-//            .placeImageXY(new FrameImage(circle), 200, 60)
-//            .placeImageXY(discText, 200, 100)
-//            .placeImageXY(new FrameImage(disc), 200, 140)
-//            .placeImageXY(new FrameImage(line), 200, 220)
-//            .placeImageXY(lineText, 220, 180)
-//            .placeImageXY(new FrameImage(triangle), 200, 300)
-//            .placeImageXY(triangleText, 250, 260)
-//            .placeImageXY(new FrameImage(ellipse), 600, 60)
-//            .placeImageXY(ellipseText, 600, 20)
-//            .placeImageXY(new FrameImage(oval), 600, 220)
-//            .placeImageXY(ovalText, 600, 180)
-//            .placeImageXY(new FrameImage(hexagon), 200, 400)
-//            .placeImageXY(hexagonText, 200, 370)
-//            .placeImageXY(polygonText, 200, 450)
-//            .placeImageXY(overlayText, 600, 380)
-//            .placeImageXY(new FrameImage(overlayXY), 600, 470)
-//            .placeImageXY(overlayXYText, 600, 430)
-//            .placeImageXY(new FrameImage(polygon1), 150, 480)
-//            .placeImageXY(new FrameImage(polygon2), 200, 480)
-//            .placeImageXY(new FrameImage(polygon3), 250, 480)
-//            .placeImageXY(new FrameImage(polygon4), 300, 480)
-//            .placeImageXY(new FrameImage(overlay), 600, 400)
-//            .placeImageXY(new FrameImage(rotate35), 600, 580)
-//            .placeImageXY(rotate35Text, 600, 520)
-//            .placeImageXY(scale2Text, 125, 530)
-//            .placeImageXY(new FrameImage(scale2), 125, 560)
-//            .placeImageXY(scale2YText, 325, 530)
-//            .placeImageXY(new FrameImage(scale2Y), 325, 560)
-//            .placeImageXY(
-//                    new ShearedImage(new ScaleImage(overlay, 2), 0.5, 0.5),
-//                    400, 200)
-//            .placeImageXY(new FrameImage(sheared), 400, 400)
-//            .placeImageXY(
-//                    new FrameImage(new ScaleImage(new ShearedImage(overlay,
-//                            -0.5, -0.5), 2)), 400, 600);
-    
-    WorldScene combined2 = scene.placeImageXY(new FrameImage(sheared), 400, 400);
+    WorldImage duck = new ScaleImage(new FromFileImage("rubberduck.jpg"), 0.5);
+    WorldImage duckText = new TextImage("FromFileImage(\"rubberduck.jpg\")",
+            Color.BLACK);
+
+    WorldImage allTransforms = new ScaleImage(new ShearedImage(new FrameImage(rotate35,
+            Color.RED), 0.5, 0), 0.9);
+    WorldImage allTransforms2 = new ScaleImage(new ShearedImage(polygon3, 0.5, 0), 0.9);
+
+    WorldScene combined = scene
+            .placeImageXY(new FrameImage(rectangle), 600, 330)
+            .placeImageXY(rectangleText, 600, 300)
+            .placeImageXY(frame, 600, 130)
+            .placeImageXY(frameText, 600, 100)
+            .placeImageXY(circleText, 200, 20)
+            .placeImageXY(new FrameImage(circle), 200, 60)
+            .placeImageXY(discText, 200, 100)
+            .placeImageXY(new FrameImage(disc), 200, 140)
+            .placeImageXY(new FrameImage(line), 200, 220)
+            .placeImageXY(lineText, 220, 180)
+            .placeImageXY(new FrameImage(triangle), 200, 300)
+            .placeImageXY(triangleText, 250, 260)
+            .placeImageXY(new FrameImage(ellipse), 600, 60)
+            .placeImageXY(ellipseText, 600, 20)
+            .placeImageXY(new FrameImage(oval), 600, 220)
+            .placeImageXY(ovalText, 600, 180)
+            .placeImageXY(new FrameImage(hexagon), 200, 400)
+            .placeImageXY(hexagonText, 200, 370)
+            .placeImageXY(polygonText, 200, 450)
+            .placeImageXY(overlayText, 600, 380)
+            .placeImageXY(new FrameImage(overlayXY), 600, 470)
+            .placeImageXY(overlayXYText, 600, 430)
+            .placeImageXY(new FrameImage(polygon1), 150, 480)
+            .placeImageXY(new FrameImage(polygon2), 200, 480)
+            .placeImageXY(new FrameImage(polygon3), 250, 480)
+            .placeImageXY(new FrameImage(polygon4), 300, 480)
+            .placeImageXY(new FrameImage(overlay), 600, 400)
+            .placeImageXY(new FrameImage(rotate35), 600, 580)
+            .placeImageXY(rotate35Text, 600, 520)
+            .placeImageXY(scale2Text, 125, 530)
+            .placeImageXY(new FrameImage(scale2), 125, 560)
+            .placeImageXY(scale2YText, 325, 530)
+            .placeImageXY(new FrameImage(scale2Y), 325, 560)
+            .placeImageXY(shearedText, 600, 650)
+            .placeImageXY(new FrameImage(sheared), 600, 690)
+            .placeImageXY(new FrameImage(duck), 200, 660)
+            .placeImageXY(duckText, 200, 610)
+            .placeImageXY(new FrameImage(allTransforms), 400, 700)
+            .placeImageXY(new FrameImage(allTransforms2), 400, 400);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -175,6 +182,6 @@ public class ExamplesImageDrawings {
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-        boolean makeDrawing = c.show() && c.drawScene(e.combined2);
+        boolean makeDrawing = c.show() && c.drawScene(e.combined);
     }
 }
