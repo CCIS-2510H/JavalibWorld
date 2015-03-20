@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * <p>Copyright 2014 Benjamin Lerner</p>
@@ -80,23 +81,48 @@ public class RegularPolyImage extends WorldImage {
         // The second angle is what matters to determine how much to rotate
         // the polygon
 
-        // Shape | Sides | Rotation | rotationAngle
+        // Shape    | Sides | Rotation     | rotationAngle
         // -------------------------------------------------
-        // Triangle | 3 | pi / 6 | pi / 3
-        // Square | 4 | pi / 4 | pi * 2 / 4
-        // Pentagram | 5 | pi * 3 / 10 | pi * 3 / 5
-        // ... | ... | ... | ...
+        // Triangle |   3   |  pi / 6      | pi / 3
+        // Square   |   4   |  pi / 4      | pi * 2 / 4
+        // Pentagon |   5   |  pi * 3 / 10 | pi * 3 / 5
+        // ...      |  ...  |   ...        | ...
 
+        double xMin = sideLen, xMax = -sideLen, yMin = sideLen, yMax = -sideLen;
         for (int i = 0; i < this.sides; i++) {
-            xCoord[i] = (int) Math.round((Math
-                    .cos(i * internalAngle + rotation) * sideLen));
-            yCoord[i] = (int) Math.round((Math
-                    .sin(i * internalAngle + rotation) * sideLen));
+            double x = Math.round((Math
+                .cos(i * internalAngle + rotation) * sideLen));
+            xMin = Math.min(xMin, x);
+            xMax = Math.max(xMax, x);
+            xCoord[i] = (int)x;
+            double y = Math.round((Math
+                .sin(i * internalAngle + rotation) * sideLen));
+            yCoord[i] = (int)y;
+            yMin = Math.min(yMin, y);
+            yMax = Math.max(yMax, y);
+        }
+        double xAvg = (xMin + xMax) / 2.0;
+        double yAvg = (yMin + yMax) / 2.0;
+        for (int i = 0; i < this.sides; i++) {
+            xCoord[i] -= xAvg;
+            yCoord[i] -= yAvg;
         }
 
         this.poly = new Polygon(xCoord, yCoord, this.sides);
     }
 
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        Posn p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
+        Posn p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
+        BoundingBox ans = new BoundingBox(p1, p2);
+        for (int i = 2; i < this.sides; i++) {
+            Posn p = WorldImage.transformPosn(t, this.poly.xpoints[i], this.poly.ypoints[i]);
+            ans = ans.add(p);
+        }
+        return ans;
+    }
+    
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -111,29 +137,10 @@ public class RegularPolyImage extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
-        // Create a translated polygon that centers on (x, y)
-        int h = this.getHeight();
-        int[] xCoord = new int[this.poly.npoints];
-        int[] yCoord = new int[this.poly.npoints];
-        for (int i = 0; i < this.poly.npoints; i++) {
-            xCoord[i] = this.poly.xpoints[i];
-            yCoord[i] = this.poly.ypoints[i];
-        }
-
-        // Some polygons don't shift as well as they need to
-        // TODO: This is a hack. Make this better
-        if (yCoord[0] < (h / 2)) {
-            int moveDist = (h / 2) - yCoord[0];
-            for (int i = 0; i < this.poly.npoints; i++) {
-                yCoord[i] += moveDist;
-            }
-        }
-
-        Polygon p = new Polygon(xCoord, yCoord, this.poly.npoints);
         if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(p);
+            g.draw(this.poly);
         } else if (this.fill == OutlineMode.SOLID) {
-            g.fill(p);
+            g.fill(this.poly);
         }
 
         // reset the original paint

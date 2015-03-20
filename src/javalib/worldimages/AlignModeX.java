@@ -1,7 +1,7 @@
 package javalib.worldimages;
 
 public enum AlignModeX {
-    LEFT, RIGHT, MIDDLE, CENTER;
+    LEFT, RIGHT, MIDDLE, CENTER, PINHOLE;
     
     @Override
     public String toString() {

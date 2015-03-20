@@ -14,6 +14,12 @@ public class ScaleImageXY extends WorldImage {
         this.scaleY = scaleY;
     }
 
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        AffineTransform newT = new AffineTransform(t);
+        newT.scale(this.scaleX, this.scaleY);
+        return this.img.getBB(newT);
+    }
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 

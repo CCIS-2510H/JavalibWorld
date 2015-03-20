@@ -56,6 +56,35 @@ public class EllipseImage extends WorldImage {
         this(width, height, OutlineMode.fromString(outlineMode), color);
     }
 
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        // From https://stackoverflow.com/questions/24746834/calculating-an-aabb-for-a-transformed-ellipse
+        double rx = (double)this.width / 2.0;
+        double ry = (double)this.height / 2.0;
+        
+        // /M11 M21 M31\ 
+        // |M12 M22 M32| Transform matrix format
+        // \0   0   1  /
+        double m11 = t.getScaleX();
+        double m21 = t.getShearX();
+        double m31 = t.getTranslateX();
+        double m12 = t.getShearY();
+        double m22 = t.getScaleY();
+        double m32 = t.getTranslateY();
+        int xOffset = (int)Math.sqrt((Math.pow(m11, 2) * Math.pow(rx, 2)) + (Math.pow(m21, 2) * Math.pow(ry, 2)));
+        int yOffset = (int)Math.sqrt((Math.pow(m12, 2) * Math.pow(rx, 2)) + (Math.pow(m22, 2) * Math.pow(ry, 2)));
+
+        int centerX = (int)m31; // Transform center of 
+        int centerY = (int)m32; // ellipse using M
+        int xMin = centerX - xOffset;
+        int xMax = centerX + xOffset;
+
+        int yMin = centerY - yOffset;
+        int yMax = centerY + yOffset;
+        
+        return new BoundingBox(xMin, yMin, xMax, yMax);
+    }
+    
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 

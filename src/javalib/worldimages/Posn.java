@@ -15,4 +15,14 @@ public class Posn {
         this.x = x;
         this.y = y;
     }
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Posn)) return false;
+        Posn that = (Posn)other;
+        return this.x == that.x && this.y == that.y;
+    }
+    @Override
+    public String toString() {
+        return String.format("new Posn(x = %d, y = %d)", this.x, this.y);
+    }
 }

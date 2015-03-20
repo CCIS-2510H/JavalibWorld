@@ -5,6 +5,7 @@ import javalib.worldcanvas.CanvasPanel;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -175,7 +176,31 @@ public class TextImage extends WorldImage {
      * and size
      */
     protected void setWidthHeight() {
+        AffineTransform t = g.getTransform();
+        Rectangle2D bounds = getBoundingBox();
+        g.setTransform(t);
+        /*
+         * System.out.println("Bounds: x = " + bounds.getX() + "  y = " +
+         * bounds.getX() + "  width = " + bounds.getWidth() + "  height = " +
+         * bounds.getHeight());
+         */
 
+        this.width = (int) bounds.getWidth();
+        this.height = (int) bounds.getHeight();
+
+    }
+
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        AffineTransform old = g.getTransform();
+        g.setTransform(t);
+        Rectangle2D bounds = getBoundingBox();
+        g.setTransform(old);
+        return new BoundingBox((int)bounds.getMinX(), (int)bounds.getMinY(),
+            (int)bounds.getMaxX(),(int)bounds.getMaxY());
+    }
+    
+    private Rectangle2D getBoundingBox() {
         // change the font style and size as given
         g.setFont(font.deriveFont(this.style, this.size));
         // now get this new font
@@ -191,16 +216,7 @@ public class TextImage extends WorldImage {
         g.setFont(font);
 
         Rectangle2D bounds = layout.getBounds();
-
-        /*
-         * System.out.println("Bounds: x = " + bounds.getX() + "  y = " +
-         * bounds.getX() + "  width = " + bounds.getWidth() + "  height = " +
-         * bounds.getHeight());
-         */
-
-        this.width = (int) bounds.getWidth();
-        this.height = (int) bounds.getHeight();
-
+        return bounds;
     }
 
     /**

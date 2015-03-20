@@ -45,6 +45,12 @@ public class LineImage extends WorldImage {
 
     }
 
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        Posn end1 = WorldImage.transformPosn(t, -this.endPoint.x / 2, -this.endPoint.y / 2);
+        Posn end2 = WorldImage.transformPosn(t, this.endPoint.x / 2, this.endPoint.y / 2);
+        return new BoundingBox(end1, end2);
+    }
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 

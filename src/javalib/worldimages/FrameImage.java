@@ -1,15 +1,17 @@
 package javalib.worldimages;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
+import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 public class FrameImage extends RectangleImage {
     public WorldImage img;
 
     public FrameImage(WorldImage img, Color color) {
-        super(img.getWidth(), img.getHeight(), OutlineMode.OUTLINE, color);
+        super(img.getBB().getWidth(), img.getBB().getHeight(), OutlineMode.OUTLINE, color);
         this.img = img;
     }
 
@@ -34,14 +36,21 @@ public class FrameImage extends RectangleImage {
 
         // save the current paint
         Paint oldPaint = g.getPaint();
+        Stroke oldStroke = g.getStroke();
         // draw the object
         this.img.draw(g);
         // set the paint to the given color
         g.setPaint(this.color);
-        g.draw(new Rectangle2D.Double(Math.ceil(-(this.width / 2.0)), Math
-                .ceil(-(this.height / 2.0)), this.width, this.height));
+//        g.draw(new Rectangle2D.Double(Math.ceil(-(this.width / 2.0)), Math
+//                .ceil(-(this.height / 2.0)), this.width, this.height));
+        
+        BoundingBox bb = this.img.getBB();
+//        g.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 5, new float[]{10}, 0));
+//        g.setColor(Color.GREEN);
+        g.draw(new Rectangle2D.Double(bb.topLeft.x, bb.topLeft.y, bb.getWidth(), bb.getHeight()));
         // reset the original paint
         g.setPaint(oldPaint);
+        g.setStroke(oldStroke);
     }
 
     /**

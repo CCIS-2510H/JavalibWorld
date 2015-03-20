@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * <p>Copyright 2012 Viera K. Proulx</p>
@@ -60,6 +61,14 @@ public class TriangleImage extends WorldImage {
         int[] yCoord = new int[] { p1.y - centerY, p2.y - centerY,
                 p3.y - centerY };
         this.poly = new Polygon(xCoord, yCoord, 3);
+        
+    }
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        Posn p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
+        Posn p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
+        Posn p3 = WorldImage.transformPosn(t, this.poly.xpoints[2], this.poly.ypoints[2]);
+        return new BoundingBox(p1, p2).add(p3);
     }
 
     public TriangleImage(Posn p1, Posn p2, Posn p3, String fill, Color color) {

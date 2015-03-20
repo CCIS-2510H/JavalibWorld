@@ -16,6 +16,13 @@ public class RotateImage extends WorldImage {
         this.height = img.getHeight();
     }
 
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        AffineTransform newT = new AffineTransform(t);
+        newT.rotate(Math.toRadians(this.rotationDegrees));
+        return this.img.getBB(newT);
+    }
+    
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -44,8 +51,8 @@ public class RotateImage extends WorldImage {
      * Produce a <code>String</code> representation of this rotated image
      */
     public String toString() {
-        return "new RotateImage(this.width = " + width + ", this.height = "
-                + height + ")\n";
+        return "new RotateImage(this.img = " + this.img.toString() + ", this.rotationDegrees = "
+                + this.rotationDegrees + ")\n";
     }
 
     /**

@@ -69,10 +69,10 @@ public class ExamplesImageDrawings {
             "TriangleImage(new Posn(50, 0), new Posn(0, 40), new Posn(-50, 10),\n"
                     + "\"solid\", Color.CYAN)", Color.CYAN);
 
-    WorldImage ellipse = new EllipseImage(60, 20, OutlineMode.OUTLINE,
-            Color.BLUE);
+    WorldImage ellipse = new RotateImage(new EllipseImage(60, 20, OutlineMode.OUTLINE,
+            Color.BLUE), 75);
     WorldImage ellipseText = new TextImage(
-            "EllipseImage(60, 20, \"outline\" Color.BLUE)", Color.BLUE);
+            "RotateImage(EllipseImage(60, 20, \"outline\" Color.BLUE), 75)", Color.BLUE);
 
     WorldImage oval = new EllipseImage(60, 20, "solid", Color.YELLOW);
     WorldImage ovalText = new TextImage(
@@ -122,8 +122,8 @@ public class ExamplesImageDrawings {
     WorldImage duckText = new TextImage("FromFileImage(\"rubberduck.jpg\")",
             Color.BLACK);
 
-    WorldImage allTransforms = new ScaleImage(new ShearedImage(new FrameImage(
-            rotate35, Color.RED), 0.5, 0), 0.9);
+    WorldImage allTransforms = new FrameImage(new ScaleImage(new ShearedImage(
+            rotate35, 0.5, 0), 0.9), Color.RED);
     WorldImage allTransforms2 = new ScaleImage(new ShearedImage(polygon3, 0.5,
             0), 0.9);
 

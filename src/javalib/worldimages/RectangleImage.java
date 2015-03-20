@@ -47,6 +47,15 @@ public class RectangleImage extends WorldImage {
         this(width, height, OutlineMode.fromString(fill), color);
     }
 
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        Posn tl = WorldImage.transformPosn(t, -this.width / 2, -this.height / 2);
+        Posn tr = WorldImage.transformPosn(t,  this.width / 2, -this.height / 2);
+        Posn bl = WorldImage.transformPosn(t, -this.width / 2,  this.height / 2);
+        Posn br = WorldImage.transformPosn(t,  this.width / 2,  this.height / 2);
+        return new BoundingBox(tl, tr).add(bl).add(br);
+    }
+    
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 

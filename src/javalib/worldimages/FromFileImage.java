@@ -108,6 +108,14 @@ public class FromFileImage extends WorldImage {
         return this.imread.height;
     }
 
+    
+    @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        Point2D tl = t.transform(new Point(-this.getWidth() / 2, -this.getHeight() / 2), null);
+        Point2D br = t.transform(new Point(this.getWidth() / 2, this.getHeight()/ 2), null);
+        return new BoundingBox((int)tl.getX(), (int)tl.getY(), (int)br.getX(), (int)br.getY());
+    }
+    
     /**
      * Produce a <code>String</code> representation of this from-file image
      */

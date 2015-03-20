@@ -15,6 +15,12 @@ public class ShearedImage extends WorldImage {
     }
 
     @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        AffineTransform newT = new AffineTransform(t);
+        newT.shear(this.sx, this.sy);
+        return this.img.getBB(newT);
+    }
+    @Override
     public void draw(Graphics2D g) {
         AffineTransform old = g.getTransform();
         AffineTransform trans = new AffineTransform();

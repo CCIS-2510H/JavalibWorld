@@ -25,6 +25,15 @@ public class BesideAlignImage extends WorldImage {
     }
 
     @Override
+    protected BoundingBox getBB(AffineTransform t) {
+        AffineTransform temp = new AffineTransform(t);
+        temp.translate(-this.im2.getWidth() / 2, 0);
+        BoundingBox bb1 = this.im1.getBB(temp);
+        temp.translate((this.im1.getWidth() + this.im2.getWidth()) / 2, yMoveDist());
+        return bb1.combine(this.im2.getBB(temp));
+    }
+    
+    @Override
     public void draw(Graphics2D g) {
         // Save the old transform state
         AffineTransform old = g.getTransform();

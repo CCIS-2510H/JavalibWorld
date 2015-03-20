@@ -1,6 +1,8 @@
 package javalib.worldimages;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 /**
  * <p>Copyright 2012 Viera K. Proulx</p>
@@ -31,8 +33,29 @@ public abstract class WorldImage {
      *            the color for this image
      */
     public WorldImage() {
+        this(new Posn(0,0));
     }
-
+    // Ignore this for now
+    protected WorldImage(Posn pinhole) {
+        this.pinhole = pinhole;
+    }
+    // Ignore this for now
+    Posn pinhole;
+    
+    
+    public BoundingBox getBB() {
+        return this.getBB(new AffineTransform());
+    }
+    protected abstract BoundingBox getBB(AffineTransform t);
+    protected static Posn transformPosn(AffineTransform t, Posn p) {
+        return transformPosn(t, p.x, p.y);
+    }
+    protected static Posn transformPosn(AffineTransform t, int x, int y) {
+        Point2D point = new Point(x, y);
+        Point2D ans = t.transform(point, null);
+        return new Posn((int)ans.getX(), (int)ans.getY());
+    }
+    
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
