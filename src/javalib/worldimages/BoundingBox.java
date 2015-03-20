@@ -1,37 +1,50 @@
 package javalib.worldimages;
 
+import java.awt.geom.Point2D;
+
 public class BoundingBox {
-    Posn topLeft, botRight;
+    double tlx, tly, brx, bry;
     BoundingBox(Posn tl, Posn br) {
         this(tl.x, tl.y, br.x, br.y);
     }
-    BoundingBox(int tlx, int tly, int brx, int bry) {
-        this.topLeft = new Posn(Math.min(tlx, brx), Math.min(tly, bry));
-        this.botRight = new Posn(Math.max(tlx, brx), Math.max(tly, bry));
+    BoundingBox(Point2D tl, Point2D br) {
+        this(tl.getX(), tl.getY(), br.getX(), br.getY());
+    }
+    BoundingBox(double tlx, double tly, double brx, double bry) {
+        this.tlx = Math.min(tlx, brx);
+        this.tly = Math.min(tly, bry);
+        this.brx = Math.max(tlx, brx);
+        this.bry = Math.max(tly, bry);
     }
     BoundingBox combine(BoundingBox other) {
         return new BoundingBox(
-            Math.min(this.topLeft.x, other.topLeft.x),
-            Math.min(this.topLeft.y, other.topLeft.y),
-            Math.max(this.botRight.x, other.botRight.x),
-            Math.max(this.botRight.y, other.botRight.y));
+            Math.min(this.tlx, other.tlx),
+            Math.min(this.tly, other.tly),
+            Math.max(this.brx, other.brx),
+            Math.max(this.bry, other.bry));
     }
     BoundingBox add(Posn p) {
-        if (p.x >= this.topLeft.x && p.x <= this.botRight.x &&
-            p.y >= this.topLeft.y && p.y <= this.botRight.y) {
+        return this.add(p.x, p.y);
+    }
+    BoundingBox add(Point2D p) {
+        return this.add(p.getX(), p.getY());
+    }
+    BoundingBox add(double px, double py) {
+        if (px >= this.tlx && px <= this.brx &&
+            py >= this.tly && py <= this.bry) {
             return this;
         } else {
             return new BoundingBox(
-                Math.min(this.topLeft.x, p.x),
-                Math.min(this.topLeft.y, p.y),
-                Math.max(this.botRight.x, p.x),
-                Math.max(this.botRight.y, p.y));
+                Math.min(this.tlx, px),
+                Math.min(this.tly, py),
+                Math.max(this.brx, px),
+                Math.max(this.bry, py));
         }
     }
-    int getWidth() { return this.botRight.x - this.topLeft.x; }
-    int getHeight() { return this.botRight.y - this.topLeft.y; }
+    double getWidth() { return this.brx - this.tlx; }
+    double getHeight() { return this.bry - this.tly; }
     @Override
     public String toString() {
-        return String.format("BB((%d,%d)-(%d,%d))", this.topLeft.x, this.topLeft.y, this.botRight.x, this.botRight.y);
+        return String.format("BB((%d,%d)-(%d,%d))", this.tlx, this.tly, this.brx, this.bry);
     }
 }

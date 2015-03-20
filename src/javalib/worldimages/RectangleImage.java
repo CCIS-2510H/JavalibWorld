@@ -49,10 +49,10 @@ public class RectangleImage extends WorldImage {
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Posn tl = WorldImage.transformPosn(t, -this.width / 2, -this.height / 2);
-        Posn tr = WorldImage.transformPosn(t,  this.width / 2, -this.height / 2);
-        Posn bl = WorldImage.transformPosn(t, -this.width / 2,  this.height / 2);
-        Posn br = WorldImage.transformPosn(t,  this.width / 2,  this.height / 2);
+        Point2D tl = WorldImage.transformPosn(t, -this.width / 2, -this.height / 2);
+        Point2D tr = WorldImage.transformPosn(t,  this.width / 2, -this.height / 2);
+        Point2D bl = WorldImage.transformPosn(t, -this.width / 2,  this.height / 2);
+        Point2D br = WorldImage.transformPosn(t,  this.width / 2,  this.height / 2);
         return new BoundingBox(tl, tr).add(bl).add(br);
     }
     

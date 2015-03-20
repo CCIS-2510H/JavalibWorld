@@ -20,10 +20,16 @@ public class WorldScene {
         this.imgs.add(new PlaceImage(new RectangleImage(width, height,
                 OutlineMode.OUTLINE, Color.black), width / 2, height / 2));
     }
+    private WorldScene(int width, int height, List<PlaceImage> imgs) {
+        this.width = width;
+        this.height = height;
+        this.imgs = imgs;
+    }
 
     public WorldScene placeImageXY(WorldImage image, int x, int y) {
-        imgs.add(new PlaceImage(image, x, y));
-        return this;
+        List<PlaceImage> newImgs = new LinkedList<PlaceImage>(imgs);
+        newImgs.add(new PlaceImage(image, x, y));
+        return new WorldScene(width, height, newImgs);
     }
 
     protected void draw(Graphics2D g) {

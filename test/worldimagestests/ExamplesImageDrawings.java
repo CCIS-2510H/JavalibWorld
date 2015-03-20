@@ -99,7 +99,7 @@ public class ExamplesImageDrawings {
     WorldImage overlayText = new TextImage(
             "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.BLACK);
 
-    WorldImage overlayXY = new OverlayImagesXY(disc, rectangle, -50, -30);
+    WorldImage overlayXY = new OverlayImagesXY(disc, -50, -30, rectangle);
     WorldImage overlayXYText = new TextImage(
             "OverlayImagesXY(disc, rectangle, -50, -30)", Color.BLACK);
 
@@ -179,6 +179,33 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(above), 400, 200)
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
             .placeImageXY(new FrameImage(allTransforms2), 400, 400);
+    
+    WorldImage whitePetal = 
+        new OverlayImagesXY(
+            new CircleImage(15, OutlineMode.SOLID, Color.WHITE), 
+            60, 0, 
+            new OverlayImagesXY(
+                new TriangleImage(new Posn(0,0), new Posn(60, -15), new Posn(60, 15), OutlineMode.SOLID, Color.WHITE),
+                30, 0,
+                new CircleImage(75, OutlineMode.SOLID, new Color(0,0,255,0))));
+    WorldImage yellowPetal = 
+        new OverlayImagesXY(
+            new CircleImage(15, OutlineMode.SOLID, Color.YELLOW), 
+            60, 0, 
+            new OverlayImagesXY(
+                new TriangleImage(new Posn(0,0), new Posn(60, -15), new Posn(60, 15), OutlineMode.SOLID, Color.YELLOW),
+                30, 0,
+                new CircleImage(75, OutlineMode.SOLID, new Color(0,0,255,0))));
+    WorldImage daisyImg = 
+        new OverlayImages(new RotateImage(whitePetal, 0),
+            new OverlayImages(new RotateImage(yellowPetal, 60),
+                new OverlayImages(new RotateImage(whitePetal, 120),
+                    new OverlayImages(new RotateImage(yellowPetal, 180),
+                        new OverlayImages(new RotateImage(whitePetal, 240),
+                            new RotateImage(yellowPetal, 300))))));
+    WorldScene daisy = 
+        scene.placeImageXY(new RectangleImage(200, 200, OutlineMode.SOLID, Color.GRAY), 100, 100)
+             .placeImageXY(daisyImg, 100, 100);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -196,5 +223,7 @@ public class ExamplesImageDrawings {
 
         // show several images in the canvas
         boolean makeDrawing = c.show() && c.drawScene(e.combined);
+        c = new WorldCanvas(800, 800);
+        //boolean daisy = c.show() && c.drawScene(e.daisy);
     }
 }

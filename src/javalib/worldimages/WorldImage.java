@@ -42,18 +42,17 @@ public abstract class WorldImage {
     // Ignore this for now
     Posn pinhole;
     
-    
+        
     public BoundingBox getBB() {
         return this.getBB(new AffineTransform());
     }
     protected abstract BoundingBox getBB(AffineTransform t);
-    protected static Posn transformPosn(AffineTransform t, Posn p) {
+    protected static Point2D transformPosn(AffineTransform t, Posn p) {
         return transformPosn(t, p.x, p.y);
     }
-    protected static Posn transformPosn(AffineTransform t, int x, int y) {
+    protected static Point2D transformPosn(AffineTransform t, int x, int y) {
         Point2D point = new Point(x, y);
-        Point2D ans = t.transform(point, null);
-        return new Posn((int)ans.getX(), (int)ans.getY());
+        return t.transform(point, null);
     }
     
     /**

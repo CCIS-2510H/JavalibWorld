@@ -113,7 +113,7 @@ class Tree {
         // the trunk
         new RectangleImage(new Posn(this.loc.x + 5, this.loc.y
                 - this.trunkHeight / 2), 10, this.trunkHeight, new Color(0x84,
-                0x3c, 0x24)).overlayImages(new OvalImage(new Posn(
+                0x3c, 0x24)).overlayImages(new EllipseImage(OutlineMode.OUTLINE, new Posn(
                 this.loc.x + 5, this.loc.y - this.trunkHeight - this.height / 2
                         + 3), this.width, this.height, Color.green));
     }
@@ -147,10 +147,10 @@ class Cloud {
 
     // make the image of this cloud
     WorldImage cloudImage() {
-        return new OvalImage(this.loc, this.width, this.height, Color.white)
-                .overlayImages(new OvalImage(new Posn(this.loc.x - this.width
+        return new EllipseImage(OutlineMode.OUTLINE, this.loc, this.width, this.height, Color.white)
+                .overlayImages(new EllipseImage(OutlineMode.OUTLINE, new Posn(this.loc.x - this.width
                         / 4, this.loc.y - this.height / 4), this.width / 2,
-                        this.width / 2, Color.white), new OvalImage(new Posn(
+                        this.width / 2, Color.white), new EllipseImage(OutlineMode.OUTLINE, new Posn(
                         this.loc.x + this.width / 4, this.loc.y - this.height
                                 / 2), this.width / 2, this.height / 2,
                         Color.white));
@@ -167,7 +167,7 @@ class Sun {
 
     // make the image of this sun - somewhat transparent
     WorldImage sunImage() {
-        return new DiskImage(new Posn(50, 50), this.size, new Color(255, 255,
+        return new CircleImage(new Posn(50, 50), this.size, new Color(255, 255,
                 0, 230));
     }
 }
@@ -227,7 +227,7 @@ public class TickyTackFun extends World {
         if (10 < sun.size && sun.size < 20)
             return new WorldEnd(true, this.makeImage().overlayImages(
                     new TextImage(new Posn(150, 80), "Goodbye sun!", 15, 3,
-                            new Red())));
+                            Color.RED)));
         else
             return new WorldEnd(false, this.makeImage());
     }
@@ -246,7 +246,7 @@ public class TickyTackFun extends World {
 
     public WorldImage lastImage(String s) {
         return this.makeImage().overlayImages(
-                new TextImage(new Posn(150, 80), s, 15, 3, new Red()));
+                new TextImage(new Posn(150, 80), s, 15, 3, Color.RED));
     }
 
     // support for the regression tests

@@ -35,7 +35,7 @@ abstract public class World {
 
     /** the canvas that displays the current world */
     public WorldCanvas theCanvas;
-
+    
     /** true if 'bigBang' started the world and it did not end, did not stop */
     private transient boolean worldExists = false;
 
@@ -91,6 +91,8 @@ abstract public class World {
         }
         // throw runtime exceptions if w, h <= 0
         this.theCanvas = new WorldCanvas(w, h);
+        this.blankScene = new WorldScene(w, h);
+        this.lastWorld = new WorldEnd(false, this.blankScene);
 
         // if the user closes the Canvas window
         // it will only hide and can be reopened by invoking 'show'
@@ -151,7 +153,7 @@ abstract public class World {
 
         return this.drawWorld("");
     }
-
+    public WorldScene getEmptyScene() { return this.blankScene; }
     /**
      * Start the world by creating a canvas of the given size, creating and
      * adding the key and mouse adapters, without running the the timer.

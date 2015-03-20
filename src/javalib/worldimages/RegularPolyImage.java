@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 /**
  * <p>Copyright 2014 Benjamin Lerner</p>
@@ -113,11 +114,11 @@ public class RegularPolyImage extends WorldImage {
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Posn p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
-        Posn p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
+        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
+        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
         BoundingBox ans = new BoundingBox(p1, p2);
         for (int i = 2; i < this.sides; i++) {
-            Posn p = WorldImage.transformPosn(t, this.poly.xpoints[i], this.poly.ypoints[i]);
+            Point2D p = WorldImage.transformPosn(t, this.poly.xpoints[i], this.poly.ypoints[i]);
             ans = ans.add(p);
         }
         return ans;

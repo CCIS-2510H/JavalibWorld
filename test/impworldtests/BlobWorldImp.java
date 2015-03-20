@@ -1,7 +1,7 @@
 package impworldtests;
 
-import javalib.colors.*;
 import javalib.impworld.*;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.Color;
@@ -19,12 +19,12 @@ class Blob {
 
     Posn center;
     int radius;
-    IColor col;
+    Color col;
 
     // ImageMaker image = new ImageMaker("shark.png");
 
     /** The constructor */
-    Blob(Posn center, int radius, IColor col) {
+    Blob(Posn center, int radius, Color col) {
         this.center = center;
         this.radius = radius;
         this.col = col;
@@ -32,9 +32,9 @@ class Blob {
 
     /** produce the image of this blob at its current location and color */
     WorldImage blobImage() {
-        // return new DiskImage(this.center, this.radius, this.col);
-        return new FromFileImage(this.center, "Images/shark.png")
-                .overlayImages(new CircleImage(this.center, this.radius,
+        // return new CircleImage(this.center, this.radius, this.col);
+        return new FromFileImage("Images/shark.png")
+                .overlayImages(new CircleImage(this.radius, OutlineMode.OUTLINE,
                         this.col));
     }
 
@@ -55,11 +55,11 @@ class Blob {
         }
         // change the color to Y, G, R
         else if (ke.equals("Y")) {
-            this.col = new Yellow();
+            this.col = Color.YELLOW;
         } else if (ke.equals("G")) {
-            this.col = new Green();
+            this.col = Color.GREEN;
         } else if (ke.equals("R")) {
-            this.col = new Red();
+            this.col = Color.RED;
         }
     }
 
@@ -140,35 +140,35 @@ public class BlobWorldImp extends World {
      * of the <code>WorldImage</code> shapes
      */
     public WorldImage blackHole = new OverlayImages(new RectangleImage(
-            new Posn(100, 150), this.width, this.height, new Blue()),
+            new Posn(100, 150), this.width, this.height, Color.BLUE),
             new OverlayImages(new EllipseImage(new Posn(12, 12), 25, 25,
-                    new Green()), new OverlayImages(new DiskImage(new Posn(100,
-                    150), 10, new Black()), new OverlayImages(new CircleImage(
-                    new Posn(100, 150), 10, new White()),
+                    Color.GREEN), new OverlayImages(new CircleImage(new Posn(100,
+                    150), 10, Color.BLACK), new OverlayImages(new CircleImage(
+                    new Posn(100, 150), 10, Color.WHITE),
                     new OverlayImages(new RectangleImage(new Posn(100, 150),
-                            10, 10, new White()), new OverlayImages(
+                            10, 10, Color.WHITE), new OverlayImages(
                             new LineImage(new Posn(95, 145),
-                                    new Posn(105, 155), new Red()),
+                                    new Posn(105, 155), Color.RED),
                             new OverlayImages(new LineImage(new Posn(95, 155),
-                                    new Posn(105, 145), new Red()),
-                                    new OvalImage(new Posn(187, 287), 25, 25,
-                                            new Green()))))))));
+                                    new Posn(105, 145), Color.RED),
+                                    new EllipseImage(OutlineMode.OUTLINE, new Posn(187, 287), 25, 25,
+                                            Color.GREEN))))))));
 
     /**
      * produce the image of this world by adding the moving blob to the
      * background image
      */
-    public WorldImage makeImage() {
-        return new OverlayImages(this.blackHole, this.blob.blobImage());
+    public WorldScene makeScene() {
+        return this.getEmptyScene().placeImageXY(this.blackHole, this.width / 2, this.height / 2)
+            .placeImageXY(this.blob.blobImage(), this.width / 2, this.height / 2);
     }
 
     /**
      * produce the image of this world by adding the given <code>String</code>
      * to the image with the blob at its point of demise
      */
-    public WorldImage lastImage(String s) {
-        return new OverlayImages(this.makeImage(), new TextImage(new Posn(100,
-                40), s, Color.red));
+    public WorldScene lastImage(String s) {
+        return this.makeScene().placeImageXY(new TextImage(s, Color.red), 100, 40);
     }
 
     /**
@@ -178,17 +178,14 @@ public class BlobWorldImp extends World {
     public WorldEnd worldEnds() {
         // if the blob is outside the canvas, stop
         if (this.blob.outsideBounds(this.width, this.height)) {
-            return new WorldEnd(true, new OverlayImages(this.makeImage(),
-                    new TextImage(new Posn(100, 40),
-                            "Blob is outside the bounds", Color.red)));
+            return new WorldEnd(true, this.lastImage("Blob is outside the bounds"));
         }
         // time ends is the blob falls into the black hole in the middle
         if (this.blob.nearCenter(this.width, this.height)) {
-            return new WorldEnd(true, new OverlayImages(this.makeImage(),
-                    new TextImage(new Posn(100, 40), "Black hole ate the blob",
-                            13, 3, Color.red)));
+            return new WorldEnd(true, 
+                this.makeScene().placeImageXY(new TextImage("Black hole ate the blob",13, 3, Color.red), 100, 40));
         } else {
-            return new WorldEnd(false, this.makeImage());
+            return new WorldEnd(false, this.makeScene());
         }
     }
 
@@ -199,13 +196,13 @@ public class BlobWorldImp extends World {
 class BlobExamples {
 
     // examples of data for the Blob class:
-    Blob b1 = new Blob(new Posn(100, 100), 50, new Red());
-    Blob b1left = new Blob(new Posn(95, 100), 50, new Red());
-    Blob b1right = new Blob(new Posn(105, 100), 50, new Red());
-    Blob b1up = new Blob(new Posn(100, 95), 50, new Red());
-    Blob b1down = new Blob(new Posn(100, 105), 50, new Red());
-    Blob b1G = new Blob(new Posn(100, 100), 50, new Green());
-    Blob b1Y = new Blob(new Posn(100, 100), 50, new Yellow());
+    Blob b1 = new Blob(new Posn(100, 100), 50, Color.RED);
+    Blob b1left = new Blob(new Posn(95, 100), 50, Color.RED);
+    Blob b1right = new Blob(new Posn(105, 100), 50, Color.RED);
+    Blob b1up = new Blob(new Posn(100, 95), 50, Color.RED);
+    Blob b1down = new Blob(new Posn(100, 105), 50, Color.RED);
+    Blob b1G = new Blob(new Posn(100, 100), 50, Color.GREEN);
+    Blob b1Y = new Blob(new Posn(100, 100), 50, Color.YELLOW);
 
     // examples of data for the BlobWorld class:
     BlobWorldImp b1w = new BlobWorldImp(this.b1);
@@ -216,24 +213,24 @@ class BlobExamples {
     BlobWorldImp b1Gw = new BlobWorldImp(this.b1G);
     BlobWorldImp b1Yw = new BlobWorldImp(this.b1Y);
     BlobWorldImp b1mouse50x50w = new BlobWorldImp(new Blob(new Posn(50, 50),
-            50, new Red()));
+            50, Color.RED));
 
     BlobWorldImp bwOutOfBounds = new BlobWorldImp(new Blob(new Posn(100, 350),
-            50, new Red()));
+            50, Color.RED));
 
     BlobWorldImp bwInTheCenter = new BlobWorldImp(new Blob(new Posn(100, 150),
-            50, new Red()));
+            50, Color.RED));
 
     void reset() {
 
         // examples of data for the Blob class:
-        this.b1 = new Blob(new Posn(100, 100), 50, new Red());
-        this.b1left = new Blob(new Posn(95, 100), 50, new Red());
-        this.b1right = new Blob(new Posn(105, 100), 50, new Red());
-        this.b1up = new Blob(new Posn(100, 95), 50, new Red());
-        this.b1down = new Blob(new Posn(100, 105), 50, new Red());
-        this.b1G = new Blob(new Posn(100, 100), 50, new Green());
-        this.b1Y = new Blob(new Posn(100, 100), 50, new Yellow());
+        this.b1 = new Blob(new Posn(100, 100), 50, Color.RED);
+        this.b1left = new Blob(new Posn(95, 100), 50, Color.RED);
+        this.b1right = new Blob(new Posn(105, 100), 50, Color.RED);
+        this.b1up = new Blob(new Posn(100, 95), 50, Color.RED);
+        this.b1down = new Blob(new Posn(100, 105), 50, Color.RED);
+        this.b1G = new Blob(new Posn(100, 100), 50, Color.GREEN);
+        this.b1Y = new Blob(new Posn(100, 100), 50, Color.YELLOW);
 
         // examples of data for the BlobWorld class:
         this.b1w = new BlobWorldImp(this.b1);
@@ -244,13 +241,13 @@ class BlobExamples {
         this.b1Gw = new BlobWorldImp(this.b1G);
         this.b1Yw = new BlobWorldImp(this.b1Y);
         this.b1mouse50x50w = new BlobWorldImp(new Blob(new Posn(50, 50), 50,
-                new Red()));
+                Color.RED));
 
         this.bwOutOfBounds = new BlobWorldImp(new Blob(new Posn(100, 350), 50,
-                new Red()));
+                Color.RED));
 
         this.bwInTheCenter = new BlobWorldImp(new Blob(new Posn(100, 150), 50,
-                new Red()));
+                Color.RED));
     }
 
     /** test the method moveBlob in the Blob class */
@@ -318,8 +315,7 @@ class BlobExamples {
         this.reset();
         this.b1Gw.onKeyEvent("x");
         t.checkExpect(this.b1Gw.lastWorld, new WorldEnd(true,
-                new OverlayImages(this.b1Gw.makeImage(), new TextImage(
-                        new Posn(100, 40), "Goodbye", Color.red))));
+                this.b1Gw.makeScene().placeImageXY(new TextImage("Goodbye", Color.red), 100, 40)));
     }
 
     /** test the method outsideBounds in the Blob class */
@@ -334,11 +330,11 @@ class BlobExamples {
                 "test outsideBounds below");
 
         this.reset();
-        t.checkExpect(new Blob(new Posn(-5, 100), 50, new Red()).outsideBounds(
+        t.checkExpect(new Blob(new Posn(-5, 100), 50, Color.RED).outsideBounds(
                 100, 110), true, "test outsideBounds above");
 
         this.reset();
-        t.checkExpect(new Blob(new Posn(80, -5), 50, new Blue()).outsideBounds(
+        t.checkExpect(new Blob(new Posn(80, -5), 50, Color.BLUE).outsideBounds(
                 100, 90), true, "test outsideBounds on the left");
 
         this.reset();
@@ -383,13 +379,13 @@ class BlobExamples {
         this.reset();
         this.b1.randomMove(1);
         t.checkOneOf("test randomMove", this.b1, new Blob(new Posn(99, 99), 50,
-                new Red()), new Blob(new Posn(99, 100), 50, new Red()),
-                new Blob(new Posn(99, 101), 50, new Red()), new Blob(new Posn(
-                        100, 99), 50, new Red()), new Blob(new Posn(100, 100),
-                        50, new Red()), new Blob(new Posn(100, 101), 50,
-                        new Red()), new Blob(new Posn(101, 99), 50, new Red()),
-                new Blob(new Posn(101, 100), 50, new Red()), new Blob(new Posn(
-                        101, 101), 50, new Red()));
+                Color.RED), new Blob(new Posn(99, 100), 50, Color.RED),
+                new Blob(new Posn(99, 101), 50, Color.RED), new Blob(new Posn(
+                        100, 99), 50, Color.RED), new Blob(new Posn(100, 100),
+                        50, Color.RED), new Blob(new Posn(100, 101), 50,
+                        Color.RED), new Blob(new Posn(101, 99), 50, Color.RED),
+                new Blob(new Posn(101, 100), 50, Color.RED), new Blob(new Posn(
+                        101, 101), 50, Color.RED));
     }
 
     /** test the method onTick in the BlobWorld class */
@@ -412,14 +408,14 @@ class BlobExamples {
      * 
      * // insufficient number of options ...
      * t.checkOneOf("test onTick2: randomMove", this.b1w.onTick(), new
-     * BlobWorld(new Blob(new Posn( 99, 99), 50, new Red())), new BlobWorld(new
-     * Blob(new Posn( 99, 100), 50, new Red())), new BlobWorld(new Blob(new
-     * Posn( 99, 101), 50, new Red())), new BlobWorld(new Blob(new Posn(100,
-     * 99), 50, new Red())), new BlobWorld(new Blob(new Posn(100, 100), 50, new
-     * Red())), new BlobWorld(new Blob(new Posn(100, 101), 50, new Red())), new
-     * BlobWorld(new Blob(new Posn(101, 99), 50, new Red())), new BlobWorld(new
-     * Blob(new Posn(101, 100), 50, new Red())), new BlobWorld(new Blob(new
-     * Posn(101, 101), 50, new Red())) ); }
+     * BlobWorld(new Blob(new Posn( 99, 99), 50, Color.RED)), new BlobWorld(new
+     * Blob(new Posn( 99, 100), 50, Color.RED)), new BlobWorld(new Blob(new
+     * Posn( 99, 101), 50, Color.RED)), new BlobWorld(new Blob(new Posn(100,
+     * 99), 50, Color.RED)), new BlobWorld(new Blob(new Posn(100, 100), 50, new
+     * Red())), new BlobWorld(new Blob(new Posn(100, 101), 50, Color.RED)), new
+     * BlobWorld(new Blob(new Posn(101, 99), 50, Color.RED)), new BlobWorld(new
+     * Blob(new Posn(101, 100), 50, Color.RED)), new BlobWorld(new Blob(new
+     * Posn(101, 101), 50, Color.RED)) ); }
      */
 
     // test the method worldEnds for the class BlobWorld
@@ -427,28 +423,26 @@ class BlobExamples {
 
         this.reset();
         t.checkExpect(this.bwOutOfBounds.worldEnds(), new WorldEnd(true,
-                new OverlayImages(this.bwOutOfBounds.makeImage(),
-                        new TextImage(new Posn(100, 40),
-                                "Blob is outside the bounds", Color.red))));
+                this.bwOutOfBounds.makeScene().placeImageXY(
+                        new TextImage("Blob is outside the bounds", Color.red), 100, 40)));
 
         this.reset();
         t.checkExpect(this.bwInTheCenter.worldEnds(), new WorldEnd(true,
-                new OverlayImages(this.bwInTheCenter.makeImage(),
-                        new TextImage(new Posn(100, 40),
-                                "Black hole ate the blob", 13, 3, Color.red))));
+                this.bwInTheCenter.makeScene().placeImageXY(
+                    new TextImage("Black hole ate the blob", 13, 3, Color.red), 100, 40)));
 
         this.reset();
         t.checkExpect(this.b1w.worldEnds(),
-                new WorldEnd(false, this.b1w.makeImage()));
+                new WorldEnd(false, this.b1w.makeScene()));
     }
 
     /** run the animation */
     BlobWorldImp w1 = new BlobWorldImp(new Blob(new Posn(100, 200), 20,
-            new Red()));
+            Color.RED));
     BlobWorldImp w2 = new BlobWorldImp(new Blob(new Posn(100, 200), 20,
-            new Red()));
+            Color.RED));
     BlobWorldImp w3 = new BlobWorldImp(new Blob(new Posn(100, 200), 20,
-            new Red()));
+            Color.RED));
 
     // test that we can run three different animations concurrently
     // with the events directed to the correct version of the world
@@ -467,15 +461,15 @@ class BlobExamples {
 
         // run the game
         BlobWorldImp w = new BlobWorldImp(new Blob(new Posn(150, 100), 20,
-                new Red()));
+                Color.RED));
         w.bigBang(200, 300, 0.3);
 
         /*
          * Canvas c = new Canvas(200, 300); c.show();
          * System.out.println(" let's see: \n\n" +
          * Printer.produceString(w.makeImage())); c.drawImage(new
-         * OverlayImages(new DiskImage(new Posn(50, 50), 20, new Red()), new
-         * RectangleImage(new Posn(20, 30), 40, 20, new Blue())));
+         * OverlayImages(new CircleImage(new Posn(50, 50), 20, Color.RED), new
+         * RectangleImage(new Posn(20, 30), 40, 20, Color.BLUE)));
          */
     }
 

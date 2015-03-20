@@ -167,7 +167,7 @@ class Segment {
     String direction;
 
     int radius;
-    IColor color;
+    Color color;
     int DX;
     int DY;
 
@@ -175,7 +175,7 @@ class Segment {
         this.x = x;
         this.y = y;
         this.radius = 5;
-        this.color = new Red();
+        this.color = Color.RED;
         this.DX = 2 * this.radius;
         this.DY = 2 * this.radius;
         this.direction = d;
@@ -226,7 +226,7 @@ class Segment {
     }
 
     protected WorldImage drawImage() {
-        return new DiskImage(new Posn(this.x, this.y), this.radius, this.color);
+        return new CircleImage(new Posn(this.x, this.y), this.radius, this.color);
     }
 
     // --- auxiliaries that are only needed for this class: motivate private ---
@@ -255,7 +255,7 @@ class MtSegment extends ListSegment {
 
     // make an image of this empty segment
     protected WorldImage drawImage() {
-        return new RectangleImage(new Posn(0, 0), 0, 0, new Blue());
+        return new RectangleImage(new Posn(0, 0), 0, 0, Color.BLUE);
     }
 }
 
@@ -313,14 +313,14 @@ class Food {
 
     int width;
     int height;
-    IColor color;
+    Color color;
 
     public Food(int x, int y) {
         this.x = x;
         this.y = y;
         this.width = 20;
         this.height = 10;
-        this.color = new Green();
+        this.color = Color.GREEN;
     }
 
     public void moveTo(Posn p) {
@@ -378,6 +378,6 @@ class Box {
 
     // make an image of this box
     protected WorldImage drawImage() {
-        return new RectangleImage(new Posn(100, 100), width, height, new Blue());
+        return new RectangleImage(new Posn(100, 100), width, height, Color.BLUE);
     }
 }

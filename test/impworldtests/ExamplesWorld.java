@@ -1,7 +1,7 @@
 package impworldtests;
 
 import javalib.impworld.*;
-import javalib.colors.*;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.Color;
@@ -29,12 +29,11 @@ public class ExamplesWorld extends World {
     }
 
     // just a red ball moving across the screen
-    public WorldImage makeImage() {
-        return new OverlayImages(
-                new RectangleImage(this.pos, 60, 20, new Red()),
-                new OverlayImages(new TextImage(this.pos, "hello", 12, 0,
-                        new Blue()), new LineImage(this.pos, new Posn(
-                        this.pos.x + 5, this.pos.y - 5), new Black())));
+    public WorldScene makeScene() {
+        return this.getEmptyScene()
+            .placeImageXY(new RectangleImage(60, 20, OutlineMode.SOLID, Color.RED), this.pos.x, this.pos.y)
+            .placeImageXY(new TextImage("hello", 12, 0, Color.BLUE), this.pos.x, this.pos.y)
+            .placeImageXY(new LineImage(new Posn(this.pos.x + 5, this.pos.y - 5), Color.BLACK), this.pos.x, this.pos.y);
     }
 
     // test all kinds of actions using key events:
@@ -63,11 +62,11 @@ public class ExamplesWorld extends World {
     public WorldEnd worldEnds() {
         // if the blob is outside the canvas, stop
         if (this.worldEnd)
-            return new WorldEnd(true, new OverlayImages(this.makeImage(),
-                    new TextImage(new Posn(100, 40), "End of the World!!", 13,
-                            Color.red)));
+            return new WorldEnd(true, 
+                this.makeScene().placeImageXY(new TextImage("End of the World!!", 13,
+                            Color.red), 100, 40));
         else
-            return new WorldEnd(false, this.makeImage());
+            return new WorldEnd(false, this.makeScene());
     }
 
     // at each tick print the current position of the ball

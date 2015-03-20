@@ -1,6 +1,5 @@
 package javalib.worldimages;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -11,7 +10,7 @@ public class FrameImage extends RectangleImage {
     public WorldImage img;
 
     public FrameImage(WorldImage img, Color color) {
-        super(img.getBB().getWidth(), img.getBB().getHeight(), OutlineMode.OUTLINE, color);
+        super((int)img.getBB().getWidth(), (int)img.getBB().getHeight(), OutlineMode.OUTLINE, color);
         this.img = img;
     }
 
@@ -47,7 +46,7 @@ public class FrameImage extends RectangleImage {
         BoundingBox bb = this.img.getBB();
 //        g.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 5, new float[]{10}, 0));
 //        g.setColor(Color.GREEN);
-        g.draw(new Rectangle2D.Double(bb.topLeft.x, bb.topLeft.y, bb.getWidth(), bb.getHeight()));
+        g.draw(new Rectangle2D.Double(bb.tlx, bb.tly, bb.getWidth(), bb.getHeight()));
         // reset the original paint
         g.setPaint(oldPaint);
         g.setStroke(oldStroke);

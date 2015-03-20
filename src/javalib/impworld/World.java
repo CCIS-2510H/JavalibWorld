@@ -54,10 +54,10 @@ abstract public class World {
     private transient WindowListener windowClosing;
 
     /** a blank image, to avoid <code>null</code> in the <code>lastWorld</code> */
-    private transient WorldScene blankScene = new WorldScene(0, 0);
+    private transient WorldScene blankScene;
 
     /** the last world - if needed */
-    public WorldEnd lastWorld = new WorldEnd(false, this.blankScene);
+    public WorldEnd lastWorld;
 
     /**
      * The default constructor. To start the world one must invoke the
@@ -92,6 +92,8 @@ abstract public class World {
         }
         // throw runtime exceptions if w, h <= 0
         this.theCanvas = new WorldCanvas(w, h);
+        this.blankScene = new WorldScene(w, h);
+        this.lastWorld = new WorldEnd(false, this.blankScene);
 
         // if the user closes the Canvas window
         // it will only hide and can be reopened by invoking 'show'
@@ -153,6 +155,8 @@ abstract public class World {
         System.out.println(Versions.CURRENT_VERSION);
     }
 
+    public WorldScene getEmptyScene() { return this.blankScene; }
+    
     /**
      * EFFECT:
      * <p>

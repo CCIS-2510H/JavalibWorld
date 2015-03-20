@@ -2,8 +2,9 @@ package impworldtests;
 
 import tester.*;
 import javalib.impworld.*;
-import javalib.colors.*;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
+
 import java.util.*;
 import java.awt.Color;
 
@@ -33,8 +34,7 @@ interface OceanWorldConstants {
     public Color oceanColor = new Color(50, 150, 255);
 
     // the background image of the ocean
-    public WorldImage oceanImage = new RectangleImage(new Posn(WIDTH / 2,
-            HEIGHT / 2), WIDTH, HEIGHT, oceanColor);
+    public WorldImage oceanImage = new RectangleImage(WIDTH, HEIGHT, OutlineMode.SOLID, oceanColor);
 }
 
 // To represent a location (x,y) in graphics coordinates
@@ -107,7 +107,7 @@ class Shark implements OceanWorldConstants {
 
     // produce the image of this shark at its position
     WorldImage sharkImage() {
-        return new FromFileImage(this.sharkPos(), "Images/small-shark.png");
+        return new FromFileImage("Images/small-shark.png");
     }
 
     // EFFECT:
@@ -170,7 +170,7 @@ class Fish implements OceanWorldConstants {
 
     // produce the image of this fish at its position
     WorldImage fishImage() {
-        return new FromFileImage(this.p, this.name);
+        return new FromFileImage(this.name);
     }
 }
 
@@ -207,7 +207,7 @@ class EmptySchool implements School, OceanWorldConstants {
 
     // produce an empty blue dot in the sea of blue
     public WorldImage fishesImage() {
-        return new CircleImage(new Posn(0, 0), 1, oceanColor);
+        return new CircleImage(1, OutlineMode.OUTLINE, oceanColor);
     }
 
     // EFFECT:
@@ -308,20 +308,23 @@ class Ocean extends World implements OceanWorldConstants {
     }
 
     // produce the image of the fish and shark swimming in the sea of blue
-    public WorldImage makeImage() {
-        return new RectangleImage(new Posn(200, 200), 400, 400, new Color(50,
-                150, 255)).overlayImages(this.shark.sharkImage(),
-                this.fish.fishesImage());
+    public WorldScene makeScene() {
+        return this.getEmptyScene()
+            .placeImageXY(new RectangleImage(400, 400, OutlineMode.SOLID, new Color(50, 150, 255)), 400, 400)
+            .placeImageXY(this.shark.sharkImage(), 0, this.shark.y)
+            .placeImageXY(this.fish.fishesImage(), 0, 0);
+//        return new RectangleImage(new Posn(200, 200), 400, 400, new Color(50,
+//                150, 255)).overlayImages(this.shark.sharkImage(),
+//                this.fish.fishesImage());
     }
 
     // the world ends when the shark starves to death
     public WorldEnd worldEnds() {
         if (this.shark.isDead())
-            return new WorldEnd(true, new OverlayImages(this.makeImage(),
-                    new TextImage(new Posn(100, 50), "The shark died",
-                            new Red())));
+            return new WorldEnd(true, this.makeScene()
+                .placeImageXY(new TextImage("The shark died", Color.RED), 100, 50));
         else
-            return new WorldEnd(false, this.makeImage());
+            return new WorldEnd(false, this.makeScene());
     }
 
 }
@@ -565,11 +568,11 @@ class ExamplesOceanWorldImp implements OceanWorldConstants {
     // test Ocean method onTick, worldEnds
     public void testOceanWorldEnds(Tester t) {
         t.checkExpect(this.ocean.worldEnds(),
-                new WorldEnd(false, this.ocean.makeImage()));
+                new WorldEnd(false, this.ocean.makeScene()));
         t.checkExpect((new Ocean(new Shark(HEIGHT / 2, 0), this.allFish))
-                .worldEnds(), new WorldEnd(true, new OverlayImages((new Ocean(
-                new Shark(HEIGHT / 2, 0), this.allFish)).makeImage(),
-                new TextImage(new Posn(100, 50), "The shark died", new Red()))));
+                .worldEnds(), new WorldEnd(true, 
+                    new Ocean(new Shark(HEIGHT / 2, 0), this.allFish).makeScene()
+                    .placeImageXY(new TextImage("The shark died", Color.RED), 100, 50)));
     }
 
     public void testRun(Tester t) {

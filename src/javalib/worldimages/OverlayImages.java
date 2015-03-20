@@ -33,7 +33,7 @@ public class OverlayImages extends OverlayImagesXY {
      *            the bottom image for the combined image
      */
     public OverlayImages(WorldImage top, WorldImage bot) {
-        super(top, bot, 0, 0);
+        super(top, 0, 0, bot);
     }
 
     /**

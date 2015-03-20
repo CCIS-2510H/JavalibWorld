@@ -35,19 +35,16 @@ public class OverlayImagesXY extends WorldImage {
     /**
      * The full constructor that produces the top image overlaid over the bottom
      * one with the given offset.
-     * 
-     * 
-     * 
-     * @param bot
-     *            the bottom image for the combined image
      * @param top
      *            the bottom image for the combined image
      * @param dx
      *            the horizontal offset for the top image
      * @param dy
      *            the vertical offset for the top image
+     * @param bot
+     *            the bottom image for the combined image
      */
-    public OverlayImagesXY(WorldImage top, WorldImage bot, int dx, int dy) {
+    public OverlayImagesXY(WorldImage top, int dx, int dy, WorldImage bot) {
         super();
         this.bot = bot;
         this.top = top;

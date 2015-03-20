@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 /**
  * <p>Copyright 2012 Viera K. Proulx</p>
@@ -65,9 +66,9 @@ public class TriangleImage extends WorldImage {
     }
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Posn p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
-        Posn p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
-        Posn p3 = WorldImage.transformPosn(t, this.poly.xpoints[2], this.poly.ypoints[2]);
+        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
+        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
+        Point2D p3 = WorldImage.transformPosn(t, this.poly.xpoints[2], this.poly.ypoints[2]);
         return new BoundingBox(p1, p2).add(p3);
     }
 

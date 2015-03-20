@@ -1,5 +1,7 @@
 package worldimagestests;
 
+import java.awt.Color;
+
 import javalib.colors.*;
 import javalib.worldcanvas.WorldCanvas;
 import javalib.worldimages.*;
@@ -29,12 +31,12 @@ public class ExamplesTextImages {
     // a text inside a red rectangle with a small black line
     public static WorldImage makeImage(Posn pos, int size) {
         WorldImage hello = new TextImage(pos, "quickbrownfoxjumedoveralazydog",
-                size, 0, new Blue());
+                size, 0, Color.BLUE);
 
         WorldImage helloRed = new OverlayImages(new RectangleImage(pos,
-                hello.getWidth(), hello.getHeight(), new Red()), hello);
+                hello.getWidth(), hello.getHeight(), Color.RED), hello);
         return new OverlayImages(helloRed, new LineImage(pos, new Posn(
-                pos.x + 5, pos.y - 5), new Black()));
+                pos.x + 5, pos.y - 5), Color.BLACK));
     }
 
     public void testAll(Tester t) {
@@ -52,14 +54,14 @@ public class ExamplesTextImages {
         // show several images in the canvas
         boolean makeDrawing = c.show()
                 && c.drawImage(new LineImage(new Posn(400, 400), new Posn(600,
-                        600), new Red()))
+                        600), Color.RED))
                 && c.drawImage(new FromFileImage(new Posn(100, 100),
                         "Images/green-fish.png"))
                 && c.drawImage(new FromFileImage(new Posn(200, 250),
                         "Images/pink-fish.png"))
                 && c.drawImage(new FromFileImage(new Posn(350, 400),
                         "Images/shark.png"))
-                && c.drawImage(new DiskImage(new Posn(100, 100), 5, new Black()))
+                && c.drawImage(new CircleImage(new Posn(100, 100), 5, Color.BLACK))
                 && c.drawImage(pic);
 
         pic = ExamplesTextImages.makeImage(new Posn(200, 100), 12);
@@ -70,10 +72,10 @@ public class ExamplesTextImages {
         boolean makeAnotherDrawing2 = c.drawImage(pic);
 
         WorldImage triangle = new TriangleImage(new Posn(20, 50), new Posn(60,
-                80), new Posn(40, 90), new Green());
+                80), new Posn(40, 90), Color.GREEN);
 
         WorldImage blueline = new LineImage(new Posn(200, 300), new Posn(300,
-                200), new Blue());
+                200), Color.BLUE);
 
         WorldCanvas c2 = new WorldCanvas(600, 600);
         boolean makeDrawing3 = c2.show() && c2.drawImage(pic)
@@ -98,10 +100,10 @@ public class ExamplesTextImages {
         WorldImage pic2 = ExamplesTextImages.makeImage(new Posn(300, 100), 20);
 
         WorldImage triangleX = new TriangleImage(new Posn(20, 50), new Posn(60,
-                80), new Posn(40, 90), new Green());
+                80), new Posn(40, 90), Color.GREEN);
 
         WorldImage frameTriangle = new FrameImage(triangleX.pinhole,
-                triangleX.getWidth(), triangleX.getHeight(), new Black());
+                triangleX.getWidth(), triangleX.getHeight(), Color.BLACK);
 
         boolean makeDrawing4 = c3.show() && c3.drawImage(pic2)
                 && c3.drawImage(triangleX) && c3.drawImage(frameTriangle);

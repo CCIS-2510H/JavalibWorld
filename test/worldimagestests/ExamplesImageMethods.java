@@ -30,12 +30,12 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ CircleImage class
     // ------------------------------------------//
 
-    WorldImage circle1 = new CircleImage(new Posn(2, 3), 4, new Red());
-    WorldImage circle2 = new CircleImage(new Posn(2, 3), 4, Color.red);
-    WorldImage circle3 = new CircleImage(new Posn(1, 3), 4, new Red());
-    WorldImage circle4 = new CircleImage(new Posn(2, 4), 4, new Red());
-    WorldImage circle5 = new CircleImage(new Posn(2, 3), 5, new Red());
-    WorldImage circle6 = new CircleImage(new Posn(2, 3), 4, new Blue());
+    WorldImage circle1 = new CircleImage(/*new Posn(2, 3),*/ 4, OutlineMode.SOLID, Color.RED);
+    WorldImage circle2 = new CircleImage(/*new Posn(2, 3),*/ 4, OutlineMode.SOLID, Color.red);
+    WorldImage circle3 = new CircleImage(/*new Posn(1, 3),*/ 4, OutlineMode.SOLID, Color.RED);
+    WorldImage circle4 = new CircleImage(/*new Posn(2, 4),*/ 4, OutlineMode.SOLID, Color.RED);
+    WorldImage circle5 = new CircleImage(/*new Posn(2, 3),*/ 5, OutlineMode.SOLID, Color.RED);
+    WorldImage circle6 = new CircleImage(/*new Posn(2, 3),*/ 4, OutlineMode.SOLID, Color.BLUE);
 
     // Tests for the CircleImage class
     void testCircleImage(Tester t) {
@@ -67,17 +67,17 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ DiskImage class
     // --------------------------------------------//
 
-    WorldImage disk1 = new DiskImage(new Posn(2, 3), 4, new Red());
-    WorldImage disk2 = new DiskImage(new Posn(2, 3), 4, Color.red);
-    WorldImage disk3 = new DiskImage(new Posn(1, 3), 4, new Red());
-    WorldImage disk4 = new DiskImage(new Posn(2, 4), 4, new Red());
-    WorldImage disk5 = new DiskImage(new Posn(2, 3), 5, new Red());
-    WorldImage disk6 = new DiskImage(new Posn(2, 3), 4, new Blue());
+    WorldImage disk1 = new CircleImage(/*new Posn(2, 3),*/ 4, OutlineMode.OUTLINE, Color.RED);
+    WorldImage disk2 = new CircleImage(/*new Posn(2, 3),*/ 4, OutlineMode.OUTLINE, Color.red);
+    WorldImage disk3 = new CircleImage(/*new Posn(1, 3),*/ 4, OutlineMode.OUTLINE, Color.RED);
+    WorldImage disk4 = new CircleImage(/*new Posn(2, 4),*/ 4, OutlineMode.OUTLINE, Color.RED);
+    WorldImage disk5 = new CircleImage(/*new Posn(2, 3),*/ 5, OutlineMode.OUTLINE, Color.RED);
+    WorldImage disk6 = new CircleImage(/*new Posn(2, 3),*/ 4, OutlineMode.OUTLINE, Color.BLUE);
 
-    // Tests for the DiskImage class
+    // Tests for the CircleImage class
     void testDiskImage(Tester t) {
         t.checkExpect(this.disk1.toString(),
-                "new DiskImage(this.pinhole = (2, 3), "
+                "new CircleImage(this.pinhole = (2, 3), "
                         + "\nthis.color = java.awt.Color[r=255,g=0,b=0]"
                         + "\nthis.radius = 4)\n");
         t.checkExpect(this.disk1, this.disk2);
@@ -108,13 +108,13 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ EllipseImage class
     // -----------------------------------------//
 
-    WorldImage ellipse1 = new EllipseImage(new Posn(2, 3), 4, 5, new Green());
-    WorldImage ellipse2 = new EllipseImage(new Posn(2, 3), 4, 5, Color.green);
-    WorldImage ellipse3 = new EllipseImage(new Posn(1, 3), 4, 5, new Green());
-    WorldImage ellipse4 = new EllipseImage(new Posn(2, 4), 4, 5, new Green());
-    WorldImage ellipse5 = new EllipseImage(new Posn(2, 3), 5, 5, new Green());
-    WorldImage ellipse6 = new EllipseImage(new Posn(2, 3), 4, 6, new Green());
-    WorldImage ellipse7 = new EllipseImage(new Posn(2, 3), 4, 5, new Blue());
+    WorldImage ellipse1 = new EllipseImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage ellipse2 = new EllipseImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.SOLID, Color.green);
+    WorldImage ellipse3 = new EllipseImage(/*new Posn(1, 3),*/ 4, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage ellipse4 = new EllipseImage(/*new Posn(2, 4),*/ 4, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage ellipse5 = new EllipseImage(/*new Posn(2, 3),*/ 5, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage ellipse6 = new EllipseImage(/*new Posn(2, 3),*/ 4, 6, OutlineMode.SOLID, Color.GREEN);
+    WorldImage ellipse7 = new EllipseImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.SOLID, Color.BLUE);
 
     // Tests for the EllipseImage class
     void testEllipseImage(Tester t) {
@@ -149,13 +149,13 @@ public class ExamplesImageMethods implements IExamples {
 
     // ------------ FrameImage class -----------------------------------------//
 
-    WorldImage frame1 = new FrameImage(new Posn(2, 3), 4, 5, new Green());
-    WorldImage frame2 = new FrameImage(new Posn(2, 3), 4, 5, Color.green);
-    WorldImage frame3 = new FrameImage(new Posn(1, 3), 4, 5, new Green());
-    WorldImage frame4 = new FrameImage(new Posn(2, 4), 4, 5, new Green());
-    WorldImage frame5 = new FrameImage(new Posn(2, 3), 5, 5, new Green());
-    WorldImage frame6 = new FrameImage(new Posn(2, 3), 4, 6, new Green());
-    WorldImage frame7 = new FrameImage(new Posn(2, 3), 4, 5, new Blue());
+    WorldImage frame1 = new RectangleImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage frame2 = new RectangleImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.green);
+    WorldImage frame3 = new RectangleImage(/*new Posn(1, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage frame4 = new RectangleImage(/*new Posn(2, 4),*/ 4, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage frame5 = new RectangleImage(/*new Posn(2, 3),*/ 5, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage frame6 = new RectangleImage(/*new Posn(2, 3),*/ 4, 6, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage frame7 = new RectangleImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.BLUE);
 
     // Tests for the FrameImage class
     void testFrameImage(Tester t) {
@@ -190,18 +190,18 @@ public class ExamplesImageMethods implements IExamples {
 
     // ------------ OvalImage class -----------------------------------------//
 
-    WorldImage oval1 = new OvalImage(new Posn(2, 3), 4, 5, new Green());
-    WorldImage oval2 = new OvalImage(new Posn(2, 3), 4, 5, Color.green);
-    WorldImage oval3 = new OvalImage(new Posn(1, 3), 4, 5, new Green());
-    WorldImage oval4 = new OvalImage(new Posn(2, 4), 4, 5, new Green());
-    WorldImage oval5 = new OvalImage(new Posn(2, 3), 5, 5, new Green());
-    WorldImage oval6 = new OvalImage(new Posn(2, 3), 4, 6, new Green());
-    WorldImage oval7 = new OvalImage(new Posn(2, 3), 4, 5, new Blue());
+    WorldImage oval1 = new EllipseImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage oval2 = new EllipseImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.green);
+    WorldImage oval3 = new EllipseImage(/*new Posn(1, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage oval4 = new EllipseImage(/*new Posn(2, 4),*/ 4, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage oval5 = new EllipseImage(/*new Posn(2, 3),*/ 5, 5, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage oval6 = new EllipseImage(/*new Posn(2, 3),*/ 4, 6, OutlineMode.OUTLINE, Color.GREEN);
+    WorldImage oval7 = new EllipseImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.OUTLINE, Color.BLUE);
 
     // Tests for the OvalImage class
     void testOvalImage(Tester t) {
         t.checkExpect(this.oval1.toString(),
-                "new OvalImage(this.pinhole = (2, 3), "
+                "new EllipseImage(OutlineMode.OUTLINE, this.pinhole = (2, 3), "
                         + "\nthis.color = java.awt.Color[r=0,g=255,b=0]"
                         + "\nthis.width = 4, this.height = 5)\n");
         t.checkExpect(this.oval1, this.oval2);
@@ -232,19 +232,13 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ RectangleImage class
     // ---------------------------------------//
 
-    WorldImage rectangle1 = new RectangleImage(new Posn(2, 3), 4, 5,
-            new Green());
-    WorldImage rectangle2 = new RectangleImage(new Posn(2, 3), 4, 5,
-            Color.green);
-    WorldImage rectangle3 = new RectangleImage(new Posn(1, 3), 4, 5,
-            new Green());
-    WorldImage rectangle4 = new RectangleImage(new Posn(2, 4), 4, 5,
-            new Green());
-    WorldImage rectangle5 = new RectangleImage(new Posn(2, 3), 5, 5,
-            new Green());
-    WorldImage rectangle6 = new RectangleImage(new Posn(2, 3), 4, 6,
-            new Green());
-    WorldImage rectangle7 = new RectangleImage(new Posn(2, 3), 4, 5, new Blue());
+    WorldImage rectangle1 = new RectangleImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage rectangle2 = new RectangleImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.SOLID, Color.green);
+    WorldImage rectangle3 = new RectangleImage(/*new Posn(1, 3),*/ 4, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage rectangle4 = new RectangleImage(/*new Posn(2, 4),*/ 4, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage rectangle5 = new RectangleImage(/*new Posn(2, 3),*/ 5, 5, OutlineMode.SOLID, Color.GREEN);
+    WorldImage rectangle6 = new RectangleImage(/*new Posn(2, 3),*/ 4, 6, OutlineMode.SOLID, Color.GREEN);
+    WorldImage rectangle7 = new RectangleImage(/*new Posn(2, 3),*/ 4, 5, OutlineMode.SOLID, Color.BLUE);
 
     // Tests for the RectangleImage class
     void testRectangleImage(Tester t) {
@@ -281,25 +275,25 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ LineImage class
     // --------------------------------------------//
 
-    WorldImage line1 = new LineImage(new Posn(2, 3), new Posn(4, 5),
-            new Green());
-    WorldImage line2 = new LineImage(new Posn(2, 3), new Posn(4, 5),
+    WorldImage line1 = new LineImage(/*new Posn(2, 3),*/ new Posn(4, 5),
+            Color.GREEN);
+    WorldImage line2 = new LineImage(/*new Posn(2, 3),*/ new Posn(4, 5),
             Color.green);
-    WorldImage line3 = new LineImage(new Posn(1, 3), new Posn(4, 5),
-            new Green());
-    WorldImage line4 = new LineImage(new Posn(2, 4), new Posn(4, 5),
-            new Green());
-    WorldImage line5 = new LineImage(new Posn(2, 3), new Posn(5, 5),
-            new Green());
-    WorldImage line6 = new LineImage(new Posn(2, 3), new Posn(4, 6),
-            new Green());
-    WorldImage line7 = new LineImage(new Posn(2, 3), new Posn(4, 5), new Blue());
-    WorldImage line8 = new LineImage(new Posn(1, 3), new Posn(3, 5),
-            new Green());
-    WorldImage line9 = new LineImage(new Posn(2, 4), new Posn(4, 6),
-            new Green());
-    WorldImage line10 = new LineImage(new Posn(3, 6), new Posn(5, 8),
-            new Green());
+    WorldImage line3 = new LineImage(/*new Posn(1, 3),*/ new Posn(4, 5),
+            Color.GREEN);
+    WorldImage line4 = new LineImage(/*new Posn(2, 4),*/ new Posn(4, 5),
+            Color.GREEN);
+    WorldImage line5 = new LineImage(/*new Posn(2, 3),*/ new Posn(5, 5),
+            Color.GREEN);
+    WorldImage line6 = new LineImage(/*new Posn(2, 3),*/ new Posn(4, 6),
+            Color.GREEN);
+    WorldImage line7 = new LineImage(/*new Posn(2, 3),*/ new Posn(4, 5), Color.BLUE);
+    WorldImage line8 = new LineImage(/*new Posn(1, 3),*/ new Posn(3, 5),
+            Color.GREEN);
+    WorldImage line9 = new LineImage(/*new Posn(2, 4),*/ new Posn(4, 6),
+            Color.GREEN);
+    WorldImage line10 = new LineImage(/*new Posn(3, 6),*/ new Posn(5, 8),
+            Color.GREEN);
 
     // Tests for the LineImage class
     void testLineImage(Tester t) {
@@ -337,29 +331,29 @@ public class ExamplesImageMethods implements IExamples {
     // ----------------------------------------//
 
     WorldImage triangle1 = new TriangleImage(new Posn(2, 3), new Posn(4, 5),
-            new Posn(6, 7), new Black());
+            new Posn(6, 7), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle2 = new TriangleImage(new Posn(2, 3), new Posn(4, 5),
-            new Posn(6, 7), Color.black);
+            new Posn(6, 7), OutlineMode.SOLID, Color.black);
     WorldImage triangle3 = new TriangleImage(new Posn(1, 3), new Posn(4, 5),
-            new Posn(6, 7), new Black());
+            new Posn(6, 7), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle4 = new TriangleImage(new Posn(2, 4), new Posn(4, 5),
-            new Posn(6, 7), new Black());
+            new Posn(6, 7), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle5 = new TriangleImage(new Posn(2, 3), new Posn(5, 5),
-            new Posn(6, 7), new Black());
+            new Posn(6, 7), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle6 = new TriangleImage(new Posn(2, 3), new Posn(4, 6),
-            new Posn(6, 7), new Black());
+            new Posn(6, 7), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle7 = new TriangleImage(new Posn(2, 3), new Posn(4, 5),
-            new Posn(7, 7), Color.black);
+            new Posn(7, 7), OutlineMode.SOLID, Color.black);
     WorldImage triangle8 = new TriangleImage(new Posn(2, 3), new Posn(4, 5),
-            new Posn(6, 8), Color.black);
+            new Posn(6, 8), OutlineMode.SOLID, Color.black);
     WorldImage triangle9 = new TriangleImage(new Posn(2, 3), new Posn(4, 5),
-            new Posn(6, 7), new Blue());
+            new Posn(6, 7), OutlineMode.SOLID, Color.BLUE);
     WorldImage triangle10 = new TriangleImage(new Posn(3, 3), new Posn(5, 5),
-            new Posn(7, 7), new Black());
+            new Posn(7, 7), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle11 = new TriangleImage(new Posn(2, 6), new Posn(4, 8),
-            new Posn(6, 10), new Black());
+            new Posn(6, 10), OutlineMode.SOLID, Color.BLACK);
     WorldImage triangle12 = new TriangleImage(new Posn(3, 5), new Posn(5, 7),
-            new Posn(7, 9), new Black());
+            new Posn(7, 9), OutlineMode.SOLID, Color.BLACK);
 
     // Tests for the TriangleImage class
     void testTriangleImage(Tester t) {
@@ -399,17 +393,17 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ TextImage class
     // --------------------------------------------//
 
-    WorldImage text1 = new TextImage(new Posn(2, 3), "hello", 6, 2, new Black());
-    WorldImage text2 = new TextImage(new Posn(2, 3), "hello", 6, 2, Color.black);
-    WorldImage text3 = new TextImage(new Posn(1, 3), "hello", 6, 2, new Black());
-    WorldImage text4 = new TextImage(new Posn(2, 4), "hello", 6, 2, new Black());
-    WorldImage text5 = new TextImage(new Posn(2, 3), "hello", 7, 2, new Black());
-    WorldImage text6 = new TextImage(new Posn(2, 3), "hello", 6, 1, new Black());
-    WorldImage text7 = new TextImage(new Posn(2, 3), "hello", 6.0f, 2,
+    WorldImage text1 = new TextImage(/*new Posn(2, 3),*/ "hello", 6, 2, Color.BLACK);
+    WorldImage text2 = new TextImage(/*new Posn(2, 3),*/ "hello", 6, 2, Color.black);
+    WorldImage text3 = new TextImage(/*new Posn(1, 3),*/ "hello", 6, 2, Color.BLACK);
+    WorldImage text4 = new TextImage(/*new Posn(2, 4),*/ "hello", 6, 2, Color.BLACK);
+    WorldImage text5 = new TextImage(/*new Posn(2, 3),*/ "hello", 7, 2, Color.BLACK);
+    WorldImage text6 = new TextImage(/*new Posn(2, 3),*/ "hello", 6, 1, Color.BLACK);
+    WorldImage text7 = new TextImage(/*new Posn(2, 3),*/ "hello", 6.0f, 2,
             Color.black);
-    WorldImage text8 = new TextImage(new Posn(2, 3), "hello", 6.0f, 2,
-            new Black());
-    WorldImage text9 = new TextImage(new Posn(2, 3), "hello", 6, 2, new Blue());
+    WorldImage text8 = new TextImage(/*new Posn(2, 3),*/ "hello", 6.0f, 2,
+            Color.BLACK);
+    WorldImage text9 = new TextImage(/*new Posn(2, 3),*/ "hello", 6, 2, Color.BLUE);
 
     // Tests for the TextImage class
     void testTextImage(Tester t) {
@@ -501,28 +495,28 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ OverlayImages class
     // ----------------------------------------//
 
-    WorldImage overlayXY1 = new OverlayImagesXY(this.circle1, this.rectangle1,
-            5, 3);
-    WorldImage overlayXY2 = new OverlayImagesXY(this.circle2, this.rectangle2,
-            5, 3);
-    WorldImage overlayXY3 = new OverlayImagesXY(this.circle1, this.overlay1, 4,
-            5);
-    WorldImage overlayXY4 = new OverlayImagesXY(this.overlay1, this.circle1, 5,
-            3);
-    WorldImage overlayXY5 = new OverlayImagesXY(this.circle1, this.ellipse1, 5,
-            3);
-    WorldImage overlayXY6 = new OverlayImagesXY(this.overlay1, this.overlay2,
-            5, 3);
-    WorldImage overlayXY7 = new OverlayImagesXY(this.overlay2, this.overlay1,
-            5, 3);
-    WorldImage overlayXY8 = new OverlayImagesXY(this.circle2, this.overlay2, 4,
-            5);
-    WorldImage overlayXY9 = new OverlayImagesXY(this.circle1, this.rectangle2,
-            5, 3);
-    WorldImage overlayXY10 = new OverlayImagesXY(this.circle3, this.rectangle3,
-            5, 3);
-    WorldImage overlayXY11 = new OverlayImagesXY(this.circle4, this.rectangle4,
-            5, 3);
+    WorldImage overlayXY1 = new OverlayImagesXY(this.circle1, 5,
+            3, this.rectangle1);
+    WorldImage overlayXY2 = new OverlayImagesXY(this.circle2, 5,
+            3, this.rectangle2);
+    WorldImage overlayXY3 = new OverlayImagesXY(this.circle1, 4, 5,
+            this.overlay1);
+    WorldImage overlayXY4 = new OverlayImagesXY(this.overlay1, 5, 3,
+            this.circle1);
+    WorldImage overlayXY5 = new OverlayImagesXY(this.circle1, 5, 3,
+            this.ellipse1);
+    WorldImage overlayXY6 = new OverlayImagesXY(this.overlay1, 5,
+            3, this.overlay2);
+    WorldImage overlayXY7 = new OverlayImagesXY(this.overlay2, 5,
+            3, this.overlay1);
+    WorldImage overlayXY8 = new OverlayImagesXY(this.circle2, 4, 5,
+            this.overlay2);
+    WorldImage overlayXY9 = new OverlayImagesXY(this.circle1, 5,
+            3, this.rectangle2);
+    WorldImage overlayXY10 = new OverlayImagesXY(this.circle3, 5,
+            3, this.rectangle3);
+    WorldImage overlayXY11 = new OverlayImagesXY(this.circle4, 5,
+            3, this.rectangle4);
 
     // Tests for the OverlayImagesXY class
     void testOverlayImagesXY(Tester t) {
@@ -564,14 +558,10 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ OverlayImages class
     // ----------------------------------------//
 
-    WorldImage fromFile1 = new FromFileImage(new Posn(20, 30),
-            "Images/shark.png");
-    WorldImage fromFile2 = new FromFileImage(new Posn(10, 30),
-            "Images/shark.png");
-    WorldImage fromFile3 = new FromFileImage(new Posn(20, 40),
-            "Images/shark.png");
-    WorldImage fromFile4 = new FromFileImage(new Posn(20, 40),
-            "Images/fish.png");
+    WorldImage fromFile1 = new FromFileImage(/*new Posn(20, 30),*/ "Images/shark.png");
+    WorldImage fromFile2 = new FromFileImage(/*new Posn(10, 30),*/ "Images/shark.png");
+    WorldImage fromFile3 = new FromFileImage(/*new Posn(20, 40),*/ "Images/shark.png");
+    WorldImage fromFile4 = new FromFileImage(/*new Posn(20, 40),*/ "Images/fish.png");
 
     // Tests for the FromFileImage class
     void testFromFileImage(Tester t) {
@@ -600,10 +590,10 @@ public class ExamplesImageMethods implements IExamples {
     // Run all tests - comment out those you want to skip
     public void tests(Tester t) {
         // testCircleImage(t);
-        // testDiskImage(t);
+        // testCircleImage(t);
         // testEllipseImage(t);
         // testFrameImage(t);
-        // testOvalImage(t);
+        // testEllipseImage(t);
         // testRectangleImage(t);
         // testLineImage(t);
         // testTriangleImage(t);
