@@ -20,6 +20,7 @@ import java.awt.geom.Point2D;
  * @since February 4 2012, April 25 2012
  */
 public abstract class WorldImage {
+    Posn pinhole;
 
     /**
      * Every image has a pinhole (<code>Posn</code>) and a color (
@@ -39,9 +40,6 @@ public abstract class WorldImage {
     protected WorldImage(Posn pinhole) {
         this.pinhole = pinhole;
     }
-    // Ignore this for now
-    Posn pinhole;
-    
         
     public BoundingBox getBB() {
         return this.getBB(new AffineTransform());

@@ -23,7 +23,7 @@ import java.util.*;
  * @author Viera K. Proulx
  * @since February 4 2012, 9 August 2012
  */
-public class ImageMaker {
+public final class ImageMaker {
     public int width;
     public int height;
 

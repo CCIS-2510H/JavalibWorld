@@ -34,7 +34,7 @@ interface OceanWorldConstants {
     public Color oceanColor = new Color(50, 150, 255);
 
     // the background image of the ocean
-    public WorldImage oceanImage = new RectangleImage(WIDTH, HEIGHT, OutlineMode.SOLID, oceanColor);
+    public WorldImage oceanImage = new RectangleImageBase(WIDTH, HEIGHT, OutlineMode.SOLID, oceanColor);
 }
 
 // To represent a location (x,y) in graphics coordinates
@@ -310,7 +310,7 @@ class Ocean extends World implements OceanWorldConstants {
     // produce the image of the fish and shark swimming in the sea of blue
     public WorldScene makeScene() {
         return this.getEmptyScene()
-            .placeImageXY(new RectangleImage(400, 400, OutlineMode.SOLID, new Color(50, 150, 255)), 400, 400)
+            .placeImageXY(new RectangleImageBase(400, 400, OutlineMode.SOLID, new Color(50, 150, 255)), 400, 400)
             .placeImageXY(this.shark.sharkImage(), 0, this.shark.y)
             .placeImageXY(this.fish.fishesImage(), 0, 0);
 //        return new RectangleImage(new Posn(200, 200), 400, 400, new Color(50,

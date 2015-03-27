@@ -18,7 +18,7 @@ import java.awt.geom.*;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class FromFileImage extends WorldImage {
+public final class FromFileImage extends WorldImage {
 
     /** the file name for the image source */
     public String fileName;

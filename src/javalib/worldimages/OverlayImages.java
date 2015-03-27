@@ -21,7 +21,7 @@ package javalib.worldimages;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class OverlayImages extends OverlayImagesXY {
+public final class OverlayImages extends OverlayImagesXYBase {
 
     /**
      * The only constructor - invokes the constructor in the super class

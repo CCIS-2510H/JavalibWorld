@@ -2,7 +2,7 @@ package javalib.worldimages;
 
 import java.awt.geom.Point2D;
 
-public class BoundingBox {
+public final class BoundingBox {
     double tlx, tly, brx, bry;
     BoundingBox(Posn tl, Posn br) {
         this(tl.x, tl.y, br.x, br.y);

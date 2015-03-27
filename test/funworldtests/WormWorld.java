@@ -273,7 +273,7 @@ class MtSegment extends ListSegment {
 
     // make an image of this empty segment
     protected WorldImage drawImage() {
-        return new RectangleImage(new Posn(0, 0), 0, 0, Color.BLUE);
+        return new RectangleImageBase(new Posn(0, 0), 0, 0, Color.BLUE);
     }
 }
 
@@ -366,7 +366,7 @@ class Food {
 
     // make an image of this food
     protected WorldImage drawImage() {
-        return new RectangleImage(new Posn(this.x, this.y), this.width,
+        return new RectangleImageBase(new Posn(this.x, this.y), this.width,
                 this.height, this.color);
     }
 }
@@ -391,6 +391,6 @@ class Box {
 
     // make an image of this box
     protected WorldImage drawImage() {
-        return new RectangleImage(new Posn(100, 100), width, height, Color.BLUE);
+        return new RectangleImageBase(new Posn(100, 100), width, height, Color.BLUE);
     }
 }

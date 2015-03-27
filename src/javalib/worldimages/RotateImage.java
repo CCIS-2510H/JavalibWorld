@@ -3,7 +3,7 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class RotateImage extends WorldImage {
+public final class RotateImage extends WorldImage {
     public WorldImage img;
     public double rotationDegrees;
     private int width, height;

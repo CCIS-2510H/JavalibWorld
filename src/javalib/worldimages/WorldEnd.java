@@ -21,7 +21,7 @@ import javalib.worldcanvas.WorldScene;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class WorldEnd {
+public final class WorldEnd {
     /**
      * the indicator whether the world should end: true if the world should end,
      * false if the world goes on

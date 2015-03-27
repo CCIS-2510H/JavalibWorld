@@ -10,6 +10,19 @@ import java.awt.geom.Point2D;
  * GNU Lesser General Public License (LGPL)</p>
  */
 
+public final class RegularPolyImage extends RegularPolyImageBase {
+    
+    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
+            Color color) {
+        super(sideLen, numSides, fill, color);
+    }
+    
+    public RegularPolyImage(double sideLen, int numSides, String fill,
+            Color color) {
+        super(sideLen, numSides, fill, color);
+    }
+}
+
 /**
  * <p>
  * The class to represent filled regular polygon images drawn by the world when
@@ -23,7 +36,7 @@ import java.awt.geom.Point2D;
  * @since November 14 2014
  */
 
-public class RegularPolyImage extends WorldImage {
+abstract class RegularPolyImageBase extends WorldImage {
     public Posn center;
     public int sides;
     public double sideLen;
@@ -46,7 +59,7 @@ public class RegularPolyImage extends WorldImage {
      * @param color
      *            -- the color for this regular polygon
      */
-    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
+    public RegularPolyImageBase(double sideLen, int numSides, OutlineMode fill,
             Color color) {
         super();
 
@@ -62,7 +75,7 @@ public class RegularPolyImage extends WorldImage {
         this.generatePoly();
     }
 
-    public RegularPolyImage(double sideLen, int numSides, String fill,
+    public RegularPolyImageBase(double sideLen, int numSides, String fill,
             Color color) {
         this(sideLen, numSides, OutlineMode.fromString(fill), color);
     }
@@ -208,8 +221,8 @@ public class RegularPolyImage extends WorldImage {
      * Is this <code>RegularPolyImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof RegularPolyImage) {
-            RegularPolyImage that = (RegularPolyImage) o;
+        if (o instanceof RegularPolyImageBase) {
+            RegularPolyImageBase that = (RegularPolyImageBase) o;
             return this.sideLen == that.sideLen && this.sides == that.sides
                     && this.color.equals(that.color);
         } else

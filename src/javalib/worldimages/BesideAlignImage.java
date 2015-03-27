@@ -3,11 +3,22 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class BesideAlignImage extends WorldImage {
+public final class BesideAlignImage extends BesideAlignImageBase {
+    
+    public BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage... ims) {
+        super(mode, im1, ims);
+    }
+    
+    public BesideAlignImage(String mode, WorldImage im1, WorldImage... ims) {
+        super(mode, im1, ims);
+    }
+}
+
+class BesideAlignImageBase extends WorldImage {
     WorldImage im1, im2;
     AlignModeY mode;
 
-    public BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage... ims) {
+    public BesideAlignImageBase(AlignModeY mode, WorldImage im1, WorldImage... ims) {
         super();
         this.mode = mode;
         this.im1 = im1;
@@ -16,11 +27,11 @@ public class BesideAlignImage extends WorldImage {
         } else if (ims.length > 1) {
             WorldImage[] images = new WorldImage[ims.length - 1];
             System.arraycopy(ims, 1, images, 0, images.length);
-            im2 = new BesideAlignImage(mode, ims[0], images);
+            im2 = new BesideAlignImageBase(mode, ims[0], images);
         }
     }
 
-    public BesideAlignImage(String mode, WorldImage im1, WorldImage... ims) {
+    public BesideAlignImageBase(String mode, WorldImage im1, WorldImage... ims) {
         this(AlignModeY.fromString(mode), im1, ims);
     }
 
@@ -101,7 +112,7 @@ public class BesideAlignImage extends WorldImage {
      * This requires the import of the tester library.
      * </p>
      */
-    public boolean same(BesideAlignImage that) {
+    public boolean same(BesideAlignImageBase that) {
         return this.mode == that.mode
                 && this.im1.equals(that.im1)
                 && ((this.im2 == null && that.im2 == null) || (this.im2 != null
@@ -112,8 +123,8 @@ public class BesideAlignImage extends WorldImage {
      * Is this <code>FromFileImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof BesideAlignImage) {
-            BesideAlignImage that = (BesideAlignImage) o;
+        if (o instanceof BesideAlignImageBase) {
+            BesideAlignImageBase that = (BesideAlignImageBase) o;
             return this.same(that);
         } else
             return false;

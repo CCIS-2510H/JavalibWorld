@@ -37,7 +37,7 @@ class House {
 
     // make the image of this house
     WorldImage houseImage() {
-        return new RectangleImage(
+        return new RectangleImageBase(
         // the pinhole in the center
                 new Posn(this.loc.x + this.width / 2, this.loc.y - this.height
                         / 2), this.width, this.height, this.color)
@@ -50,7 +50,7 @@ class House {
                                         this.loc.y - 3 * this.height / 2),
                                 Color.red),
                         // the door - black in the middle
-                        new RectangleImage(new Posn(
+                        new RectangleImageBase(new Posn(
                                 this.loc.x + this.width / 2, this.loc.y
                                         - this.height / 4), this.width / 2,
                                 this.height / 2, Color.gray), this.person
@@ -113,9 +113,9 @@ class Tree {
     WorldImage treeImage() {
         return
         // the trunk
-        new RectangleImage(new Posn(this.loc.x + 5, this.loc.y
+        new RectangleImageBase(new Posn(this.loc.x + 5, this.loc.y
                 - this.trunkHeight / 2), 10, this.trunkHeight, new Color(0x84,
-                0x3c, 0x24)).overlayImages(new EllipseImage(OutlineMode.OUTLINE, new Posn(
+                0x3c, 0x24)).overlayImages(new EllipseImageBase(OutlineMode.OUTLINE, new Posn(
                 this.loc.x + 5, this.loc.y - this.trunkHeight - this.height / 2
                         + 3), this.width, this.height, Color.green));
     }
@@ -148,10 +148,10 @@ class Cloud {
 
     // make the image of this cloud
     WorldImage cloudImage() {
-        return new EllipseImage(OutlineMode.OUTLINE, this.loc, this.width, this.height, Color.white)
-                .overlayImages(new EllipseImage(OutlineMode.OUTLINE, new Posn(this.loc.x - this.width
+        return new EllipseImageBase(OutlineMode.OUTLINE, this.loc, this.width, this.height, Color.white)
+                .overlayImages(new EllipseImageBase(OutlineMode.OUTLINE, new Posn(this.loc.x - this.width
                         / 4, this.loc.y - this.height / 4), this.width / 2,
-                        this.width / 2, Color.white), new EllipseImage(OutlineMode.OUTLINE, new Posn(
+                        this.width / 2, Color.white), new EllipseImageBase(OutlineMode.OUTLINE, new Posn(
                         this.loc.x + this.width / 4, this.loc.y - this.height
                                 / 2), this.width / 2, this.height / 2,
                         Color.white));
@@ -232,7 +232,7 @@ public class TickyTackImp extends World {
     // produce the image of the whole world -
     // with all houses, both trees, the cloud and the sun
     public WorldImage makeImage() {
-        return new RectangleImage(new Posn(300, 150), 600, 300, Color.blue)
+        return new RectangleImageBase(new Posn(300, 150), 600, 300, Color.blue)
                 .overlayImages(this.h1.houseImage(), this.h2.houseImage(),
                         this.h3.houseImage(), this.h4.houseImage(),
                         this.h5.houseImage(), this.h6.houseImage(),
@@ -272,7 +272,7 @@ class ExamplesTickyTack {
 
     Sun sun = new Sun(25);
 
-    WorldImage wholeworld = new RectangleImage(new Posn(300, 150), 600, 300,
+    WorldImage wholeworld = new RectangleImageBase(new Posn(300, 150), 600, 300,
             Color.blue).overlayImages(this.h1.houseImage(),
             this.h2.houseImage(), this.h3.houseImage(), this.h4.houseImage(),
             this.h5.houseImage(), this.h6.houseImage(), this.h7.houseImage(),

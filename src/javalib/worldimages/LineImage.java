@@ -18,7 +18,7 @@ import java.awt.geom.*;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class LineImage extends WorldImage {
+public final class LineImage extends WorldImage {
 
     /**
      * the ending point of this line the starting point is (0, 0)

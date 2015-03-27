@@ -9,6 +9,16 @@ import java.awt.geom.*;
  * GNU Lesser General Public License (LGPL)</p>
  */
 
+public final class EllipseImage extends EllipseImageBase {
+    public EllipseImage(int width, int height, OutlineMode outlineMode, Color color) {
+        super(width, height, outlineMode, color);
+    }
+    
+    public EllipseImage(int width, int height, String outlineMode, Color color) {
+        super(width, height, outlineMode, color);
+    }
+}
+
 /**
  * <p>
  * The class to represent filled ellipse images drawn by the world when drawing
@@ -18,7 +28,7 @@ import java.awt.geom.*;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class EllipseImage extends WorldImage {
+abstract class EllipseImageBase extends WorldImage {
 
     /** the width of this ellipse */
     public int width;
@@ -44,7 +54,7 @@ public class EllipseImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public EllipseImage(int width, int height, OutlineMode mode, Color color) {
+    public EllipseImageBase(int width, int height, OutlineMode mode, Color color) {
         super();
         this.width = width;
         this.height = height;
@@ -52,7 +62,7 @@ public class EllipseImage extends WorldImage {
         this.color = color;
     }
 
-    public EllipseImage(int width, int height, String outlineMode, Color color) {
+    public EllipseImageBase(int width, int height, String outlineMode, Color color) {
         this(width, height, OutlineMode.fromString(outlineMode), color);
     }
 
@@ -163,8 +173,8 @@ public class EllipseImage extends WorldImage {
      * Is this <code>EllipseImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof EllipseImage) {
-            EllipseImage that = (EllipseImage) o;
+        if (o instanceof EllipseImageBase) {
+            EllipseImageBase that = (EllipseImageBase) o;
             return this.width == that.width && this.height == that.height
                     && this.fill == that.fill && this.color.equals(that.color);
         } else

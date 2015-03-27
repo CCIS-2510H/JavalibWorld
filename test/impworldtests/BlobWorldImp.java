@@ -139,19 +139,19 @@ public class BlobWorldImp extends World {
      * The entire background image for this world It illustrates the use of most
      * of the <code>WorldImage</code> shapes
      */
-    public WorldImage blackHole = new OverlayImages(new RectangleImage(
+    public WorldImage blackHole = new OverlayImages(new RectangleImageBase(
             new Posn(100, 150), this.width, this.height, Color.BLUE),
-            new OverlayImages(new EllipseImage(new Posn(12, 12), 25, 25,
+            new OverlayImages(new EllipseImageBase(new Posn(12, 12), 25, 25,
                     Color.GREEN), new OverlayImages(new CircleImage(new Posn(100,
                     150), 10, Color.BLACK), new OverlayImages(new CircleImage(
                     new Posn(100, 150), 10, Color.WHITE),
-                    new OverlayImages(new RectangleImage(new Posn(100, 150),
+                    new OverlayImages(new RectangleImageBase(new Posn(100, 150),
                             10, 10, Color.WHITE), new OverlayImages(
                             new LineImage(new Posn(95, 145),
                                     new Posn(105, 155), Color.RED),
                             new OverlayImages(new LineImage(new Posn(95, 155),
                                     new Posn(105, 145), Color.RED),
-                                    new EllipseImage(OutlineMode.OUTLINE, new Posn(187, 287), 25, 25,
+                                    new EllipseImageBase(OutlineMode.OUTLINE, new Posn(187, 287), 25, 25,
                                             Color.GREEN))))))));
 
     /**

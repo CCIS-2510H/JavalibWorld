@@ -3,11 +3,18 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class ScaleImageXY extends WorldImage {
+public final class ScaleImageXY extends ScaleImageXYBase {
+
+    public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
+        super(img, scaleX, scaleY);
+    }
+}
+
+abstract class ScaleImageXYBase extends WorldImage {
     public WorldImage img;
     public double scaleX, scaleY;
 
-    public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
+    public ScaleImageXYBase(WorldImage img, double scaleX, double scaleY) {
         super();
         this.img = img;
         this.scaleX = scaleX;
@@ -20,6 +27,7 @@ public class ScaleImageXY extends WorldImage {
         newT.scale(this.scaleX, this.scaleY);
         return this.img.getBB(newT);
     }
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 

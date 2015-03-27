@@ -9,6 +9,16 @@ import java.awt.geom.*;
  * GNU Lesser General Public License (LGPL)</p>
  */
 
+public final class RectangleImage extends RectangleImageBase {
+    public RectangleImage(int width, int height, OutlineMode fill, Color color) {
+        super(width, height, fill, color);
+    }
+    
+    public RectangleImage(int width, int height, String fill, Color color) {
+        super(width, height, fill, color);
+    }
+}
+
 /**
  * <p>
  * The class to represent filled rectangle images drawn by the world when
@@ -18,7 +28,7 @@ import java.awt.geom.*;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class RectangleImage extends WorldImage {
+abstract class RectangleImageBase extends WorldImage {
     public int width, height;
     public Color color;
     public OutlineMode fill;
@@ -35,7 +45,7 @@ public class RectangleImage extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public RectangleImage(int width, int height, OutlineMode fill, Color color) {
+    public RectangleImageBase(int width, int height, OutlineMode fill, Color color) {
         super();
         this.width = width;
         this.height = height;
@@ -43,7 +53,7 @@ public class RectangleImage extends WorldImage {
         this.color = color;
     }
 
-    public RectangleImage(int width, int height, String fill, Color color) {
+    public RectangleImageBase(int width, int height, String fill, Color color) {
         this(width, height, OutlineMode.fromString(fill), color);
     }
 
@@ -132,8 +142,8 @@ public class RectangleImage extends WorldImage {
      * Is this <code>RectangleImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof RectangleImage) {
-            RectangleImage that = (RectangleImage) o;
+        if (o instanceof RectangleImageBase) {
+            RectangleImageBase that = (RectangleImageBase) o;
             return this.width == that.width && this.height == that.height
                     && this.color.equals(that.color);
         } else

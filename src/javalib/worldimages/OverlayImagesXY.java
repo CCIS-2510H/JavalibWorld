@@ -9,6 +9,13 @@ import java.awt.geom.AffineTransform;
  * GNU Lesser General Public License (LGPL)</p>
  */
 
+public final class OverlayImagesXY extends OverlayImagesXYBase {
+    
+    public OverlayImagesXY(WorldImage top, int dx, int dy, WorldImage bot) {
+        super(top, dx, dy, bot);
+    }
+}
+
 /**
  * <p>
  * The class to represent an overlay of the top image on the bottom one with the
@@ -20,7 +27,7 @@ import java.awt.geom.AffineTransform;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class OverlayImagesXY extends WorldImage {
+abstract class OverlayImagesXYBase extends WorldImage {
 
     /** the bottom image for the combined image */
     public WorldImage bot;
@@ -44,7 +51,7 @@ public class OverlayImagesXY extends WorldImage {
      * @param bot
      *            the bottom image for the combined image
      */
-    public OverlayImagesXY(WorldImage top, int dx, int dy, WorldImage bot) {
+    public OverlayImagesXYBase(WorldImage top, int dx, int dy, WorldImage bot) {
         super();
         this.bot = bot;
         this.top = top;
@@ -150,8 +157,8 @@ public class OverlayImagesXY extends WorldImage {
      * Is this <code>OverlayImagesXY</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof OverlayImagesXY) {
-            OverlayImagesXY that = (OverlayImagesXY) o;
+        if (o instanceof OverlayImagesXYBase) {
+            OverlayImagesXYBase that = (OverlayImagesXYBase) o;
             return this.bot.equals(that.bot) && this.top.equals(that.top)
                     && this.deltaTop.equals(that.deltaTop) && this.deltaBot.equals(that.deltaBot);
         } else

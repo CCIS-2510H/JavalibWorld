@@ -146,10 +146,10 @@ public class BlobWorldFun extends World {
         new OverlayImages(
             new OverlayImages(new CircleImage(10, OutlineMode.OUTLINE, Color.BLACK),
                 new CircleImage(10, OutlineMode.SOLID, Color.WHITE)),
-            new OverlayImagesXY(
-                new EllipseImage(25, 25, OutlineMode.SOLID, Color.GREEN),
+            new OverlayImagesXYBase(
+                new EllipseImageBase(25, 25, OutlineMode.SOLID, Color.GREEN),
                 12, this.height - 12, 
-                new RectangleImage(this.width, this.height, OutlineMode.SOLID, Color.BLUE)));//,
+                new RectangleImageBase(this.width, this.height, OutlineMode.SOLID, Color.BLUE)));//,
 //                        new OverlayImages(new RectangleImage(new Posn(100, 150), 10, 10, Color.WHITE), 
 //                            new OverlayImages(new LineImage(new Posn(95, 145), new Posn(105, 155), Color.RED),
 //                                new OverlayImages(new LineImage(new Posn(95, 155), new Posn(105, 145), Color.RED),

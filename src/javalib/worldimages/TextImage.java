@@ -24,7 +24,7 @@ import java.awt.geom.Rectangle2D;
  * @author Viera K. Proulx
  * @since February 4 2012, April 25 2012
  */
-public class TextImage extends WorldImage {
+public final class TextImage extends WorldImage {
 
     /** the text to be shown */
     public String text;

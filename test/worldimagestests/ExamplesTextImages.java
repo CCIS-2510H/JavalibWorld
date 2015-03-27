@@ -33,7 +33,7 @@ public class ExamplesTextImages {
         WorldImage hello = new TextImage(pos, "quickbrownfoxjumedoveralazydog",
                 size, 0, Color.BLUE);
 
-        WorldImage helloRed = new OverlayImages(new RectangleImage(pos,
+        WorldImage helloRed = new OverlayImages(new RectangleImageBase(pos,
                 hello.getWidth(), hello.getHeight(), Color.RED), hello);
         return new OverlayImages(helloRed, new LineImage(pos, new Posn(
                 pos.x + 5, pos.y - 5), Color.BLACK));

@@ -3,7 +3,7 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-public class ShearedImage extends WorldImage {
+public final class ShearedImage extends WorldImage {
     WorldImage img;
     double sx, sy;
 

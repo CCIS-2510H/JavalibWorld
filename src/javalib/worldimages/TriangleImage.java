@@ -22,7 +22,7 @@ import java.awt.geom.Point2D;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class TriangleImage extends WorldImage {
+public final class TriangleImage extends WorldImage {
     public Posn p1;
     public Posn p2;
     public Posn p3;

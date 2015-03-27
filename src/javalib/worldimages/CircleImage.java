@@ -17,7 +17,7 @@ import java.awt.*;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public class CircleImage extends EllipseImage {
+public final class CircleImage extends EllipseImageBase {
 
     /** the radius of this circle */
     public int radius;

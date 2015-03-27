@@ -12,7 +12,7 @@ import java.awt.*;
  * Represents a Hexagon, a special case of a regular polygon
  * 
  */
-public class HexagonImage extends RegularPolyImage {
+public final class HexagonImage extends RegularPolyImageBase {
     /**
      * The full constructor for an equilateral hexagon, whose top and bottom are
      * rotated from the horizontal

@@ -6,7 +6,7 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
-public class FrameImage extends RectangleImage {
+public final class FrameImage extends RectangleImageBase {
     public WorldImage img;
 
     public FrameImage(WorldImage img, Color color) {

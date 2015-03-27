@@ -12,7 +12,7 @@ import java.awt.*;
  * Represents a Triangle, a special case of a regular polygon
  * 
  */
-public class EquilateralTriangleImage extends RegularPolyImage {
+public final class EquilateralTriangleImage extends RegularPolyImageBase {
     /**
      * The full constructor for an equilateral triangle
      * 

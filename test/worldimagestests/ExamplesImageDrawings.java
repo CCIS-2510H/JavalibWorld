@@ -28,17 +28,6 @@ public class ExamplesImageDrawings {
     // support for the regression tests
     public static ExamplesImageDrawings examplesInstance = new ExamplesImageDrawings();
 
-    // a text inside a red rectangle with a yellow dot in its pinhole location
-    public static WorldImage makeText(int size) {
-        WorldImage hello = new TextImage("quickbrownfoxjumpedoveralazydog",
-                size, 3, Color.BLUE);
-
-        WorldImage helloRed = new OverlayImages(new RectangleImage(
-                hello.getWidth(), hello.getHeight(), "solid", Color.RED), hello);
-        return new OverlayImages(helloRed, new CircleImage(2,
-                OutlineMode.SOLID, Color.YELLOW));
-    }
-
     // Images
     WorldScene scene = new WorldScene(800, 800);
 
@@ -69,10 +58,11 @@ public class ExamplesImageDrawings {
             "TriangleImage(new Posn(50, 0), new Posn(0, 40), new Posn(-50, 10),\n"
                     + "\"solid\", Color.CYAN)", Color.CYAN);
 
-    WorldImage ellipse = new RotateImage(new EllipseImage(60, 20, OutlineMode.OUTLINE,
-            Color.BLUE), 75);
+    WorldImage ellipse = new RotateImage(new EllipseImage(60, 20,
+            OutlineMode.OUTLINE, Color.BLUE), 75);
     WorldImage ellipseText = new TextImage(
-            "RotateImage(EllipseImage(60, 20, \"outline\" Color.BLUE), 75)", Color.BLUE);
+            "RotateImage(EllipseImage(60, 20, \"outline\" Color.BLUE), 75)",
+            Color.BLUE);
 
     WorldImage oval = new EllipseImage(60, 20, "solid", Color.YELLOW);
     WorldImage ovalText = new TextImage(
@@ -179,33 +169,28 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(above), 400, 200)
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
             .placeImageXY(new FrameImage(allTransforms2), 400, 400);
-    
-    WorldImage whitePetal = 
-        new OverlayImagesXY(
-            new CircleImage(15, OutlineMode.SOLID, Color.WHITE), 
-            60, 0, 
-            new OverlayImagesXY(
-                new TriangleImage(new Posn(0,0), new Posn(60, -15), new Posn(60, 15), OutlineMode.SOLID, Color.WHITE),
-                30, 0,
-                new CircleImage(75, OutlineMode.SOLID, new Color(0,0,255,0))));
-    WorldImage yellowPetal = 
-        new OverlayImagesXY(
-            new CircleImage(15, OutlineMode.SOLID, Color.YELLOW), 
-            60, 0, 
-            new OverlayImagesXY(
-                new TriangleImage(new Posn(0,0), new Posn(60, -15), new Posn(60, 15), OutlineMode.SOLID, Color.YELLOW),
-                30, 0,
-                new CircleImage(75, OutlineMode.SOLID, new Color(0,0,255,0))));
-    WorldImage daisyImg = 
-        new OverlayImages(new RotateImage(whitePetal, 0),
+
+    WorldImage whitePetal = new OverlayImagesXY(new CircleImage(15,
+            OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayImagesXY(
+            new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
+                    15), OutlineMode.SOLID, Color.WHITE), 30, 0,
+            new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
+    WorldImage yellowPetal = new OverlayImagesXY(new CircleImage(15,
+            OutlineMode.SOLID, Color.YELLOW), 60, 0, new OverlayImagesXY(
+            new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
+                    15), OutlineMode.SOLID, Color.YELLOW), 30, 0,
+            new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
+    WorldImage daisyImg = new OverlayImages(new RotateImage(whitePetal, 0),
             new OverlayImages(new RotateImage(yellowPetal, 60),
-                new OverlayImages(new RotateImage(whitePetal, 120),
-                    new OverlayImages(new RotateImage(yellowPetal, 180),
-                        new OverlayImages(new RotateImage(whitePetal, 240),
-                            new RotateImage(yellowPetal, 300))))));
-    WorldScene daisy = 
-        scene.placeImageXY(new RectangleImage(200, 200, OutlineMode.SOLID, Color.GRAY), 100, 100)
-             .placeImageXY(daisyImg, 100, 100);
+                    new OverlayImages(new RotateImage(whitePetal, 120),
+                            new OverlayImages(
+                                    new RotateImage(yellowPetal, 180),
+                                    new OverlayImages(new RotateImage(
+                                            whitePetal, 240), new RotateImage(
+                                            yellowPetal, 300))))));
+    WorldScene daisy = scene.placeImageXY(
+            new RectangleImage(200, 200, OutlineMode.SOLID, Color.GRAY), 100,
+            100).placeImageXY(daisyImg, 100, 100);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -224,6 +209,6 @@ public class ExamplesImageDrawings {
         // show several images in the canvas
         boolean makeDrawing = c.show() && c.drawScene(e.combined);
         c = new WorldCanvas(800, 800);
-        //boolean daisy = c.show() && c.drawScene(e.daisy);
+        boolean daisy = c.show() && c.drawScene(e.daisy);
     }
 }
