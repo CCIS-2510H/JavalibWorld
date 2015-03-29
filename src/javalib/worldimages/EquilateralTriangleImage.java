@@ -32,4 +32,11 @@ public final class EquilateralTriangleImage extends RegularPolyImageBase {
         this(sideLen, OutlineMode.fromString(fill), color);
     }
 
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new EquilateralTriangleImage(this.sideLen, this.fill, this.color);
+        i.pinhole = p;
+        return i;
+    }
+
 }

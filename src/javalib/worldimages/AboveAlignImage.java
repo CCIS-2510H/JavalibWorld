@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 public final class AboveAlignImage extends AboveAlignImageBase {
-
-    public AboveAlignImage(AlignModeX mode, WorldImage im1, WorldImage[] ims) {
+    
+    public AboveAlignImage(AlignModeX mode, WorldImage im1, WorldImage... ims) {
         super(mode, im1, ims);
     }
-    
+
     public AboveAlignImage(String mode, WorldImage im1, WorldImage... ims) {
         super(mode, im1, ims);
     }
@@ -18,7 +18,8 @@ class AboveAlignImageBase extends WorldImage {
     WorldImage im1, im2;
     AlignModeX mode;
 
-    public AboveAlignImageBase(AlignModeX mode, WorldImage im1, WorldImage... ims) {
+    public AboveAlignImageBase(AlignModeX mode, WorldImage im1,
+            WorldImage... ims) {
         super();
         this.mode = mode;
         this.im1 = im1;
@@ -55,11 +56,10 @@ class AboveAlignImageBase extends WorldImage {
             this.im1.draw(g);
         } else {
             int x = xMoveDist();
-            g.translate(this.pinhole.x, -(this.im2.getHeight() / 2)
-                    + this.pinhole.y);
+            g.translate(0, -(this.im2.getHeight() / 2));
             this.im1.draw(g);
-            g.translate(x + this.pinhole.x, (this.im2.getHeight() / 2)
-                    + (this.im1.getHeight() / 2) + this.pinhole.y);
+            g.translate(x, (this.im2.getHeight() / 2)
+                    + (this.im1.getHeight() / 2));
             this.im2.draw(g);
         }
 
@@ -136,6 +136,13 @@ class AboveAlignImageBase extends WorldImage {
      */
     public int hashCode() {
         return this.mode.hashCode();
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new AboveAlignImage(this.mode, this.im1, this.im2);
+        i.pinhole = p;
+        return i;
     }
 
 }

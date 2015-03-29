@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 public final class BesideAlignImage extends BesideAlignImageBase {
-    
+
     public BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage... ims) {
         super(mode, im1, ims);
     }
-    
+
     public BesideAlignImage(String mode, WorldImage im1, WorldImage... ims) {
         super(mode, im1, ims);
     }
@@ -18,7 +18,8 @@ class BesideAlignImageBase extends WorldImage {
     WorldImage im1, im2;
     AlignModeY mode;
 
-    public BesideAlignImageBase(AlignModeY mode, WorldImage im1, WorldImage... ims) {
+    public BesideAlignImageBase(AlignModeY mode, WorldImage im1,
+            WorldImage... ims) {
         super();
         this.mode = mode;
         this.im1 = im1;
@@ -40,10 +41,11 @@ class BesideAlignImageBase extends WorldImage {
         AffineTransform temp = new AffineTransform(t);
         temp.translate(-this.im2.getWidth() / 2, 0);
         BoundingBox bb1 = this.im1.getBB(temp);
-        temp.translate((this.im1.getWidth() + this.im2.getWidth()) / 2, yMoveDist());
+        temp.translate((this.im1.getWidth() + this.im2.getWidth()) / 2,
+                yMoveDist());
         return bb1.combine(this.im2.getBB(temp));
     }
-    
+
     @Override
     public void draw(Graphics2D g) {
         // Save the old transform state
@@ -54,9 +56,10 @@ class BesideAlignImageBase extends WorldImage {
             this.im1.draw(g);
         } else {
             int y = yMoveDist();
-            g.translate(-(this.im2.getWidth() / 2), 0);
+            g.translate(-(this.im2.getWidth() / 2),
+                    0);
             this.im1.draw(g);
-            g.translate((this.im2.getWidth() / 2) + this.im1.getWidth() / 2, y);
+            g.translate((this.im2.getWidth() / 2) + (this.im1.getWidth() / 2), y);
             this.im2.draw(g);
         }
 
@@ -137,4 +140,10 @@ class BesideAlignImageBase extends WorldImage {
         return this.mode.hashCode();
     }
 
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new BesideAlignImage(this.mode, this.im1, this.im2);
+        i.pinhole = p;
+        return i;
+    }
 }

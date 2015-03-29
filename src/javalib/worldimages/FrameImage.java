@@ -10,7 +10,8 @@ public final class FrameImage extends RectangleImageBase {
     public WorldImage img;
 
     public FrameImage(WorldImage img, Color color) {
-        super((int)img.getBB().getWidth(), (int)img.getBB().getHeight(), OutlineMode.OUTLINE, color);
+        super((int) img.getBB().getWidth(), (int) img.getBB().getHeight(),
+                OutlineMode.OUTLINE, color);
         this.img = img;
     }
 
@@ -40,13 +41,14 @@ public final class FrameImage extends RectangleImageBase {
         this.img.draw(g);
         // set the paint to the given color
         g.setPaint(this.color);
-//        g.draw(new Rectangle2D.Double(Math.ceil(-(this.width / 2.0)), Math
-//                .ceil(-(this.height / 2.0)), this.width, this.height));
-        
+        // Adjust the position of the frame
+        g.translate(this.img.pinhole.x, this.img.pinhole.y);
+        // Draw the frame
         BoundingBox bb = this.img.getBB();
-//        g.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL, 5, new float[]{10}, 0));
-//        g.setColor(Color.GREEN);
-        g.draw(new Rectangle2D.Double(bb.tlx, bb.tly, bb.getWidth(), bb.getHeight()));
+        g.draw(new Rectangle2D.Double(bb.tlx, bb.tly, bb.getWidth(), bb
+                .getHeight()));
+        // Reset the position of the frame
+        g.translate(-this.img.pinhole.x, -this.img.pinhole.y);
         // reset the original paint
         g.setPaint(oldPaint);
         g.setStroke(oldStroke);
@@ -92,5 +94,12 @@ public final class FrameImage extends RectangleImageBase {
      */
     public int hashCode() {
         return this.color.hashCode() + this.width + this.height;
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new FrameImage(this.img, this.color);
+        i.pinhole = p;
+        return i;
     }
 }

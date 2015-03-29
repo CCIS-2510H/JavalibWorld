@@ -62,13 +62,17 @@ public final class TriangleImage extends WorldImage {
         int[] yCoord = new int[] { p1.y - centerY, p2.y - centerY,
                 p3.y - centerY };
         this.poly = new Polygon(xCoord, yCoord, 3);
-        
+
     }
+
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
-        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
-        Point2D p3 = WorldImage.transformPosn(t, this.poly.xpoints[2], this.poly.ypoints[2]);
+        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0],
+                this.poly.ypoints[0]);
+        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1],
+                this.poly.ypoints[1]);
+        Point2D p3 = WorldImage.transformPosn(t, this.poly.xpoints[2],
+                this.poly.ypoints[2]);
         return new BoundingBox(p1, p2).add(p3);
     }
 
@@ -169,5 +173,13 @@ public final class TriangleImage extends WorldImage {
     public int hashCode() {
         return this.color.hashCode() + this.p1.x * this.p1.y + this.p2.x
                 * this.p2.y + this.p3.x * this.p3.y;
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new TriangleImage(this.p1, this.p2, this.p3, this.fill,
+                this.color);
+        i.pinhole = p;
+        return i;
     }
 }

@@ -89,7 +89,7 @@ public class ExamplesImageDrawings {
     WorldImage overlayText = new TextImage(
             "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.BLACK);
 
-    WorldImage overlayXY = new OverlayImagesXY(disc, -50, -30, rectangle);
+    WorldImage overlayXY = new OverlayOffsetImages(disc, -50, -30, rectangle);
     WorldImage overlayXYText = new TextImage(
             "OverlayImagesXY(disc, rectangle, -50, -30)", Color.BLACK);
 
@@ -170,13 +170,13 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
             .placeImageXY(new FrameImage(allTransforms2), 400, 400);
 
-    WorldImage whitePetal = new OverlayImagesXY(new CircleImage(15,
-            OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayImagesXY(
+    WorldImage whitePetal = new OverlayOffsetImages(new CircleImage(15,
+            OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayOffsetImages(
             new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
                     15), OutlineMode.SOLID, Color.WHITE), 30, 0,
             new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
-    WorldImage yellowPetal = new OverlayImagesXY(new CircleImage(15,
-            OutlineMode.SOLID, Color.YELLOW), 60, 0, new OverlayImagesXY(
+    WorldImage yellowPetal = new OverlayOffsetImages(new CircleImage(15,
+            OutlineMode.SOLID, Color.YELLOW), 60, 0, new OverlayOffsetImages(
             new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
                     15), OutlineMode.SOLID, Color.YELLOW), 30, 0,
             new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
@@ -189,8 +189,46 @@ public class ExamplesImageDrawings {
                                             whitePetal, 240), new RotateImage(
                                             yellowPetal, 300))))));
     WorldScene daisy = scene.placeImageXY(
-            new RectangleImage(200, 200, OutlineMode.SOLID, Color.GRAY), 100,
-            100).placeImageXY(daisyImg, 100, 100);
+            new RectangleImage(400, 400, OutlineMode.SOLID, Color.GRAY), 100,
+            100).placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
+            100, 100);
+
+    WorldImage arrow = new BesideImage(new RectangleImage(10, 5, "outline",
+            Color.BLACK), new TriangleImage(new Posn(0, -10), new Posn(0, 10),
+            new Posn(10, 0), "outline", Color.BLACK));
+    WorldImage pinhole = new CircleImage(2, "solid", Color.RED);
+    WorldImage center = new CircleImage(2, "solid", Color.GREEN);
+    WorldScene pinholes = drawCircles(generateCircles());
+
+    WorldImage[] generateCircles() {
+        WorldImage[] pinholeImages = new WorldImage[5];
+        pinholeImages[0] = new CircleImage(20, "solid", Color.BLUE);
+        pinholeImages[1] = pinholeImages[0].movePinhole(10, -10);
+        pinholeImages[2] = new ShearedImage(pinholeImages[1], -0.5, 0.0);
+        pinholeImages[3] = new RotateImage(pinholeImages[2], 90);
+        //pinholeImages[4] = new OverlayOffsetImages(pinholeImages[3])
+        return pinholeImages;
+    }
+
+    WorldScene drawCircles(WorldImage[] circles) {
+        WorldScene s = scene;
+        int x = 100;
+        int horizDist = 100;
+        for (int i = 0; i < circles.length - 1; i++) {
+            int y = 100 * (i + 1);
+            s = s.placeImageXY(circles[i], x, y)
+                    .placeImageXY(pinhole, x + circles[i].pinhole.x,
+                            y + circles[i].pinhole.y)
+                    .placeImageXY(center, x, y)
+                    .placeImageXY(arrow, x + horizDist / 2, y)
+                    .placeImageXY(circles[i + 1], x + horizDist, y)
+                    .placeImageXY(pinhole,
+                            x + horizDist + circles[i + 1].pinhole.x,
+                            y + circles[i + 1].pinhole.y)
+                    .placeImageXY(center, x + horizDist, y);
+        }
+        return s;
+    }
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -207,8 +245,9 @@ public class ExamplesImageDrawings {
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-        boolean makeDrawing = c.show() && c.drawScene(e.combined);
+        // boolean makeDrawing = c.show() && c.drawScene(e.combined);
         c = new WorldCanvas(800, 800);
-        boolean daisy = c.show() && c.drawScene(e.daisy);
+        // boolean daisy = c.show() && c.drawScene(e.daisy);
+        boolean pins = c.show() && c.drawScene(e.pinholes);
     }
 }

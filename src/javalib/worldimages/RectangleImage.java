@@ -4,16 +4,20 @@ import java.awt.*;
 import java.awt.geom.*;
 
 /**
- * <p>Copyright 2012 Viera K. Proulx</p>
- * <p>This program is distributed under the terms of the 
- * GNU Lesser General Public License (LGPL)</p>
+ * <p>
+ * Copyright 2012 Viera K. Proulx
+ * </p>
+ * <p>
+ * This program is distributed under the terms of the GNU Lesser General Public
+ * License (LGPL)
+ * </p>
  */
 
 public final class RectangleImage extends RectangleImageBase {
     public RectangleImage(int width, int height, OutlineMode fill, Color color) {
         super(width, height, fill, color);
     }
-    
+
     public RectangleImage(int width, int height, String fill, Color color) {
         super(width, height, fill, color);
     }
@@ -45,7 +49,8 @@ abstract class RectangleImageBase extends WorldImage {
      * @param color
      *            the color for this image
      */
-    public RectangleImageBase(int width, int height, OutlineMode fill, Color color) {
+    public RectangleImageBase(int width, int height, OutlineMode fill,
+            Color color) {
         super();
         this.width = width;
         this.height = height;
@@ -59,13 +64,17 @@ abstract class RectangleImageBase extends WorldImage {
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D tl = WorldImage.transformPosn(t, -this.width / 2, -this.height / 2);
-        Point2D tr = WorldImage.transformPosn(t,  this.width / 2, -this.height / 2);
-        Point2D bl = WorldImage.transformPosn(t, -this.width / 2,  this.height / 2);
-        Point2D br = WorldImage.transformPosn(t,  this.width / 2,  this.height / 2);
+        Point2D tl = WorldImage.transformPosn(t, -this.width / 2,
+                -this.height / 2);
+        Point2D tr = WorldImage.transformPosn(t, this.width / 2,
+                -this.height / 2);
+        Point2D bl = WorldImage.transformPosn(t, -this.width / 2,
+                this.height / 2);
+        Point2D br = WorldImage.transformPosn(t, this.width / 2,
+                this.height / 2);
         return new BoundingBox(tl, tr).add(bl).add(br);
     }
-    
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -155,5 +164,13 @@ abstract class RectangleImageBase extends WorldImage {
      */
     public int hashCode() {
         return this.color.hashCode() + this.width + this.height;
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new RectangleImage(this.width, this.height, this.fill,
+                this.color);
+        i.pinhole = p;
+        return i;
     }
 }

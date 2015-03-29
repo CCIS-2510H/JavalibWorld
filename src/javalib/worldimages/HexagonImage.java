@@ -31,4 +31,11 @@ public final class HexagonImage extends RegularPolyImageBase {
     public HexagonImage(double sideLen, String fill, Color color) {
         this(sideLen, OutlineMode.fromString(fill), color);
     }
+    
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new HexagonImage(this.sideLen, this.fill, this.color);
+        i.pinhole = p;
+        return i;
+    }
 }

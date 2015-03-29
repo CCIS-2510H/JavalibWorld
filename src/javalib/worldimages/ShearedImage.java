@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 public final class ShearedImage extends WorldImage {
     WorldImage img;
@@ -12,6 +13,13 @@ public final class ShearedImage extends WorldImage {
         this.img = img;
         this.sx = sx;
         this.sy = sy;
+
+        // Shear the pinhole
+        AffineTransform newT = new AffineTransform();
+        newT.shear(this.sx, this.sy);
+        Point2D p = WorldImage.transformPosn(newT, img.pinhole);
+        this.pinhole = new Posn((int) Math.round(p.getX()), (int) Math.round(p
+                .getY()));
     }
 
     @Override
@@ -20,11 +28,10 @@ public final class ShearedImage extends WorldImage {
         newT.shear(this.sx, this.sy);
         return this.img.getBB(newT);
     }
+
     @Override
     public void draw(Graphics2D g) {
         AffineTransform old = g.getTransform();
-        AffineTransform trans = new AffineTransform();
-        trans.setTransform(old);
         g.shear(this.sx, this.sy);
         this.img.draw(g);
         g.setTransform(old);
@@ -46,5 +53,12 @@ public final class ShearedImage extends WorldImage {
     public String toIndentedString(String indent) {
         return "new ShearedImage(" + this.img.toIndentedString(indent) + ",\n"
                 + indent + this.sx + ", " + this.sy + ")";
+    }
+    
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new ShearedImage(this.img, this.sx, this.sy);
+        i.pinhole = p;
+        return i;
     }
 }

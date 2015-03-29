@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 public final class RotateImage extends WorldImage {
     public WorldImage img;
@@ -14,6 +15,13 @@ public final class RotateImage extends WorldImage {
         this.rotationDegrees = rotationDegrees;
         this.width = img.getWidth();
         this.height = img.getHeight();
+
+        // Rotate the pinhole
+        AffineTransform newT = new AffineTransform();
+        newT.rotate(Math.toRadians(this.rotationDegrees));
+        Point2D p = WorldImage.transformPosn(newT, img.pinhole);
+        this.pinhole = new Posn((int) Math.round(p.getX()), (int) Math.round(p
+                .getY()));
     }
 
     @Override
@@ -22,7 +30,7 @@ public final class RotateImage extends WorldImage {
         newT.rotate(Math.toRadians(this.rotationDegrees));
         return this.img.getBB(newT);
     }
-    
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -51,8 +59,8 @@ public final class RotateImage extends WorldImage {
      * Produce a <code>String</code> representation of this rotated image
      */
     public String toString() {
-        return "new RotateImage(this.img = " + this.img.toString() + ", this.rotationDegrees = "
-                + this.rotationDegrees + ")\n";
+        return "new RotateImage(this.img = " + this.img.toString()
+                + ", this.rotationDegrees = " + this.rotationDegrees + ")\n";
     }
 
     /**
@@ -104,5 +112,12 @@ public final class RotateImage extends WorldImage {
                 * Math.sin(Math.toRadians(this.rotationDegrees)))
                 + Math.abs(this.img.getHeight()
                         * Math.cos(Math.toRadians(this.rotationDegrees))));
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new RotateImage(this.img, this.rotationDegrees);
+        i.pinhole = p;
+        return i;
     }
 }

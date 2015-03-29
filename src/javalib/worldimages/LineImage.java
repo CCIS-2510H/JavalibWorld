@@ -136,4 +136,11 @@ public final class LineImage extends WorldImage {
     public int hashCode() {
         return this.color.hashCode() + this.endPoint.x + this.endPoint.y;
     }
+    
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new LineImage(this.endPoint, this.color);
+        i.pinhole = p;
+        return i;
+    }
 }

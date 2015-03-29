@@ -146,7 +146,7 @@ public class BlobWorldFun extends World {
         new OverlayImages(
             new OverlayImages(new CircleImage(10, OutlineMode.OUTLINE, Color.BLACK),
                 new CircleImage(10, OutlineMode.SOLID, Color.WHITE)),
-            new OverlayImagesXYBase(
+            new OverlayOffsetImagesBase(
                 new EllipseImageBase(25, 25, OutlineMode.SOLID, Color.GREEN),
                 12, this.height - 12, 
                 new RectangleImageBase(this.width, this.height, OutlineMode.SOLID, Color.BLUE)));//,

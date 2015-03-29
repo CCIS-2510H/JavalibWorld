@@ -21,7 +21,7 @@ package javalib.worldimages;
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-public final class OverlayImages extends OverlayImagesXYBase {
+public final class OverlayImages extends OverlayOffsetImagesBase {
 
     /**
      * The only constructor - invokes the constructor in the super class
@@ -76,5 +76,12 @@ public final class OverlayImages extends OverlayImagesXYBase {
      */
     public int hashCode() {
         return this.bot.hashCode() + this.top.hashCode();
+    }
+    
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new OverlayImages(this.top, this.bot);
+        i.pinhole = p;
+        return i;
     }
 }

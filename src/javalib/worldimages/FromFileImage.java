@@ -67,12 +67,15 @@ public final class FromFileImage extends WorldImage {
      *            the provided <code>Graphics2D</code> context
      */
     public void draw(Graphics2D g) {
-        g.translate(-this.imread.width / 2, -this.imread.height / 2);
+        // Adjust the position of the frame
+        g.translate(-(this.imread.width / 2),
+                -(this.imread.height / 2));
 
         g.drawRenderedImage(this.imread.image, new AffineTransform());
 
         // Reset to original position
-        g.translate(this.imread.width / 2, this.imread.height / 2);
+        g.translate((this.imread.width / 2),
+                (this.imread.height / 2));
     }
 
     /**
@@ -108,14 +111,16 @@ public final class FromFileImage extends WorldImage {
         return this.imread.height;
     }
 
-    
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D tl = t.transform(new Point(-this.getWidth() / 2, -this.getHeight() / 2), null);
-        Point2D br = t.transform(new Point(this.getWidth() / 2, this.getHeight()/ 2), null);
-        return new BoundingBox((int)tl.getX(), (int)tl.getY(), (int)br.getX(), (int)br.getY());
+        Point2D tl = t.transform(
+                new Point(-this.getWidth() / 2, -this.getHeight() / 2), null);
+        Point2D br = t.transform(
+                new Point(this.getWidth() / 2, this.getHeight() / 2), null);
+        return new BoundingBox((int) tl.getX(), (int) tl.getY(),
+                (int) br.getX(), (int) br.getY());
     }
-    
+
     /**
      * Produce a <code>String</code> representation of this from-file image
      */
@@ -153,5 +158,12 @@ public final class FromFileImage extends WorldImage {
      */
     public int hashCode() {
         return this.fileName.hashCode();
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new FromFileImage(this.fileName);
+        i.pinhole = p;
+        return i;
     }
 }

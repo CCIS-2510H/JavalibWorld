@@ -19,6 +19,10 @@ abstract class ScaleImageXYBase extends WorldImage {
         this.img = img;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
+        
+        // Scale the pinhole
+        this.pinhole = new Posn((int) Math.round(img.pinhole.x * this.scaleX),
+                (int) Math.round(img.pinhole.y * this.scaleY));
     }
 
     @Override
@@ -101,5 +105,12 @@ abstract class ScaleImageXYBase extends WorldImage {
     @Override
     public int getHeight() {
         return (int) Math.round(this.img.getHeight() * this.scaleY);
+    }
+    
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new ScaleImageXY(this.img, this.scaleX, this.scaleY);
+        i.pinhole = p;
+        return i;
     }
 }

@@ -495,27 +495,27 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ OverlayImages class
     // ----------------------------------------//
 
-    WorldImage overlayXY1 = new OverlayImagesXYBase(this.circle1, 5,
+    WorldImage overlayXY1 = new OverlayOffsetImagesBase(this.circle1, 5,
             3, this.rectangle1);
-    WorldImage overlayXY2 = new OverlayImagesXYBase(this.circle2, 5,
+    WorldImage overlayXY2 = new OverlayOffsetImagesBase(this.circle2, 5,
             3, this.rectangle2);
-    WorldImage overlayXY3 = new OverlayImagesXYBase(this.circle1, 4, 5,
+    WorldImage overlayXY3 = new OverlayOffsetImagesBase(this.circle1, 4, 5,
             this.overlay1);
-    WorldImage overlayXY4 = new OverlayImagesXYBase(this.overlay1, 5, 3,
+    WorldImage overlayXY4 = new OverlayOffsetImagesBase(this.overlay1, 5, 3,
             this.circle1);
-    WorldImage overlayXY5 = new OverlayImagesXYBase(this.circle1, 5, 3,
+    WorldImage overlayXY5 = new OverlayOffsetImagesBase(this.circle1, 5, 3,
             this.ellipse1);
-    WorldImage overlayXY6 = new OverlayImagesXYBase(this.overlay1, 5,
+    WorldImage overlayXY6 = new OverlayOffsetImagesBase(this.overlay1, 5,
             3, this.overlay2);
-    WorldImage overlayXY7 = new OverlayImagesXYBase(this.overlay2, 5,
+    WorldImage overlayXY7 = new OverlayOffsetImagesBase(this.overlay2, 5,
             3, this.overlay1);
-    WorldImage overlayXY8 = new OverlayImagesXYBase(this.circle2, 4, 5,
+    WorldImage overlayXY8 = new OverlayOffsetImagesBase(this.circle2, 4, 5,
             this.overlay2);
-    WorldImage overlayXY9 = new OverlayImagesXYBase(this.circle1, 5,
+    WorldImage overlayXY9 = new OverlayOffsetImagesBase(this.circle1, 5,
             3, this.rectangle2);
-    WorldImage overlayXY10 = new OverlayImagesXYBase(this.circle3, 5,
+    WorldImage overlayXY10 = new OverlayOffsetImagesBase(this.circle3, 5,
             3, this.rectangle3);
-    WorldImage overlayXY11 = new OverlayImagesXYBase(this.circle4, 5,
+    WorldImage overlayXY11 = new OverlayOffsetImagesBase(this.circle4, 5,
             3, this.rectangle4);
 
     // Tests for the OverlayImagesXY class

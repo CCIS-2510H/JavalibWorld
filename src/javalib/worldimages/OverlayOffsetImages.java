@@ -4,14 +4,19 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 /**
- * <p>Copyright 2012 Viera K. Proulx</p>
- * <p>This program is distributed under the terms of the 
- * GNU Lesser General Public License (LGPL)</p>
+ * <p>
+ * Copyright 2012 Viera K. Proulx
+ * </p>
+ * <p>
+ * This program is distributed under the terms of the GNU Lesser General Public
+ * License (LGPL)
+ * </p>
  */
 
-public final class OverlayImagesXY extends OverlayImagesXYBase {
-    
-    public OverlayImagesXY(WorldImage top, int dx, int dy, WorldImage bot) {
+public final class OverlayOffsetImages extends OverlayOffsetImagesBase {
+
+    public OverlayOffsetImages(WorldImage top, double dx, double dy,
+            WorldImage bot) {
         super(top, dx, dy, bot);
     }
 }
@@ -27,7 +32,7 @@ public final class OverlayImagesXY extends OverlayImagesXYBase {
  * @author Viera K. Proulx
  * @since February 4 2012
  */
-abstract class OverlayImagesXYBase extends WorldImage {
+abstract class OverlayOffsetImagesBase extends WorldImage {
 
     /** the bottom image for the combined image */
     public WorldImage bot;
@@ -36,12 +41,14 @@ abstract class OverlayImagesXYBase extends WorldImage {
     public WorldImage top;
 
     public Posn deltaTop, deltaBot;
-    
+
     private int width, height;
+    private double dx, dy;
 
     /**
      * The full constructor that produces the top image overlaid over the bottom
      * one with the given offset.
+     * 
      * @param top
      *            the bottom image for the combined image
      * @param dx
@@ -51,25 +58,33 @@ abstract class OverlayImagesXYBase extends WorldImage {
      * @param bot
      *            the bottom image for the combined image
      */
-    public OverlayImagesXYBase(WorldImage top, int dx, int dy, WorldImage bot) {
+    public OverlayOffsetImagesBase(WorldImage top, double dx, double dy,
+            WorldImage bot) {
         super();
         this.bot = bot;
         this.top = top;
+        this.dx = dx;
+        this.dy = dy;
 
         // Calculate proper center point
         int botWidth = this.bot.getWidth();
         int topWidth = this.top.getWidth();
         int botHeight = this.bot.getHeight();
         int topHeight = this.top.getHeight();
-        int rightX = Math.max(botWidth / 2, dx + (topWidth / 2));
-        int leftX = Math.min(-botWidth / 2, dx - (topWidth / 2));
-        int bottomY = Math.max(botHeight / 2, dy + (topHeight / 2));
-        int topY = Math.min(-botHeight / 2, dy - (topHeight / 2));
-        
+        int rightX = (int) Math.round(Math.max(botWidth / 2, dx
+                + (topWidth / 2)));
+        int leftX = (int) Math.round(Math.min(-botWidth / 2, dx
+                - (topWidth / 2)));
+        int bottomY = (int) Math.round(Math.max(botHeight / 2, dy
+                + (topHeight / 2)));
+        int topY = (int) Math.round(Math.min(-botHeight / 2, dy
+                - (topHeight / 2)));
+
         Posn center = new Posn((rightX + leftX) / 2, (bottomY + topY) / 2);
         this.deltaBot = new Posn(-center.x, -center.y);
-        this.deltaTop = new Posn(dx + this.deltaBot.x, dy + this.deltaBot.y);
-        
+        this.deltaTop = new Posn((int) Math.round(dx + this.deltaBot.x),
+                (int) Math.round(dy + this.deltaBot.y));
+
         this.width = rightX - leftX;
         this.height = bottomY - topY;
     }
@@ -84,7 +99,7 @@ abstract class OverlayImagesXYBase extends WorldImage {
         BoundingBox topBox = this.top.getBB(temp);
         return botBox.combine(topBox);
     }
-    
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -128,12 +143,12 @@ abstract class OverlayImagesXYBase extends WorldImage {
      * Produce a <code>String</code> representation of this overlay of images
      */
     public String toString() {
-        return "new OverlayImagesXY(this.deltaBot = " + this.deltaBot.toString()
-            + ", this.deltaTop = " + this.deltaTop.toString() 
-            + "," + "\nthis.width = " + this.width
-            + ", this.height = " + this.height + "," + "\nthis.bot = "
-            + this.bot.toString() + "\nthis.top = " + this.top.toString()
-            + ")\n";
+        return "new OverlayImagesXY(this.deltaBot = "
+                + this.deltaBot.toString() + ", this.deltaTop = "
+                + this.deltaTop.toString() + "," + "\nthis.width = "
+                + this.width + ", this.height = " + this.height + ","
+                + "\nthis.bot = " + this.bot.toString() + "\nthis.top = "
+                + this.top.toString() + ")\n";
     }
 
     /**
@@ -147,20 +162,21 @@ abstract class OverlayImagesXYBase extends WorldImage {
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "OverlayImagesXY") + indent
-            + "this.deltaBot = " + this.deltaBot.toString()
-            + ", this.deltaTop = " + this.deltaTop.toString() + "\n"
-            + indent + "this.bot = " + this.bot.toString() + "\n" + indent
-            + "this.top = " + this.top.toString() + ")\n";
+                + "this.deltaBot = " + this.deltaBot.toString()
+                + ", this.deltaTop = " + this.deltaTop.toString() + "\n"
+                + indent + "this.bot = " + this.bot.toString() + "\n" + indent
+                + "this.top = " + this.top.toString() + ")\n";
     }
 
     /**
      * Is this <code>OverlayImagesXY</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof OverlayImagesXYBase) {
-            OverlayImagesXYBase that = (OverlayImagesXYBase) o;
+        if (o instanceof OverlayOffsetImagesBase) {
+            OverlayOffsetImagesBase that = (OverlayOffsetImagesBase) o;
             return this.bot.equals(that.bot) && this.top.equals(that.top)
-                    && this.deltaTop.equals(that.deltaTop) && this.deltaBot.equals(that.deltaBot);
+                    && this.deltaTop.equals(that.deltaTop)
+                    && this.deltaBot.equals(that.deltaBot);
         } else
             return false;
     }
@@ -169,7 +185,15 @@ abstract class OverlayImagesXYBase extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.deltaBot.hashCode() + this.deltaTop.hashCode() 
-            + this.bot.hashCode() + this.top.hashCode();
+        return this.deltaBot.hashCode() + this.deltaTop.hashCode()
+                + this.bot.hashCode() + this.top.hashCode();
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new OverlayOffsetImages(this.top, this.dx, this.dy,
+                this.bot);
+        i.pinhole = p;
+        return i;
     }
 }

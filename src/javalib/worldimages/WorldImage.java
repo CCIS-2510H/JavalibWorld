@@ -20,7 +20,7 @@ import java.awt.geom.Point2D;
  * @since February 4 2012, April 25 2012
  */
 public abstract class WorldImage {
-    Posn pinhole;
+    public Posn pinhole;
 
     /**
      * Every image has a pinhole (<code>Posn</code>) and a color (
@@ -34,25 +34,36 @@ public abstract class WorldImage {
      *            the color for this image
      */
     public WorldImage() {
-        this(new Posn(0,0));
+        this(new Posn(0, 0));
     }
+
     // Ignore this for now
     protected WorldImage(Posn pinhole) {
         this.pinhole = pinhole;
     }
-        
+
     public BoundingBox getBB() {
         return this.getBB(new AffineTransform());
     }
+
     protected abstract BoundingBox getBB(AffineTransform t);
+
     protected static Point2D transformPosn(AffineTransform t, Posn p) {
         return transformPosn(t, p.x, p.y);
     }
+
     protected static Point2D transformPosn(AffineTransform t, int x, int y) {
         Point2D point = new Point(x, y);
         return t.transform(point, null);
     }
-    
+
+    public abstract WorldImage movePinholeTo(Posn p);
+
+    public WorldImage movePinhole(double dx, double dy) {
+        return movePinholeTo(new Posn((int) Math.round(this.pinhole.x + dx),
+                (int) Math.round(this.pinhole.y + dy)));
+    }
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 

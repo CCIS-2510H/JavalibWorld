@@ -196,10 +196,10 @@ public final class TextImage extends WorldImage {
         g.setTransform(t);
         Rectangle2D bounds = getBoundingBox();
         g.setTransform(old);
-        return new BoundingBox((int)bounds.getMinX(), (int)bounds.getMinY(),
-            (int)bounds.getMaxX(),(int)bounds.getMaxY());
+        return new BoundingBox((int) bounds.getMinX(), (int) bounds.getMinY(),
+                (int) bounds.getMaxX(), (int) bounds.getMaxY());
     }
-    
+
     private Rectangle2D getBoundingBox() {
         // change the font style and size as given
         g.setFont(font.deriveFont(this.style, this.size));
@@ -289,5 +289,12 @@ public final class TextImage extends WorldImage {
     public int hashCode() {
         return this.color.hashCode() + (int) this.size + this.style
                 + this.alignment + this.text.hashCode();
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new TextImage(this.text, this.size, this.style, this.color);
+        i.pinhole = p;
+        return i;
     }
 }

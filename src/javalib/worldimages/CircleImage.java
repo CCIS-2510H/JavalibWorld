@@ -100,4 +100,11 @@ public final class CircleImage extends EllipseImageBase {
     public int hashCode() {
         return this.color.hashCode() + this.radius;
     }
+    
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new CircleImage(this.radius, this.fill, this.color);
+        i.pinhole = p;
+        return i;
+    }
 }

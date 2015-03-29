@@ -5,18 +5,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
- * <p>Copyright 2014 Benjamin Lerner</p>
- * <p>This program is distributed under the terms of the 
- * GNU Lesser General Public License (LGPL)</p>
+ * <p>
+ * Copyright 2014 Benjamin Lerner
+ * </p>
+ * <p>
+ * This program is distributed under the terms of the GNU Lesser General Public
+ * License (LGPL)
+ * </p>
  */
 
 public final class RegularPolyImage extends RegularPolyImageBase {
-    
+
     public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
             Color color) {
         super(sideLen, numSides, fill, color);
     }
-    
+
     public RegularPolyImage(double sideLen, int numSides, String fill,
             Color color) {
         super(sideLen, numSides, fill, color);
@@ -95,23 +99,23 @@ abstract class RegularPolyImageBase extends WorldImage {
         // The second angle is what matters to determine how much to rotate
         // the polygon
 
-        // Shape    | Sides | Rotation     | rotationAngle
+        // Shape | Sides | Rotation | rotationAngle
         // -------------------------------------------------
-        // Triangle |   3   |  pi / 6      | pi / 3
-        // Square   |   4   |  pi / 4      | pi * 2 / 4
-        // Pentagon |   5   |  pi * 3 / 10 | pi * 3 / 5
-        // ...      |  ...  |   ...        | ...
+        // Triangle | 3 | pi / 6 | pi / 3
+        // Square | 4 | pi / 4 | pi * 2 / 4
+        // Pentagon | 5 | pi * 3 / 10 | pi * 3 / 5
+        // ... | ... | ... | ...
 
         double xMin = sideLen, xMax = -sideLen, yMin = sideLen, yMax = -sideLen;
         for (int i = 0; i < this.sides; i++) {
-            double x = Math.round((Math
-                .cos(i * internalAngle + rotation) * sideLen));
+            double x = Math
+                    .round((Math.cos(i * internalAngle + rotation) * sideLen));
             xMin = Math.min(xMin, x);
             xMax = Math.max(xMax, x);
-            xCoord[i] = (int)x;
-            double y = Math.round((Math
-                .sin(i * internalAngle + rotation) * sideLen));
-            yCoord[i] = (int)y;
+            xCoord[i] = (int) x;
+            double y = Math
+                    .round((Math.sin(i * internalAngle + rotation) * sideLen));
+            yCoord[i] = (int) y;
             yMin = Math.min(yMin, y);
             yMax = Math.max(yMax, y);
         }
@@ -127,16 +131,19 @@ abstract class RegularPolyImageBase extends WorldImage {
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0], this.poly.ypoints[0]);
-        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1], this.poly.ypoints[1]);
+        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0],
+                this.poly.ypoints[0]);
+        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1],
+                this.poly.ypoints[1]);
         BoundingBox ans = new BoundingBox(p1, p2);
         for (int i = 2; i < this.sides; i++) {
-            Point2D p = WorldImage.transformPosn(t, this.poly.xpoints[i], this.poly.ypoints[i]);
+            Point2D p = WorldImage.transformPosn(t, this.poly.xpoints[i],
+                    this.poly.ypoints[i]);
             ans = ans.add(p);
         }
         return ans;
     }
-    
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -151,6 +158,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
         g.setPaint(color);
+
         if (this.fill == OutlineMode.OUTLINE) {
             g.draw(this.poly);
         } else if (this.fill == OutlineMode.SOLID) {
@@ -234,5 +242,13 @@ abstract class RegularPolyImageBase extends WorldImage {
      */
     public int hashCode() {
         return this.color.hashCode() + (int) this.sideLen + this.sides;
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        WorldImage i = new RegularPolyImage(this.sideLen, this.sides,
+                this.fill, this.color);
+        i.pinhole = p;
+        return i;
     }
 }
