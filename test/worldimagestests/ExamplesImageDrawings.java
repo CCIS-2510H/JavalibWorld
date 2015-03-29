@@ -198,7 +198,15 @@ public class ExamplesImageDrawings {
             new Posn(10, 0), "outline", Color.BLACK));
     WorldImage pinhole = new CircleImage(2, "solid", Color.RED);
     WorldImage center = new CircleImage(2, "solid", Color.GREEN);
-    WorldScene pinholes = drawCircles(generateCircles());
+    WorldImage sq = new RectangleImage(20, 20, "solid", Color.GRAY);
+    WorldImage ooa = new OverlayOffsetAlign("pinhole",
+            "pinhole", sq.movePinhole(5, 25), 0, 0, new RectangleImage(100, 20,
+                    "solid", Color.LIGHT_GRAY).movePinhole(-25, -5));
+
+    WorldScene pinholes = drawCircles(generateCircles())
+            .placeImageXY(new FrameImage(ooa), 400, 200)
+            .placeImageXY(center, 400, 200)
+            .placeImageXY(pinhole, ooa.pinhole.x + 400, ooa.pinhole.y + 200);
 
     WorldImage[] generateCircles() {
         WorldImage[] pinholeImages = new WorldImage[5];
@@ -206,7 +214,8 @@ public class ExamplesImageDrawings {
         pinholeImages[1] = pinholeImages[0].movePinhole(10, -10);
         pinholeImages[2] = new ShearedImage(pinholeImages[1], -0.5, 0.0);
         pinholeImages[3] = new RotateImage(pinholeImages[2], 90);
-        //pinholeImages[4] = new OverlayOffsetImages(pinholeImages[3])
+        pinholeImages[4] = new OverlayOffsetAlign("pinhole", "pinhole",
+                pinholeImages[3], 0, 0, pinholeImages[2]);
         return pinholeImages;
     }
 
@@ -217,15 +226,15 @@ public class ExamplesImageDrawings {
         for (int i = 0; i < circles.length - 1; i++) {
             int y = 100 * (i + 1);
             s = s.placeImageXY(circles[i], x, y)
-                    .placeImageXY(pinhole, x + circles[i].pinhole.x,
-                            y + circles[i].pinhole.y)
-                    .placeImageXY(center, x, y)
                     .placeImageXY(arrow, x + horizDist / 2, y)
                     .placeImageXY(circles[i + 1], x + horizDist, y)
+                    .placeImageXY(center, x, y)
+                    .placeImageXY(center, x + horizDist, y)
+                    .placeImageXY(pinhole, x + circles[i].pinhole.x,
+                            y + circles[i].pinhole.y)
                     .placeImageXY(pinhole,
                             x + horizDist + circles[i + 1].pinhole.x,
-                            y + circles[i + 1].pinhole.y)
-                    .placeImageXY(center, x + horizDist, y);
+                            y + circles[i + 1].pinhole.y);
         }
         return s;
     }

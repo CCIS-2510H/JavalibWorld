@@ -13,8 +13,16 @@ public final class RotateImage extends WorldImage {
         super();
         this.img = img;
         this.rotationDegrees = rotationDegrees;
-        this.width = img.getWidth();
-        this.height = img.getHeight();
+
+        // Set width & height
+        this.width = (int) Math.round(Math.abs(this.img.getHeight()
+                * Math.sin(Math.toRadians(this.rotationDegrees)))
+                + Math.abs(this.img.getWidth()
+                        * Math.cos(Math.toRadians(this.rotationDegrees))));
+        this.height = (int) Math.round(Math.abs(this.img.getWidth()
+                * Math.sin(Math.toRadians(this.rotationDegrees)))
+                + Math.abs(this.img.getHeight()
+                        * Math.cos(Math.toRadians(this.rotationDegrees))));
 
         // Rotate the pinhole
         AffineTransform newT = new AffineTransform();
@@ -100,18 +108,12 @@ public final class RotateImage extends WorldImage {
 
     @Override
     public int getWidth() {
-        return (int) Math.round(Math.abs(this.img.getHeight()
-                * Math.sin(Math.toRadians(this.rotationDegrees)))
-                + Math.abs(this.img.getWidth()
-                        * Math.cos(Math.toRadians(this.rotationDegrees))));
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return (int) Math.round(Math.abs(this.img.getWidth()
-                * Math.sin(Math.toRadians(this.rotationDegrees)))
-                + Math.abs(this.img.getHeight()
-                        * Math.cos(Math.toRadians(this.rotationDegrees))));
+        return height;
     }
 
     @Override

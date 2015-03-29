@@ -42,13 +42,13 @@ public final class FrameImage extends RectangleImageBase {
         // set the paint to the given color
         g.setPaint(this.color);
         // Adjust the position of the frame
-        g.translate(this.img.pinhole.x, this.img.pinhole.y);
+        //g.translate(this.img.pinhole.x, this.img.pinhole.y);
         // Draw the frame
         BoundingBox bb = this.img.getBB();
         g.draw(new Rectangle2D.Double(bb.tlx, bb.tly, bb.getWidth(), bb
                 .getHeight()));
         // Reset the position of the frame
-        g.translate(-this.img.pinhole.x, -this.img.pinhole.y);
+        //g.translate(-this.img.pinhole.x, -this.img.pinhole.y);
         // reset the original paint
         g.setPaint(oldPaint);
         g.setStroke(oldStroke);
