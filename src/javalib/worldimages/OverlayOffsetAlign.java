@@ -109,17 +109,22 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
         Posn center = new Posn((rightX + leftX) / 2, (bottomY + topY) / 2);
 
-        int botDeltaX = -center.x + (int) Math.round(dx), botDeltaY = -center.y
-                + (int) Math.round(dy), topDeltaX = botDeltaX, topDeltaY = botDeltaY;
+        int botDeltaX, botDeltaY, topDeltaX, topDeltaY;
         if (alignX == AlignModeX.PINHOLE) {
             // move to pinhole, then move the based on where the center is
             botDeltaX = (int) (-(this.bot.pinhole.x + center.x) + dx);
             topDeltaX = -(this.top.pinhole.x + center.x);
+        } else {
+            botDeltaX = -center.x + xMoveDist() + (int) Math.round(dx);
+            topDeltaX = -center.x;
         }
         if (alignY == AlignModeY.PINHOLE) {
             // move to pinhole, then move the based on where the center is
             botDeltaY = (int) (-(this.bot.pinhole.y + center.y) + dy);
             topDeltaY = -(this.top.pinhole.y + center.y);
+        } else {
+            botDeltaY = -center.y + yMoveDist() + (int) Math.round(dy);
+            topDeltaY = -center.y;
         }
 
         this.deltaBot = new Posn(botDeltaX, botDeltaY);
@@ -141,6 +146,32 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         temp.translate(this.deltaTop.x, this.deltaTop.y);
         BoundingBox topBox = this.top.getBB(temp);
         return botBox.combine(topBox);
+    }
+
+    private int yMoveDist() {
+        if (this.alignY == AlignModeY.TOP || this.alignY == AlignModeY.BOTTOM) {
+            int h1 = this.top.getHeight();
+            int h2 = this.bot.getHeight();
+            if (this.alignY == AlignModeY.TOP) {
+                return (h2 - h1) / 2;
+            } else if (this.alignY == AlignModeY.BOTTOM) {
+                return (h1 - h2) / 2;
+            }
+        }
+        return 0;
+    }
+
+    private int xMoveDist() {
+        if (this.alignX == AlignModeX.LEFT || this.alignX == AlignModeX.RIGHT) {
+            int w1 = this.top.getWidth();
+            int w2 = this.bot.getWidth();
+            if (this.alignX == AlignModeX.LEFT) {
+                return (w2 - w1) / 2;
+            } else if (this.alignX == AlignModeX.RIGHT) {
+                return (w1 - w2) / 2;
+            }
+        }
+        return 0;
     }
 
     /**
