@@ -1,6 +1,5 @@
 package javalib.worldimages;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
@@ -75,7 +74,8 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         int botHeight = this.bot.getHeight();
         int topHeight = this.top.getHeight();
 
-        int rightX, leftX, topY, bottomY;
+        int rightX, leftX, topY, bottomY, centerX, centerY;
+        int botDeltaX, botDeltaY, topDeltaX, topDeltaY;
         if (alignX == AlignModeX.PINHOLE) {
             rightX = (int) Math.round(Math.max((topWidth / 2)
                     - this.top.pinhole.x, (botWidth / 2) - this.bot.pinhole.x
@@ -83,11 +83,20 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
             leftX = (int) Math.round(Math.min(
                     -((botWidth / 2) + this.bot.pinhole.x) + dx,
                     -((topWidth / 2) + this.top.pinhole.x)));
+            centerX = (rightX + leftX) / 2;
+
+            // move to pinhole, then move the based on where the center is
+            botDeltaX = -centerX + xMoveDist();
+            topDeltaX = -centerX - this.top.pinhole.x;
         } else {
             rightX = (int) Math.round(Math.max(botWidth / 2, dx
                     + (topWidth / 2)));
             leftX = (int) Math.round(Math.min(-botWidth / 2, dx
                     - (topWidth / 2)));
+            centerX = (rightX + leftX) / 2;
+
+            botDeltaX = -centerX + xMoveDist();
+            topDeltaX = -centerX;
         }
 
         if (alignY == AlignModeY.PINHOLE) {
@@ -97,43 +106,31 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
             topY = (int) Math.round(Math.min(
                     -((botHeight / 2) + this.bot.pinhole.y) + dy,
                     -((topHeight / 2) + this.top.pinhole.y)));
+            centerY = (bottomY + topY) / 2;
+
+            // move to pinhole, then move the based on where the center is
+            botDeltaY = -centerY + yMoveDist();
+            topDeltaY = -centerY - this.top.pinhole.y;
         } else {
             bottomY = (int) Math.round(Math.max(botHeight / 2, dy
                     + (topHeight / 2)));
             topY = (int) Math.round(Math.min(-botHeight / 2, dy
                     - (topHeight / 2)));
+            centerY = (bottomY + topY) / 2;
+
+            botDeltaY = -centerY + yMoveDist();
+            topDeltaY = -centerY;
         }
 
         this.width = rightX - leftX;
         this.height = bottomY - topY;
-
-        Posn center = new Posn((rightX + leftX) / 2, (bottomY + topY) / 2);
-
-        int botDeltaX, botDeltaY, topDeltaX, topDeltaY;
-        if (alignX == AlignModeX.PINHOLE) {
-            // move to pinhole, then move the based on where the center is
-            botDeltaX = (int) (-(this.bot.pinhole.x + center.x) + dx);
-            topDeltaX = -(this.top.pinhole.x + center.x);
-        } else {
-            botDeltaX = -center.x + xMoveDist() + (int) Math.round(dx);
-            topDeltaX = -center.x;
-        }
-        if (alignY == AlignModeY.PINHOLE) {
-            // move to pinhole, then move the based on where the center is
-            botDeltaY = (int) (-(this.bot.pinhole.y + center.y) + dy);
-            topDeltaY = -(this.top.pinhole.y + center.y);
-        } else {
-            botDeltaY = -center.y + yMoveDist() + (int) Math.round(dy);
-            topDeltaY = -center.y;
-        }
-
         this.deltaBot = new Posn(botDeltaX, botDeltaY);
         this.deltaTop = new Posn(topDeltaX, topDeltaY);
 
         if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
                 && dx == 0 && dy == 0) {
             // Set the pinhole
-            this.pinhole = new Posn(-center.x, -center.y);
+            this.pinhole = new Posn(-centerX, -centerY);
         }
     }
 
@@ -149,29 +146,37 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     }
 
     private int yMoveDist() {
+        int moveDist = 0;
         if (this.alignY == AlignModeY.TOP || this.alignY == AlignModeY.BOTTOM) {
             int h1 = this.top.getHeight();
             int h2 = this.bot.getHeight();
             if (this.alignY == AlignModeY.TOP) {
-                return (h2 - h1) / 2;
+                moveDist = (h2 - h1) / 2;
             } else if (this.alignY == AlignModeY.BOTTOM) {
-                return (h1 - h2) / 2;
+                moveDist = (h1 - h2) / 2;
             }
+        } else if (this.alignY == AlignModeY.PINHOLE) {
+            moveDist = -this.bot.pinhole.y;
         }
-        return 0;
+        moveDist += (int) Math.round(dy);
+        return moveDist;
     }
 
     private int xMoveDist() {
+        int moveDist = 0;
         if (this.alignX == AlignModeX.LEFT || this.alignX == AlignModeX.RIGHT) {
             int w1 = this.top.getWidth();
             int w2 = this.bot.getWidth();
             if (this.alignX == AlignModeX.LEFT) {
-                return (w2 - w1) / 2;
+                moveDist = (w2 - w1) / 2;
             } else if (this.alignX == AlignModeX.RIGHT) {
-                return (w1 - w2) / 2;
+                moveDist = (w1 - w2) / 2;
             }
+        } else if (this.alignX == AlignModeX.PINHOLE) {
+            moveDist = -this.bot.pinhole.x;
         }
-        return 0;
+        moveDist += (int) Math.round(dx);
+        return moveDist;
     }
 
     /**
