@@ -84,24 +84,24 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
                     -((botWidth / 2.0) + this.bot.pinhole.x) + dx,
                     -((topWidth / 2.0) + this.top.pinhole.x)));
         } else {
-            rightX = (int) Math.round(Math.max(botWidth / 2.0, dx
-                    + (topWidth / 2.0)));
-            leftX = (int) Math.round(Math.min(-botWidth / 2.0, dx
-                    - (topWidth / 2.0)));
+            rightX = (int) Math.round(Math.max((botWidth / 2.0)
+                    + xBotMoveDist(), (topWidth / 2.0) + xTopMoveDist()));
+            leftX = (int) Math.round(Math.min((-botWidth / 2.0)
+                    + xBotMoveDist(), (-topWidth / 2.0) + xTopMoveDist()));
         }
 
         if (alignY == AlignModeY.PINHOLE) {
             bottomY = (int) Math.round(Math.max((botHeight / 2.0)
                     - this.bot.pinhole.y + dy, (topHeight / 2.0)
-                    - this.top.pinhole.y));
+                    - this.top.pinhole.y - dy));
             topY = (int) Math.round(Math.min(
                     -((botHeight / 2.0) + this.bot.pinhole.y) + dy,
-                    -((topHeight / 2.0) + this.top.pinhole.y)));
+                    -((topHeight / 2.0) + this.top.pinhole.y) - dy));
         } else {
-            bottomY = (int) Math.round(Math.max(botHeight / 2.0, dy
-                    + (topHeight / 2.0)));
-            topY = (int) Math.round(Math.min(-botHeight / 2.0, dy
-                    - (topHeight / 2.0)));
+            bottomY = (int) Math.round(Math.max((botHeight / 2.0)
+                    + yBotMoveDist(), (topHeight / 2.0) + yTopMoveDist()));
+            topY = (int) Math.round(Math.min((-botHeight / 2.0)
+                    + yBotMoveDist(), (-topHeight / 2.0) + yTopMoveDist()));
         }
 
         this.width = rightX - leftX;
@@ -114,13 +114,11 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         // xTopMoveDist() position the two images relative to
         // each other, but not correctly positioned at the origin,
         // which is why offsetX and offsetY are needed
-        int offsetX = 0; //(int) Math.round(((this.width / 2.0) - (botWidth / 2.0)) / 2.0);
-        int offsetY = 0;
 
-        botDeltaY = -centerY + offsetY + yBotMoveDist();
-        topDeltaY = -centerY + offsetY + yTopMoveDist();
-        botDeltaX = -centerX + offsetX + xBotMoveDist();
-        topDeltaX = -centerX + offsetX + xTopMoveDist();
+        botDeltaY = -centerY + yBotMoveDist();
+        topDeltaY = -centerY + yTopMoveDist();
+        botDeltaX = -centerX + xBotMoveDist();
+        topDeltaX = -centerX + xTopMoveDist();
 
         this.deltaBot = new Posn(botDeltaX, botDeltaY);
         this.deltaTop = new Posn(topDeltaX, topDeltaY);
@@ -144,20 +142,20 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     }
 
     private int yBotMoveDist() {
-        int moveDist = 0;
+        double moveDist = 0;
         if (this.alignY == AlignModeY.TOP || this.alignY == AlignModeY.BOTTOM) {
             int h1 = this.top.getHeight();
             int h2 = this.bot.getHeight();
             if (this.alignY == AlignModeY.TOP) {
-                moveDist = (h2 - h1) / 2;
+                moveDist = (h2 - h1) / 2.0;
             } else if (this.alignY == AlignModeY.BOTTOM) {
-                moveDist = (h1 - h2) / 2;
+                moveDist = (h1 - h2) / 2.0;
             }
         } else if (this.alignY == AlignModeY.PINHOLE) {
             moveDist = -this.bot.pinhole.y;
         }
-        moveDist += (int) Math.round(dy);
-        return moveDist;
+        moveDist += dy;
+        return (int) Math.round(moveDist);
     }
 
     private int yTopMoveDist() {
@@ -168,20 +166,20 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     }
 
     private int xBotMoveDist() {
-        int moveDist = 0;
+        double moveDist = 0;
         if (this.alignX == AlignModeX.LEFT || this.alignX == AlignModeX.RIGHT) {
             int w1 = this.top.getWidth();
             int w2 = this.bot.getWidth();
             if (this.alignX == AlignModeX.LEFT) {
-                moveDist = (w2 - w1) / 2;
+                moveDist = (w2 - w1) / 2.0;
             } else if (this.alignX == AlignModeX.RIGHT) {
-                moveDist = (w1 - w2) / 2;
+                moveDist = (w1 - w2) / 2.0;
             }
         } else if (this.alignX == AlignModeX.PINHOLE) {
             moveDist = -this.bot.pinhole.x;
         }
-        moveDist += (int) Math.round(dx);
-        return moveDist;
+        moveDist += dx;
+        return (int) Math.round(moveDist);
     }
 
     private int xTopMoveDist() {

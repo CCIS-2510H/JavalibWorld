@@ -219,8 +219,8 @@ public class ExamplesImageDrawings {
 //                new RectangleImage(pinholeImages[4].getWidth() / 2,
 //                        pinholeImages[4].getHeight(), "outline", Color.RED), 0,
 //                0, pinholeImages[4]);
-        pinholeImages[5] = new OverlayOffsetAlign("right", "bottom",
-                new RectangleImage(20, 20, "solid", Color.BLUE), 0, 0,
+        pinholeImages[5] = new OverlayOffsetAlign("right", "center",
+                new RectangleImage(20, 20, "solid", Color.BLUE), -20, -40,
                 new RectangleImage(60, 60, "outline", Color.GRAY));
         return pinholeImages;
     }
