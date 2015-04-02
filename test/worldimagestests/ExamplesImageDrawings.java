@@ -199,29 +199,30 @@ public class ExamplesImageDrawings {
     WorldImage pinhole = new CircleImage(2, "solid", Color.RED);
     WorldImage center = new CircleImage(2, "solid", Color.GREEN);
     WorldImage sq = new RectangleImage(20, 10, "solid", Color.GRAY);
-    WorldImage ooa = new OverlayOffsetAlign(AlignModeX.PINHOLE, AlignModeY.TOP,
-            new RectangleImage(100, 20, "outline", Color.LIGHT_GRAY)
-                    .movePinhole(-25, -5), 0, 0, sq.movePinhole(5, 25));
+//    WorldImage ooa = new OverlayOffsetAlign(AlignModeX.PINHOLE, AlignModeY.TOP,
+//            new RectangleImage(100, 20, "outline", Color.LIGHT_GRAY)
+//                    .movePinhole(-25, -5), 0, 0, sq.movePinhole(5, 25));
 
-    WorldScene pinholes = drawCircles(generateCircles())
-            .placeImageXY(ooa, 400, 200).placeImageXY(center, 400, 200)
-            .placeImageXY(pinhole, ooa.pinhole.x + 400, ooa.pinhole.y + 200);
+    WorldScene pinholes = drawCircles(generateCircles());
+//            .placeImageXY(ooa, 400, 200).placeImageXY(center, 400, 200)
+//            .placeImageXY(pinhole, ooa.pinhole.x + 400, ooa.pinhole.y + 200);
 
     WorldImage[] generateCircles() {
-        WorldImage[] pinholeImages = new WorldImage[6];
+        WorldImage[] pinholeImages = new WorldImage[7];
         pinholeImages[0] = new CircleImage(20, "solid", Color.BLUE);
         pinholeImages[1] = pinholeImages[0].movePinhole(10, -10);
         pinholeImages[2] = new ShearedImage(pinholeImages[1], -0.5, 0.0);
         pinholeImages[3] = new RotateImage(pinholeImages[2], 90);
         pinholeImages[4] = new OverlayOffsetAlign("pinhole", "pinhole",
                 pinholeImages[3], 0, 0, new RotateImage(pinholeImages[2], 180));
-//        pinholeImages[5] = new OverlayOffsetAlign("left", "center",
-//                new RectangleImage(pinholeImages[4].getWidth() / 2,
-//                        pinholeImages[4].getHeight(), "outline", Color.RED), 0,
-//                0, pinholeImages[4]);
         pinholeImages[5] = new OverlayOffsetAlign("right", "center",
-                new RectangleImage(20, 20, "solid", Color.BLUE), -20, -40,
-                new RectangleImage(60, 60, "outline", Color.GRAY));
+                        new RectangleImage(pinholeImages[4].getWidth() / 2,
+                                pinholeImages[4].getHeight(), "outline",
+                                Color.RED), 0, 0, pinholeImages[4]);
+        pinholeImages[6] = new OverlayOffsetAlign("left", "center",
+                new RectangleImage(pinholeImages[4].getWidth() / 2,
+                        pinholeImages[4].getHeight(), "outline", Color.GREEN),
+                0, 0, pinholeImages[5]);
         return pinholeImages;
     }
 
