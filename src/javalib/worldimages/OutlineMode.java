@@ -15,6 +15,10 @@ public enum OutlineMode {
         return this.name().toLowerCase();
     }
 
+    /**
+     * 
+     * @return The enum associated with the given <code>name</code>
+     */
     public static OutlineMode fromString(String name) {
         return OutlineMode.valueOf(name.toUpperCase());
     }

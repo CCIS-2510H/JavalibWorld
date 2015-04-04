@@ -1,148 +1,105 @@
 package javalib.worldimages;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
+/**
+ * <p>
+ * Copyright 2015 Ben Lerner
+ * </p>
+ * <p>
+ * This program is distributed under the terms of the GNU Lesser General Public
+ * License (LGPL)
+ * </p>
+ */
 
-public final class BesideAlignImage extends BesideAlignImageBase {
+/**
+ * A class representing positioning images next to one another, with specified
+ * alignment along the Y axis
+ * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
+ * 
+ */
+public final class BesideAlignImage extends OverlayOffsetAlignBase {
 
+    private BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage im2) {
+        super(AlignModeX.PINHOLE, mode, im1, (int) Math.round(im1.getWidth()
+                / 2.0 + im2.getWidth() / 2.0), 0, im2);
+    }
+
+    /**
+     * Position an image next to another image
+     * 
+     * @param mode
+     *            -- Alignment along the Y axis. Top, Bottom, center, middle,
+     *            pinhole.
+     * @param im1
+     *            -- Left image
+     * @param ims
+     *            -- Right image(s)
+     */
     public BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage... ims) {
-        super(mode, im1, ims);
+        this(mode, im1, multipleImageHandling(mode, ims));
     }
 
+    /**
+     * Position an image next to another image
+     * 
+     * @param mode
+     *            -- Alignment along the Y axis. Top, Bottom, center, middle,
+     *            pinhole.
+     * @param im1
+     *            -- Left image
+     * @param ims
+     *            -- Right image(s)
+     */
     public BesideAlignImage(String mode, WorldImage im1, WorldImage... ims) {
-        super(mode, im1, ims);
-    }
-}
-
-class BesideAlignImageBase extends WorldImage {
-    WorldImage im1, im2;
-    AlignModeY mode;
-
-    public BesideAlignImageBase(AlignModeY mode, WorldImage im1,
-            WorldImage... ims) {
-        super();
-        this.mode = mode;
-        this.im1 = im1;
-        if (ims.length == 1) {
-            im2 = ims[0];
-        } else if (ims.length > 1) {
-            WorldImage[] images = new WorldImage[ims.length - 1];
-            System.arraycopy(ims, 1, images, 0, images.length);
-            im2 = new BesideAlignImageBase(mode, ims[0], images);
-        }
-    }
-
-    public BesideAlignImageBase(String mode, WorldImage im1, WorldImage... ims) {
         this(AlignModeY.fromString(mode), im1, ims);
     }
 
-    @Override
-    protected BoundingBox getBB(AffineTransform t) {
-        AffineTransform temp = new AffineTransform(t);
-        temp.translate(-this.im2.getWidth() / 2, 0);
-        BoundingBox bb1 = this.im1.getBB(temp);
-        temp.translate((this.im1.getWidth() + this.im2.getWidth()) / 2,
-                yMoveDist());
-        return bb1.combine(this.im2.getBB(temp));
-    }
-
-    @Override
-    public void draw(Graphics2D g) {
-        // Save the old transform state
-        AffineTransform old = g.getTransform();
-
-        // draw the objects
-        if (this.im2 == null) {
-            this.im1.draw(g);
+    /**
+     * Combine many images into a series of BesideAlignImages
+     */
+    private static WorldImage multipleImageHandling(AlignModeY mode,
+            WorldImage[] ims) {
+        if (ims.length <= 1) {
+            return ims[0];
         } else {
-            int y = yMoveDist();
-            g.translate(-(this.im2.getWidth() / 2),
-                    0);
-            this.im1.draw(g);
-            g.translate((this.im2.getWidth() / 2) + (this.im1.getWidth() / 2), y);
-            this.im2.draw(g);
+            WorldImage[] images = new WorldImage[ims.length - 1];
+            System.arraycopy(ims, 1, images, 0, images.length);
+            return new BesideAlignImage(mode, ims[0], images);
         }
-
-        // Reset the transformation matrix
-        g.setTransform(old);
-    }
-
-    private int yMoveDist() {
-        if (this.mode != AlignModeY.CENTER && this.mode != AlignModeY.MIDDLE) {
-            int h1 = this.im1.getHeight();
-            int h2 = this.im2.getHeight();
-            if (this.mode == AlignModeY.TOP) {
-                return (h2 - h1) / 2;
-            } else if (this.mode == AlignModeY.BOTTOM) {
-                return (h1 - h2) / 2;
-            }
-        }
-        return 0;
-    }
-
-    @Override
-    public int getWidth() {
-        int w = this.im1.getWidth();
-        if (this.im2 != null) {
-            w += this.im2.getWidth();
-        }
-        return w;
-    }
-
-    @Override
-    public int getHeight() {
-        int h = this.im1.getHeight();
-        if (this.im2 != null) {
-            h = Math.max(h, this.im2.getHeight());
-        }
-        return h;
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "BesideAlignImage") + indent
-                + "this.mode = " + this.mode + ")\n";
+        return classNameString(indent, this) + "this.mode = " + this.alignY
+                + ",\n" + indent + "this.im1 = "
+                + this.top.toIndentedString(indent) + ",\n" + indent
+                + "this.im2 = " + this.bot.toIndentedString(indent) + ")\n";
     }
 
     /**
-     * <p>
-     * Provide a method for comparing two images constructed from
-     * BesideAlignImages to be used by the <em>tester</em> library.
-     * </p>
-     * 
-     * <p>
-     * This requires the import of the tester library.
-     * </p>
+     * Produce a <code>String</code> representation of this overlaid image
      */
-    public boolean same(BesideAlignImageBase that) {
-        return this.mode == that.mode
-                && this.im1.equals(that.im1)
-                && ((this.im2 == null && that.im2 == null) || (this.im2 != null
-                        && that.im2 != null && this.im2.equals(that.im2)));
+    @Override
+    public String toString() {
+        return className(this) + "this.mode = " + this.alignY
+                + ",\nthis.im1 = " + this.top.toString() + ",\nthis.im2 = "
+                + this.bot.toString() + ")\n";
     }
 
     /**
-     * Is this <code>FromFileImage</code> same as the given object?
+     * Is this <code>BesideAlignImage</code> same as the given object?
      */
+    @Override
     public boolean equals(Object o) {
-        if (o instanceof BesideAlignImageBase) {
-            BesideAlignImageBase that = (BesideAlignImageBase) o;
-            return this.same(that);
-        } else
-            return false;
-    }
-
-    /**
-     * The hashCode to match the equals method
-     */
-    public int hashCode() {
-        return this.mode.hashCode();
+        return o instanceof BesideAlignImage && this.same((BesideAlignImage) o);
     }
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new BesideAlignImage(this.mode, this.im1, this.im2);
+        WorldImage i = new BesideAlignImage(this.alignY, this.top, this.bot);
         i.pinhole = p;
         return i;
     }

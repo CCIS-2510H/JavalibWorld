@@ -179,6 +179,7 @@ abstract class EllipseImageBase extends WorldImage {
     /**
      * Is this <code>EllipseImage</code> same as the given object?
      */
+    @Override
     public boolean equals(Object o) {
         return o instanceof EllipseImageBase && this.same((EllipseImageBase) o);
     }
