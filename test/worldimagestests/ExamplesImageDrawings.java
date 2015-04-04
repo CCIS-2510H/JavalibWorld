@@ -199,13 +199,8 @@ public class ExamplesImageDrawings {
     WorldImage pinhole = new CircleImage(2, "solid", Color.RED);
     WorldImage center = new CircleImage(2, "solid", Color.GREEN);
     WorldImage sq = new RectangleImage(20, 10, "solid", Color.GRAY);
-//    WorldImage ooa = new OverlayOffsetAlign(AlignModeX.PINHOLE, AlignModeY.TOP,
-//            new RectangleImage(100, 20, "outline", Color.LIGHT_GRAY)
-//                    .movePinhole(-25, -5), 0, 0, sq.movePinhole(5, 25));
 
     WorldScene pinholes = drawCircles(generateCircles());
-//            .placeImageXY(ooa, 400, 200).placeImageXY(center, 400, 200)
-//            .placeImageXY(pinhole, ooa.pinhole.x + 400, ooa.pinhole.y + 200);
 
     WorldImage[] generateCircles() {
         WorldImage[] pinholeImages = new WorldImage[7];
