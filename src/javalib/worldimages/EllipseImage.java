@@ -5,7 +5,7 @@ import java.awt.geom.*;
 
 /**
  * <p>
- * Copyright 2012 Viera K. Proulx
+ * Copyright 2015 Ben Lerner
  * </p>
  * <p>
  * This program is distributed under the terms of the GNU Lesser General Public
@@ -14,11 +14,36 @@ import java.awt.geom.*;
  */
 
 public final class EllipseImage extends EllipseImageBase {
+
+    /**
+     * A full constructor for this ellipse image.
+     * 
+     * @param width
+     *            -- the width of this ellipse
+     * @param height
+     *            -- the height of this ellipse
+     * @param outlineMode
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this image
+     */
     public EllipseImage(int width, int height, OutlineMode outlineMode,
             Color color) {
         super(width, height, outlineMode, color);
     }
 
+    /**
+     * A full constructor for this ellipse image.
+     * 
+     * @param width
+     *            -- the width of this ellipse
+     * @param height
+     *            -- the height of this ellipse
+     * @param outlineMode
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this image
+     */
     public EllipseImage(int width, int height, String outlineMode, Color color) {
         super(width, height, outlineMode, color);
     }
@@ -26,12 +51,13 @@ public final class EllipseImage extends EllipseImageBase {
 
 /**
  * <p>
- * The class to represent filled ellipse images drawn by the world when drawing
- * on its <code>Canvas</code>.
+ * The class to represent Ellipse images drawn by the world when drawing on its
+ * <code>Canvas</code>.
  * </p>
  * 
- * @author Viera K. Proulx
- * @since February 4 2012
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4 2015
  */
 abstract class EllipseImageBase extends WorldImage {
 
@@ -47,18 +73,6 @@ abstract class EllipseImageBase extends WorldImage {
     /** Color of the ellipse */
     public Color color;
 
-    /**
-     * A full constructor for this ellipse image.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param width
-     *            the width of this ellipse
-     * @param height
-     *            the height of this ellipse
-     * @param color
-     *            the color for this image
-     */
     public EllipseImageBase(int width, int height, OutlineMode mode, Color color) {
         super();
         this.width = width;
@@ -104,12 +118,7 @@ abstract class EllipseImageBase extends WorldImage {
         return new BoundingBox(xMin, yMin, xMax, yMax);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
+    @Override
     public void draw(Graphics2D g) {
         if (this.width <= 0)
             return;
@@ -134,20 +143,12 @@ abstract class EllipseImageBase extends WorldImage {
         g.setPaint(oldPaint);
     }
 
-    /**
-     * Produce the width of this image
-     * 
-     * @return the width of this image
-     */
+    @Override
     public int getWidth() {
         return this.width;
     }
 
-    /**
-     * Produce the height of this image
-     * 
-     * @return the height of this image
-     */
+    @Override
     public int getHeight() {
         return this.height;
     }
@@ -156,38 +157,30 @@ abstract class EllipseImageBase extends WorldImage {
      * Produce a <code>String</code> representation of this ellipse image
      */
     public String toString() {
-        return "new EllipseImage(this.fill = " + this.fill
-                + ", \nthis.color = " + this.color.toString()
-                + "\nthis.width = " + width + ", this.height = " + height
-                + ")\n";
+        return className(this) + colorString(this.color) + ",\nthis.fill = "
+                + this.fill + "\nthis.width = " + this.width
+                + ", this.height = " + this.height + ")\n";
     }
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
+    @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "EllipseImage") + indent
-                + "this.fill = " + this.fill + "\n" + indent
-                + colorString(indent, this.color) + "\n" + indent
-                + "this.width = " + width + ", this.height = " + height + ")\n";
+        return classNameString(indent, this) + colorString(indent, this.color)
+                + "\n" + indent + "this.fill = " + this.fill + ",\n" + indent
+                + "this.width = " + this.width + ",\n" + indent
+                + "this.height = " + this.height + ")\n";
+    }
+
+    public boolean same(EllipseImageBase that) {
+        return this.width == that.width && this.height == that.height
+                && this.fill == that.fill && this.color.equals(that.color);
     }
 
     /**
      * Is this <code>EllipseImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof EllipseImageBase) {
-            EllipseImageBase that = (EllipseImageBase) o;
-            return this.width == that.width && this.height == that.height
-                    && this.fill == that.fill && this.color.equals(that.color);
-        } else
-            return false;
+        return o instanceof EllipseImageBase && this.same((EllipseImageBase) o);
     }
 
     /**
@@ -196,10 +189,11 @@ abstract class EllipseImageBase extends WorldImage {
     public int hashCode() {
         return this.color.hashCode() + this.width + this.height;
     }
-    
+
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new EllipseImage(this.width, this.height, this.fill, this.color);
+        WorldImage i = new EllipseImage(this.width, this.height, this.fill,
+                this.color);
         i.pinhole = p;
         return i;
     }

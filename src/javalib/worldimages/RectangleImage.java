@@ -5,7 +5,7 @@ import java.awt.geom.*;
 
 /**
  * <p>
- * Copyright 2012 Viera K. Proulx
+ * Copyright 2015 Ben Lerner
  * </p>
  * <p>
  * This program is distributed under the terms of the GNU Lesser General Public
@@ -14,10 +14,35 @@ import java.awt.geom.*;
  */
 
 public final class RectangleImage extends RectangleImageBase {
+
+    /**
+     * A full constructor for this rectangle image.
+     * 
+     * @param width
+     *            -- the width of this rectangle
+     * @param height
+     *            -- the height of this rectangle
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this image
+     */
     public RectangleImage(int width, int height, OutlineMode fill, Color color) {
         super(width, height, fill, color);
     }
 
+    /**
+     * A full constructor for this rectangle image.
+     * 
+     * @param width
+     *            -- the width of this rectangle
+     * @param height
+     *            -- the height of this rectangle
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this image
+     */
     public RectangleImage(int width, int height, String fill, Color color) {
         super(width, height, fill, color);
     }
@@ -25,12 +50,13 @@ public final class RectangleImage extends RectangleImageBase {
 
 /**
  * <p>
- * The class to represent filled rectangle images drawn by the world when
- * drawing on its <code>Canvas</code>.
+ * The class to represent rectangle images drawn by the world when drawing on
+ * its <code>Canvas</code>.
  * </p>
  * 
- * @author Viera K. Proulx
- * @since February 4 2012
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4 2015
  */
 abstract class RectangleImageBase extends WorldImage {
     public int width, height;
@@ -40,14 +66,14 @@ abstract class RectangleImageBase extends WorldImage {
     /**
      * A full constructor for this rectangle image.
      * 
-     * @param pinhole
-     *            the pinhole location for this image
      * @param width
-     *            the width of this rectangle
+     *            -- the width of this rectangle
      * @param height
-     *            the height of this rectangle
+     *            -- the height of this rectangle
+     * @param fill
+     *            -- outline or solid
      * @param color
-     *            the color for this image
+     *            -- the color for this image
      */
     public RectangleImageBase(int width, int height, OutlineMode fill,
             Color color) {
@@ -58,6 +84,18 @@ abstract class RectangleImageBase extends WorldImage {
         this.color = color;
     }
 
+    /**
+     * A full constructor for this rectangle image.
+     * 
+     * @param width
+     *            -- the width of this rectangle
+     * @param height
+     *            -- the height of this rectangle
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this image
+     */
     public RectangleImageBase(int width, int height, String fill, Color color) {
         this(width, height, OutlineMode.fromString(fill), color);
     }
@@ -75,12 +113,7 @@ abstract class RectangleImageBase extends WorldImage {
         return new BoundingBox(tl, tr).add(bl).add(br);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
+    @Override
     public void draw(Graphics2D g) {
         if (this.width <= 0)
             return;
@@ -105,20 +138,12 @@ abstract class RectangleImageBase extends WorldImage {
         g.setPaint(oldPaint);
     }
 
-    /**
-     * Produce the width of this image
-     * 
-     * @return the width of this image
-     */
+    @Override
     public int getWidth() {
         return this.width;
     }
 
-    /**
-     * Produce the height of this image
-     * 
-     * @return the height of this image
-     */
+    @Override
     public int getHeight() {
         return this.height;
     }
@@ -127,36 +152,34 @@ abstract class RectangleImageBase extends WorldImage {
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return "new RectangleImage(this.color = " + this.color.toString()
-                + "\nthis.width = " + width + ", this.height = " + height
-                + ")\n";
+        return className(this) + colorString(this.color) + "\nthis.fill = "
+                + this.fill + ",\nthis.width = " + width + ", this.height = "
+                + height + ")\n";
+    }
+
+    @Override
+    public String toIndentedString(String indent) {
+        indent = indent + "  ";
+        return classNameString(indent, this) + colorString(indent, this.color)
+                + "\n" + indent + "this.fill = " + this.fill + ",\n" + indent
+                + "this.width = " + width + ", this.height = " + height + ")\n";
     }
 
     /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
+     * Is this <code>RectangleImage</code> same as the given
+     * <code>RectangleImage</code>?
      */
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, "RectangleImage")
-                + colorString(indent, this.color) + "\n" + indent
-                + "this.width = " + width + ", this.height = " + height + ")\n";
+    public boolean same(RectangleImageBase that) {
+        return this.width == that.width && this.height == that.height
+                && this.color.equals(that.color) && this.fill == that.fill;
     }
 
     /**
      * Is this <code>RectangleImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof RectangleImageBase) {
-            RectangleImageBase that = (RectangleImageBase) o;
-            return this.width == that.width && this.height == that.height
-                    && this.color.equals(that.color);
-        } else
-            return false;
+        return o instanceof RectangleImageBase
+                && this.same((RectangleImageBase) o);
     }
 
     /**

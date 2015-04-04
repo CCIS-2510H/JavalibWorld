@@ -1,11 +1,11 @@
 package javalib.worldimages;
 
 /**
- * To represent a point on the drawing <CODE>WorldCanvas</CODE> or
- * <CODE>AppletCanvaas</CODE>
+ * To represent a point on the drawing <code>WorldCanvas</code>
  * 
- * @author Viera K.
- * @since August 2, 2007
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
  */
 public class Posn {
     public int x;
@@ -18,7 +18,7 @@ public class Posn {
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof Posn)) return false;
-        Posn that = (Posn)other;
+        Posn that = (Posn) other;
         return this.x == that.x && this.y == that.y;
     }
     @Override

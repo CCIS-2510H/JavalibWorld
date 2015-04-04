@@ -4,11 +4,27 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
+/**
+ * Class representing the rotation of an image
+ * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
+ * 
+ */
 public final class RotateImage extends WorldImage {
     public WorldImage img;
     public double rotationDegrees;
     private int width, height;
 
+    /**
+     * Rotate the image
+     * 
+     * @param img
+     *            -- Image to rotate
+     * @param rotationDegrees
+     *            -- Degrees to rotate the image
+     */
     public RotateImage(WorldImage img, double rotationDegrees) {
         super();
         this.img = img;
@@ -39,12 +55,6 @@ public final class RotateImage extends WorldImage {
         return this.img.getBB(newT);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
     @Override
     public void draw(Graphics2D g) {
         if (this.width <= 0)
@@ -67,36 +77,28 @@ public final class RotateImage extends WorldImage {
      * Produce a <code>String</code> representation of this rotated image
      */
     public String toString() {
-        return "new RotateImage(this.img = " + this.img.toString()
+        return className(this) + "this.img = " + this.img.toString()
                 + ", this.rotationDegrees = " + this.rotationDegrees + ")\n";
     }
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
+    @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "RotateImage") + "this.img = "
+        return classNameString(indent, this) + "this.img = "
                 + this.img.toIndentedString(indent) + "\n" + indent
                 + "this.width = " + width + ", this.height = " + height + ")\n";
+    }
+
+    public boolean same(RotateImage that) {
+        return this.rotationDegrees == that.rotationDegrees
+                && this.img.equals(that.img);
     }
 
     /**
      * Is this <code>RotateImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof RotateImage) {
-            RotateImage that = (RotateImage) o;
-            return this.width == that.width && this.height == that.height
-                    && this.rotationDegrees == that.rotationDegrees
-                    && this.img.equals(that.img);
-        } else
-            return false;
+        return o instanceof RotateImage && this.same((RotateImage) o);
     }
 
     /**

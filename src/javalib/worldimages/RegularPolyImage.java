@@ -6,26 +6,13 @@ import java.awt.geom.Point2D;
 
 /**
  * <p>
- * Copyright 2014 Benjamin Lerner
+ * Copyright 2015 Benjamin Lerner
  * </p>
  * <p>
  * This program is distributed under the terms of the GNU Lesser General Public
  * License (LGPL)
  * </p>
  */
-
-public final class RegularPolyImage extends RegularPolyImageBase {
-
-    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
-            Color color) {
-        super(sideLen, numSides, fill, color);
-    }
-
-    public RegularPolyImage(double sideLen, int numSides, String fill,
-            Color color) {
-        super(sideLen, numSides, fill, color);
-    }
-}
 
 /**
  * <p>
@@ -39,9 +26,44 @@ public final class RegularPolyImage extends RegularPolyImageBase {
  * @author Benjamin Lerner
  * @since November 14 2014
  */
+public final class RegularPolyImage extends RegularPolyImageBase {
+
+    /**
+     * The full constructor for an equilateral regular polygon
+     * 
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
+            Color color) {
+        super(sideLen, numSides, fill, color);
+    }
+
+    /**
+     * The full constructor for an equilateral regular polygon
+     * 
+     * @param sideLen
+     *            -- the length of one of the sides
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(double sideLen, int numSides, String fill,
+            Color color) {
+        this(sideLen, numSides, OutlineMode.fromString(fill), color);
+    }
+}
 
 abstract class RegularPolyImageBase extends WorldImage {
-    public Posn center;
     public int sides;
     public double sideLen;
     public OutlineMode fill;
@@ -49,17 +71,14 @@ abstract class RegularPolyImageBase extends WorldImage {
     public Color color;
 
     /**
-     * The full constructor for an equilateral regular polygon, whose rightmost
-     * point is rotated from the horizontal
+     * The full constructor for an equilateral regular polygon
      * 
-     * @param center
-     *            -- the central point of the regular polygon
      * @param sideLen
      *            -- the length of one of the sides
      * @param numSides
      *            -- the number of sides of the polygon
-     * @param angle
-     *            -- the angle of rotation in radians
+     * @param fill
+     *            -- outline or solid
      * @param color
      *            -- the color for this regular polygon
      */
@@ -79,11 +98,9 @@ abstract class RegularPolyImageBase extends WorldImage {
         this.generatePoly();
     }
 
-    public RegularPolyImageBase(double sideLen, int numSides, String fill,
-            Color color) {
-        this(sideLen, numSides, OutlineMode.fromString(fill), color);
-    }
-
+    /**
+     * Create the internal polygon representing the set of points to draw
+     */
     private void generatePoly() {
         int[] xCoord = new int[this.sides];
         int[] yCoord = new int[this.sides];
@@ -144,12 +161,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         return ans;
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
+    @Override
     public void draw(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
@@ -169,11 +181,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         g.setPaint(oldPaint);
     }
 
-    /**
-     * Produce the width of this triangle image
-     * 
-     * @return the width of this image
-     */
+    @Override
     public int getWidth() {
         int minX = this.poly.xpoints[0];
         int maxX = this.poly.xpoints[0];
@@ -184,11 +192,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         return maxX - minX;
     }
 
-    /**
-     * Produce the height of this triangle image
-     * 
-     * @return the height of this image
-     */
+    @Override
     public int getHeight() {
         int minY = this.poly.ypoints[0];
         int maxY = this.poly.ypoints[0];
@@ -200,48 +204,50 @@ abstract class RegularPolyImageBase extends WorldImage {
     }
 
     /**
-     * Produce a <code>String</code> representation of this triangle image
+     * Produce a <code>String</code> representation of this Polygon image
      */
     public String toString() {
-        return "new RegularPolyImage(this.sideLen = "
-                + Double.toString(this.sideLen) + ",\n" + "this.sides = "
-                + Integer.toString(this.sides) + ",\n" + "this.color = "
-                + this.color.toString() + "))\n";
+        return className(this) + "this.sideLen = "
+                + Double.toString(this.sideLen) + ",\nthis.sides = "
+                + Integer.toString(this.sides) + ",\nthis.fill = " + this.fill
+                + ",\n" + colorString(this.color) + ")\n";
+    }
+
+    @Override
+    public String toIndentedString(String indent) {
+        indent = indent + " ";
+        return classNameString(indent, this) + indent + "this.sideLen = "
+                + Double.toString(this.sideLen) + ",\n" + indent
+                + "this.sides = " + Integer.toString(this.sides) + ",\n"
+                + indent + "this.fill = " + this.fill + ",\n"
+                + colorString(indent, this.color) + "))\n";
     }
 
     /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
+     * Is this <code>RegularPolyImage</code> same as that
+     * <code>RegularPolyImage</code>?
      */
-    public String toIndentedString(String indent) {
-        indent = indent + " ";
-        return classNameString(indent, "RegularPolyImage") + indent
-                + "this.sideLen = " + Double.toString(this.sideLen) + ",\n"
-                + indent + "this.sides = " + Integer.toString(this.sides)
-                + ",\n" + colorString(indent, this.color) + "))\n";
+    public boolean same(RegularPolyImageBase that) {
+        return this.sideLen == that.sideLen && this.sides == that.sides
+                && this.fill == that.fill && this.color.equals(that.color);
     }
 
     /**
      * Is this <code>RegularPolyImage</code> same as the given object?
      */
+    @Override
     public boolean equals(Object o) {
-        if (o instanceof RegularPolyImageBase) {
-            RegularPolyImageBase that = (RegularPolyImageBase) o;
-            return this.sideLen == that.sideLen && this.sides == that.sides
-                    && this.color.equals(that.color);
-        } else
-            return false;
+        return o instanceof RegularPolyImageBase
+                && this.same((RegularPolyImageBase) o);
     }
 
     /**
      * The hashCode to match the equals method
      */
+    @Override
     public int hashCode() {
-        return this.color.hashCode() + (int) this.sideLen + this.sides;
+        return this.color.hashCode() + this.fill.hashCode()
+                + (int) this.sideLen + this.sides;
     }
 
     @Override

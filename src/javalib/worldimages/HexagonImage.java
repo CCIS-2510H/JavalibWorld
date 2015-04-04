@@ -3,7 +3,7 @@ package javalib.worldimages;
 import java.awt.*;
 
 /**
- * <p>Copyright 2014 Benjamin Lerner</p>
+ * <p>Copyright 2015 Benjamin Lerner</p>
  * <p>This program is distributed under the terms of the 
  * GNU Lesser General Public License (LGPL)</p>
  */
@@ -11,8 +11,12 @@ import java.awt.*;
 /**
  * Represents a Hexagon, a special case of a regular polygon
  * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
  */
 public final class HexagonImage extends RegularPolyImageBase {
+
     /**
      * The full constructor for an equilateral hexagon, whose top and bottom are
      * rotated from the horizontal
@@ -31,7 +35,12 @@ public final class HexagonImage extends RegularPolyImageBase {
     public HexagonImage(double sideLen, String fill, Color color) {
         this(sideLen, OutlineMode.fromString(fill), color);
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof HexagonImage && this.same((HexagonImage) o);
+    }
+
     @Override
     public WorldImage movePinholeTo(Posn p) {
         WorldImage i = new HexagonImage(this.sideLen, this.fill, this.color);

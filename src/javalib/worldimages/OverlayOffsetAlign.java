@@ -3,13 +3,68 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+/**
+ * <p>
+ * The class to represent an overlay of the top image on the bottom one, using
+ * <code>alignX</code> and <code>alignY</code> as a starting point, with the
+ * bottom offset by the given <code>dx</code> and <code>dy</code> combined into
+ * <code>{@link WorldImage WorldImage}</code> to be drawn by the world when
+ * drawing on its <code>Canvas</code>.
+ * </p>
+ * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4 2015
+ */
 public final class OverlayOffsetAlign extends OverlayOffsetAlignBase {
 
+    /**
+     * Overlay of the top image on the bottom one, using <code>alignX</code> and
+     * <code>alignY</code> as a starting point, with the bottom offset by the
+     * given <code>dx</code> and <code>dy</code>
+     * 
+     * @param alignX
+     *            -- the alignment on the X-axis to be used as a starting point
+     *            for overlaying the top image on the bottom
+     * @param alignY
+     *            -- the alignment on the Y-axis to be used as a starting point
+     *            for overlaying the top image on the bottom
+     * @param top
+     *            -- the bottom image for the combined image
+     * @param dx
+     *            -- the horizontal offset for the bottom image
+     * @param dy
+     *            -- the vertical offset for the bottom image
+     * @param bot
+     *            -- the bottom image for the combined image
+     */
     public OverlayOffsetAlign(AlignModeX alignX, AlignModeY alignY,
             WorldImage top, double dx, double dy, WorldImage bot) {
         super(alignX, alignY, top, dx, dy, bot);
     }
 
+    /**
+     * Overlay of the top image on the bottom one, using <code>alignX</code> and
+     * <code>alignY</code> as a starting point, with the bottom offset by the
+     * given <code>dx</code> and <code>dy</code>
+     * 
+     * @param alignX
+     *            -- the alignment on the X-axis to be used as a starting point
+     *            for overlaying the top image on the bottom. Valid values are
+     *            left, center, middle, right, pinhole.
+     * @param alignY
+     *            -- the alignment on the Y-axis to be used as a starting point
+     *            for overlaying the top image on the bottom Valid values are
+     *            top, center, middle, bottom, pinhole.
+     * @param top
+     *            -- the bottom image for the combined image
+     * @param dx
+     *            -- the horizontal offset for the bottom image
+     * @param dy
+     *            -- the vertical offset for the bottom image
+     * @param bot
+     *            -- the bottom image for the combined image
+     */
     public OverlayOffsetAlign(String alignX, String alignY, WorldImage top,
             double dx, double dy, WorldImage bot) {
         super(AlignModeX.fromString(alignX), AlignModeY.fromString(alignY),
@@ -17,17 +72,6 @@ public final class OverlayOffsetAlign extends OverlayOffsetAlignBase {
     }
 }
 
-/**
- * <p>
- * The class to represent an overlay of the top image on the bottom one with the
- * top offset by the given <code>dx</code> and <code>dy</code> combined into
- * <code>{@link WorldImage WorldImage}</code> to be drawn by the world when
- * drawing on its <code>Canvas</code>.
- * </p>
- * 
- * @author Viera K. Proulx
- * @since February 4 2012
- */
 abstract class OverlayOffsetAlignBase extends WorldImage {
 
     /** the bottom image for the combined image */
@@ -36,28 +80,16 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     /** the top image for the combined image */
     public WorldImage top;
 
-    public Posn deltaTop, deltaBot;
+    /** how much the top and bottom images need to move relative to each other */
+    protected Posn deltaTop, deltaBot;
+    public double dx, dy;
 
+    /** The base alignments */
     public AlignModeX alignX;
     public AlignModeY alignY;
 
     private int width, height;
-    private double dx, dy;
 
-    /**
-     * Overlays image top on top of bot, using alignX and alignY as the starting
-     * points for the overlaying, and then adjusts bot by dx to the right and dy
-     * pixels down.
-     * 
-     * @param top
-     *            the bottom image for the combined image
-     * @param dx
-     *            the horizontal offset for the top image
-     * @param dy
-     *            the vertical offset for the top image
-     * @param bot
-     *            the bottom image for the combined image
-     */
     public OverlayOffsetAlignBase(AlignModeX alignX, AlignModeY alignY,
             WorldImage top, double dx, double dy, WorldImage bot) {
         super();
@@ -97,16 +129,16 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
         this.deltaBot = new Posn(botDeltaX, botDeltaY);
         this.deltaTop = new Posn(topDeltaX, topDeltaY);
-        
+
         // Fix the width
-        int actualWidth = (int) Math.round(getBB(new AffineTransform()).getWidth());
-        int actualHeight = (int) Math.round(getBB(new AffineTransform()).getHeight());
-        int calculatedWidth = rightX - leftX;
-        int calculatedHeight = bottomY - topY;
-        
-        this.width = calculatedWidth;
-        this.height = calculatedHeight;
-        
+        int actualWidth = (int) Math.round(getBB().getWidth());
+        int actualHeight = (int) Math.round(getBB().getHeight());
+        // int calculatedWidth = rightX - leftX;
+        // int calculatedHeight = bottomY - topY;
+
+        this.width = actualWidth;
+        this.height = actualHeight;
+
         if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
                 && dx == 0 && dy == 0) {
             // Set the pinhole
@@ -125,6 +157,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return botBox.combine(topBox);
     }
 
+    /**
+     * How much should bottom image move in the Y direction relative to the top
+     * image?
+     * 
+     * @return y move distance
+     */
     private int yBotMoveDist() {
         double moveDist = 0;
         if (this.alignY == AlignModeY.TOP || this.alignY == AlignModeY.BOTTOM) {
@@ -142,6 +180,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return (int) Math.round(moveDist);
     }
 
+    /**
+     * How much should top image move in the Y direction relative to the bottom
+     * image?
+     * 
+     * @return y move distance
+     */
     private int yTopMoveDist() {
         if (this.alignY == AlignModeY.PINHOLE) {
             return -this.top.pinhole.y;
@@ -149,6 +193,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return 0;
     }
 
+    /**
+     * How much should bottom image move in the X direction relative to the top
+     * image?
+     * 
+     * @return x move distance
+     */
     private int xBotMoveDist() {
         double moveDist = 0;
         if (this.alignX == AlignModeX.LEFT || this.alignX == AlignModeX.RIGHT) {
@@ -166,6 +216,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return (int) Math.round(moveDist);
     }
 
+    /**
+     * How much should top image move in the X direction relative to the bottom
+     * image?
+     * 
+     * @return x move distance
+     */
     private int xTopMoveDist() {
         if (this.alignX == AlignModeX.PINHOLE) {
             return -this.top.pinhole.x;
@@ -173,12 +229,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return 0;
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
+    @Override
     public void draw(Graphics2D g) {
         // Save the old transform state
         AffineTransform old = g.getTransform();
@@ -194,20 +245,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         g.setTransform(old);
     }
 
-    /**
-     * Produce the width of this image
-     * 
-     * @return the width of this image
-     */
+    @Override
     public int getWidth() {
         return width;
     }
 
-    /**
-     * Produce the height of this image
-     * 
-     * @return the height of this image
-     */
+    @Override
     public int getHeight() {
         return height;
     }
@@ -215,6 +258,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     /**
      * Produce a <code>String</code> representation of this overlay of images
      */
+    @Override
     public String toString() {
         return "new OverlayImagesXY(this.deltaBot = "
                 + this.deltaBot.toString() + ", this.deltaTop = "
@@ -224,14 +268,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
                 + this.top.toString() + ")\n";
     }
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
+    @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, "OverlayImagesXY") + indent
@@ -242,24 +279,35 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     }
 
     /**
-     * Is this <code>OverlayImagesXY</code> same as the given object?
+     * Is this OverlayOffsetAlign the same as that OverlayOffsetAlign?
+     * 
+     * @param that
+     * @return
      */
+    public boolean same(OverlayOffsetAlignBase that) {
+        return this.bot.equals(that.bot) && this.top.equals(that.top)
+                && this.alignX == that.alignX && this.alignY == that.alignY
+                && this.dx == that.dx && this.dy == that.dy;
+    }
+
+    /**
+     * Is this <code>OverlayOffsetAlign</code> same as the given object?
+     */
+    @Override
     public boolean equals(Object o) {
-        if (o instanceof OverlayOffsetImagesBase) {
-            OverlayOffsetImagesBase that = (OverlayOffsetImagesBase) o;
-            return this.bot.equals(that.bot) && this.top.equals(that.top)
-                    && this.deltaTop.equals(that.deltaTop)
-                    && this.deltaBot.equals(that.deltaBot);
-        } else
-            return false;
+        return o instanceof OverlayOffsetAlignBase
+                && this.same((OverlayOffsetAlignBase) o);
     }
 
     /**
      * The hashCode to match the equals method
      */
+    @Override
     public int hashCode() {
         return this.deltaBot.hashCode() + this.deltaTop.hashCode()
-                + this.bot.hashCode() + this.top.hashCode();
+                + this.bot.hashCode() + this.top.hashCode()
+                + this.alignX.hashCode() + this.alignY.hashCode()
+                + (int) this.dx * 37 + (int) this.dy * 16;
     }
 
     @Override

@@ -5,22 +5,20 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
- * <p>Copyright 2012 Viera K. Proulx</p>
+ * <p>Copyright 2015 Ben Lerner</p>
  * <p>This program is distributed under the terms of the 
  * GNU Lesser General Public License (LGPL)</p>
  */
 
 /**
  * <p>
- * The class to represent filled triangle images drawn by the world when drawing
- * on its <code>Canvas</code>.
- * </p>
- * <p>
- * The pinhole for the triangle is in the center of the triangle.
+ * The class to represent triangle images drawn by the world when drawing on its
+ * <code>Canvas</code>.
  * </p>
  * 
- * @author Viera K. Proulx
- * @since February 4 2012
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
  */
 public final class TriangleImage extends WorldImage {
     public Posn p1;
@@ -31,16 +29,19 @@ public final class TriangleImage extends WorldImage {
     private Polygon poly;
 
     /**
-     * A full constructor for this triangle image.
+     * A full constructor for this triangle image. The points are relative to
+     * each other
      * 
      * @param p1
-     *            the first point of this triangle
+     *            -- the first point of this triangle
      * @param p2
-     *            the second point of this triangle
+     *            -- the second point of this triangle
      * @param p3
-     *            the third point of this triangle
+     *            -- the third point of this triangle
+     * @param fill
+     *            -- outline or solid
      * @param color
-     *            the color for this image
+     *            -- the color for this image
      */
     public TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill,
             Color color) {
@@ -65,6 +66,25 @@ public final class TriangleImage extends WorldImage {
 
     }
 
+    /**
+     * A full constructor for this triangle image. The points are relative to
+     * each other
+     * 
+     * @param p1
+     *            -- the first point of this triangle
+     * @param p2
+     *            -- the second point of this triangle
+     * @param p3
+     *            -- the third point of this triangle
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this image
+     */
+    public TriangleImage(Posn p1, Posn p2, Posn p3, String fill, Color color) {
+        this(p1, p2, p3, OutlineMode.fromString(fill), color);
+    }
+
     @Override
     protected BoundingBox getBB(AffineTransform t) {
         Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0],
@@ -76,16 +96,7 @@ public final class TriangleImage extends WorldImage {
         return new BoundingBox(p1, p2).add(p3);
     }
 
-    public TriangleImage(Posn p1, Posn p2, Posn p3, String fill, Color color) {
-        this(p1, p2, p3, OutlineMode.fromString(fill), color);
-    }
-
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
+    @Override
     public void draw(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
@@ -105,21 +116,13 @@ public final class TriangleImage extends WorldImage {
         g.setPaint(oldPaint);
     }
 
-    /**
-     * Produce the width of this triangle image
-     * 
-     * @return the width of this image
-     */
+    @Override
     public int getWidth() {
         return Math.max(p1.x, Math.max(p2.x, p3.x))
                 - Math.min(p1.x, Math.min(p2.x, p3.x));
     }
 
-    /**
-     * Produce the height of this triangle image
-     * 
-     * @return the height of this image
-     */
+    @Override
     public int getHeight() {
         return Math.max(p1.y, Math.max(p2.y, p3.y))
                 - Math.min(p1.y, Math.min(p2.y, p3.y));
@@ -129,42 +132,39 @@ public final class TriangleImage extends WorldImage {
      * Produce a <code>String</code> representation of this triangle image
      */
     public String toString() {
-        return "new TriangleImage(this.color = " + this.color.toString()
-                + "\nthis.p1 = (" + this.p1.x + ", " + this.p1.y
-                + "), \nthis.p2 = (" + this.p2.x + ", " + this.p2.y
-                + "), \nthis.p3 = (" + this.p3.x + ", " + this.p3.y + "))\n";
+        return className(this) + colorString(this.color) + "\nthis.p1 = ("
+                + this.p1.x + ", " + this.p1.y + "),\nthis.p2 = (" + this.p2.x
+                + ", " + this.p2.y + "),\nthis.p3 = (" + this.p3.x + ", "
+                + this.p3.y + ")\nthis.fill = " + this.fill + ")\n";
+    }
+
+    @Override
+    public String toIndentedString(String indent) {
+        indent = indent + " ";
+        return classNameString(indent, this) + colorString(indent, this.color)
+                + "\n" + indent + "this.p1 = (" + this.p1.x + ", " + this.p1.y
+                + "),\n" + indent + "this.p2 = (" + this.p2.x + ", "
+                + this.p2.y + "),\n" + indent + "this.p3 = (" + this.p3.x
+                + ", " + this.p3.y + "),\n" + indent + "this.fill = "
+                + this.fill + ")\n";
     }
 
     /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
+     * Is this <code>TriangleImage</code> same as that
+     * <code>TriangleImage</code>?
      */
-    public String toIndentedString(String indent) {
-        indent = indent + " ";
-        return classNameString(indent, "TriangleImage")
-                + colorString(indent, this.color) + "\n" + indent
-                + "this.p1 = (" + this.p1.x + ", " + this.p1.y + "), \n"
-                + indent + "this.p2 = (" + this.p2.x + ", " + this.p2.y
-                + "), \n" + indent + "this.p3 = (" + this.p3.x + ", "
-                + this.p3.y + "))\n";
+    public boolean same(TriangleImage that) {
+        return this.fill == that.fill && this.p1.x == that.p1.x
+                && this.p1.y == that.p1.y && this.p2.x == that.p2.x
+                && this.p2.y == that.p2.y && this.p3.x == that.p3.x
+                && this.p3.y == that.p3.y && this.color.equals(that.color);
     }
 
     /**
      * Is this <code>TriangleImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof TriangleImage) {
-            TriangleImage that = (TriangleImage) o;
-            return this.p1.x == that.p1.x && this.p1.y == that.p1.y
-                    && this.p2.x == that.p2.x && this.p2.y == that.p2.y
-                    && this.p3.x == that.p3.x && this.p3.y == that.p3.y
-                    && this.color.equals(that.color);
-        } else
-            return false;
+        return o instanceof TriangleImage && this.same((TriangleImage) o);
     }
 
     /**

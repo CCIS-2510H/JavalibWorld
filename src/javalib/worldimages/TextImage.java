@@ -10,7 +10,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
- * <p>Copyright 2012 Viera K. Proulx</p>
+ * <p>Copyright 2015 Ben Lerner</p>
  * <p>This program is distributed under the terms of the 
  * GNU Lesser General Public License (LGPL)</p>
  */
@@ -21,8 +21,9 @@ import java.awt.geom.Rectangle2D;
  * on its <code>Canvas</code>.
  * </p>
  * 
- * @author Viera K. Proulx
- * @since February 4 2012, April 25 2012
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
  */
 public final class TextImage extends WorldImage {
 
@@ -63,6 +64,18 @@ public final class TextImage extends WorldImage {
     /** the current default font in our graphics context */
     protected static Font font = g.getFont();
 
+    /**
+     * A full constructor for this text image.
+     * 
+     * @param text
+     *            -- the text to be shown
+     * @param size
+     *            -- the size of the font to use (the default is 13)
+     * @param style
+     *            -- the style of the font: (regular, bold, italic, italic/bold)
+     * @param color
+     *            -- the color for this image
+     */
     public TextImage(String text, float size, int style, Color color) {
         super();
         // bad things happen if we want to display a null String
@@ -77,34 +90,14 @@ public final class TextImage extends WorldImage {
     }
 
     /**
-     * A full constructor for this text image.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param text
-     *            the text to be shown
-     * @param size
-     *            the size of the font to use (the default is 13)
-     * @param style
-     *            the style of the font: (regular, bold, italic, italic/bold)
-     * @param color
-     *            the color for this image
-     */
-    public TextImage(String text, int size, int style, Color color) {
-        this(text, (float) size, style, color);
-    }
-
-    /**
      * A convenience constructor providing the default style (regular).
      * 
-     * @param pinhole
-     *            the pinhole location for this image
      * @param text
-     *            the text to be shown
+     *            -- the text to be shown
      * @param size
-     *            the size of the font to use (the default is 13)
+     *            -- the size of the font to use (the default is 13)
      * @param color
-     *            the color for this image
+     *            -- the color for this image
      */
     public TextImage(String text, float size, Color color) {
         this(text, size, 0, color);
@@ -113,14 +106,12 @@ public final class TextImage extends WorldImage {
     /**
      * A convenience constructor providing the default style (regular).
      * 
-     * @param pinhole
-     *            the pinhole location for this image
      * @param text
-     *            the text to be shown
+     *            -- the text to be shown
      * @param size
-     *            the size of the font to use (the default is 13)
+     *            -- the size of the font to use (the default is 13)
      * @param color
-     *            the color for this image
+     *            -- the color for this image
      */
     public TextImage(String text, int size, Color color) {
         this(text, size, 0, color);
@@ -129,23 +120,16 @@ public final class TextImage extends WorldImage {
     /**
      * A convenience constructor providing the default style (regular).
      * 
-     * @param pinhole
-     *            the pinhole location for this image
      * @param text
-     *            the text to be shown
+     *            -- the text to be shown
      * @param color
-     *            the color for this image
+     *            -- the color for this image
      */
     public TextImage(String text, Color color) {
         this(text, 13, 0, color);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
+    @Override
     public void draw(Graphics2D g) {
         if (this.text == null)
             this.text = "";
@@ -179,11 +163,6 @@ public final class TextImage extends WorldImage {
         AffineTransform t = g.getTransform();
         Rectangle2D bounds = getBoundingBox();
         g.setTransform(t);
-        /*
-         * System.out.println("Bounds: x = " + bounds.getX() + "  y = " +
-         * bounds.getX() + "  width = " + bounds.getWidth() + "  height = " +
-         * bounds.getHeight());
-         */
 
         this.width = (int) bounds.getWidth();
         this.height = (int) bounds.getHeight();
@@ -200,6 +179,13 @@ public final class TextImage extends WorldImage {
                 (int) bounds.getMaxX(), (int) bounds.getMaxY());
     }
 
+    /**
+     * Get the bounding box of the text. Note: This is distinct and separate
+     * from getBB. getBoundingBox is for internal TextImage use, whereas getBB
+     * is for package consumption
+     * 
+     * @return
+     */
     private Rectangle2D getBoundingBox() {
         // change the font style and size as given
         g.setFont(font.deriveFont(this.style, this.size));
@@ -219,24 +205,13 @@ public final class TextImage extends WorldImage {
         return bounds;
     }
 
-    /**
-     * Produce the width of this image - assuming the default font (generated by
-     * trial and error with the default font)
-     * 
-     * @return the (approximate) width of this image
-     */
+    @Override
     public int getWidth() {
-        // return (int)(this.text.length() * 0.53 * this.size);
         return this.width;
     }
 
-    /**
-     * Produce the height of this text image (based on its size)
-     * 
-     * @return the height of this image
-     */
+    @Override
     public int getHeight() {
-        // return (int)this.size;
         return this.height;
     }
 
@@ -245,42 +220,37 @@ public final class TextImage extends WorldImage {
      */
     public String toString() {
         char c = '"';
-        return "new TextImage(this.color = " + this.color.toString()
-                + "\nthis.size = " + this.size + ", this.style = " + this.style
-                + ", this.alignment = " + this.alignment + "\n" + c + this.text
-                + c + ")\n";
+        return className(this) + colorString(this.color) + "\nthis.size = "
+                + this.size + ", this.style = " + this.style
+                + ", this.alignment = " + this.alignment + "\n,this.text = "
+                + c + this.text + c + ")\n";
     }
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
+    @Override
     public String toIndentedString(String indent) {
         char c = '"';
         indent = indent + "  ";
-        return classNameString(indent, "TextImage")
-                + colorString(indent, this.color) + "\n" + indent
-                + "this.size = " + this.size + "\n" + indent + "this.style = "
-                + this.style + "\n" + indent + "this.alignment = "
-                + this.alignment + "\n" + indent + c + this.text + c + ")\n";
+        return classNameString(indent, this) + colorString(indent, this.color)
+                + "\n" + indent + "this.size = " + this.size + "\n" + indent
+                + "this.style = " + this.style + "\n" + indent
+                + "this.alignment = " + this.alignment + "\n" + indent
+                + "this.text = " + c + this.text + c + ")\n";
+    }
+
+    /**
+     * Is this <code>TextImage</code> same as that <code>TextImage</code>?
+     */
+    public boolean same(TextImage that) {
+        return this.size == that.size && this.style == that.style
+                && this.alignment == that.alignment
+                && this.text.equals(that.text) && this.color.equals(that.color);
     }
 
     /**
      * Is this <code>TextImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof TextImage) {
-            TextImage that = (TextImage) o;
-            return this.size == that.size && this.style == that.style
-                    && this.alignment == that.alignment
-                    && this.text.equals(that.text)
-                    && this.color.equals(that.color);
-        } else
-            return false;
+        return o instanceof TextImage && this.same((TextImage) o);
     }
 
     /**
@@ -293,7 +263,8 @@ public final class TextImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new TextImage(this.text, this.size, this.style, this.color);
+        WorldImage i = new TextImage(this.text, this.size, this.style,
+                this.color);
         i.pinhole = p;
         return i;
     }

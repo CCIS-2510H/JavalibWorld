@@ -3,8 +3,26 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+/**
+ * Class representing the scaling of an image in 2 directions
+ * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
+ * 
+ */
 public final class ScaleImageXY extends ScaleImageXYBase {
 
+    /**
+     * Scale the image
+     * 
+     * @param img
+     *            -- Image to scale
+     * @param scaleX
+     *            -- amount to scale on the X axis
+     * @param scaleY
+     *            -- amount to scale on the Y axis
+     */
     public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
         super(img, scaleX, scaleY);
     }
@@ -14,12 +32,22 @@ abstract class ScaleImageXYBase extends WorldImage {
     public WorldImage img;
     public double scaleX, scaleY;
 
+    /**
+     * Scale the image
+     * 
+     * @param img
+     *            -- Image to scale
+     * @param scaleX
+     *            -- amount to scale on the X axis
+     * @param scaleY
+     *            -- amount to scale on the Y axis
+     */
     public ScaleImageXYBase(WorldImage img, double scaleX, double scaleY) {
         super();
         this.img = img;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
-        
+
         // Scale the pinhole
         this.pinhole = new Posn((int) Math.round(img.pinhole.x * this.scaleX),
                 (int) Math.round(img.pinhole.y * this.scaleY));
@@ -32,12 +60,6 @@ abstract class ScaleImageXYBase extends WorldImage {
         return this.img.getBB(newT);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
     @Override
     public void draw(Graphics2D g) {
         if (this.getWidth() <= 0)
@@ -57,37 +79,35 @@ abstract class ScaleImageXYBase extends WorldImage {
     }
 
     /**
-     * Produce a <code>String</code> representation of this rectangle image
+     * Produce a <code>String</code> representation of this scaled image
      */
     public String toString() {
-        return "new ScaleImageXY(this.scaleX=" + this.scaleX + ", this.scaleY="
-                + this.scaleY + ")\n";
+        return className(this) + "this.scaleX = " + this.scaleX
+                + ", this.scaleY = " + this.scaleY + ")\n";
     }
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
+    @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "ScaleImageXY") + "this.img = "
-                + this.img.toIndentedString(indent) + "\n" + indent + ")\n";
+        return classNameString(indent, this) + "this.img = "
+                + this.img.toIndentedString(indent) + ",\n" + indent
+                + "this.scaleX = " + this.scaleX + ",\n" + indent
+                + "this.scaleY = " + this.scaleY + ")\n";
     }
 
     /**
-     * Is this <code>ScaleImage</code> same as the given object?
+     * Is this <code>ScaleImageXY</code> same as the given object?
+     */
+    public boolean same(ScaleImageXYBase that) {
+        return this.scaleX == that.scaleX && this.scaleY == that.scaleY
+                && this.img.equals(that.img);
+    }
+
+    /**
+     * Is this <code>ScaleImageXY</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof ScaleImageXY) {
-            ScaleImageXY that = (ScaleImageXY) o;
-            return this.scaleX == that.scaleX && this.scaleY == that.scaleY
-                    && this.img.equals(that.img);
-        } else
-            return false;
+        return o instanceof ScaleImageXY && this.same((ScaleImageXY) o);
     }
 
     /**
@@ -106,7 +126,7 @@ abstract class ScaleImageXYBase extends WorldImage {
     public int getHeight() {
         return (int) Math.round(this.img.getHeight() * this.scaleY);
     }
-    
+
     @Override
     public WorldImage movePinholeTo(Posn p) {
         WorldImage i = new ScaleImageXY(this.img, this.scaleX, this.scaleY);

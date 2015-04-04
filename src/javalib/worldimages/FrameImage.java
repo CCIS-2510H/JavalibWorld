@@ -6,25 +6,42 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * Class representing a frame around an image
+ * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * 
+ * @since April 4, 2015
+ * 
+ */
 public final class FrameImage extends RectangleImageBase {
     public WorldImage img;
 
+    /**
+     * Create a frame around the passed in image
+     * 
+     * @param img
+     *            -- Image to frame
+     * @param color
+     *            -- Color of the fram
+     */
     public FrameImage(WorldImage img, Color color) {
         super((int) img.getBB().getWidth(), (int) img.getBB().getHeight(),
                 OutlineMode.OUTLINE, color);
         this.img = img;
     }
 
+    /**
+     * Create a black frame around the passed in image
+     * 
+     * @param img
+     *            -- Image to frame
+     */
     public FrameImage(WorldImage img) {
         this(img, Color.black);
     }
 
-    /**
-     * Draw this image in the provided <code>Graphics2D</code> context.
-     * 
-     * @param g
-     *            the provided <code>Graphics2D</code> context
-     */
     @Override
     public void draw(Graphics2D g) {
         if (this.width <= 0)
@@ -41,59 +58,55 @@ public final class FrameImage extends RectangleImageBase {
         this.img.draw(g);
         // set the paint to the given color
         g.setPaint(this.color);
-        // Adjust the position of the frame
-        //g.translate(this.img.pinhole.x, this.img.pinhole.y);
         // Draw the frame
         BoundingBox bb = this.img.getBB();
         g.draw(new Rectangle2D.Double(bb.tlx, bb.tly, bb.getWidth(), bb
                 .getHeight()));
-        // Reset the position of the frame
-        //g.translate(-this.img.pinhole.x, -this.img.pinhole.y);
         // reset the original paint
         g.setPaint(oldPaint);
         g.setStroke(oldStroke);
     }
 
     /**
-     * Produce a <code>String</code> representation of this rectangle image
+     * Produce a <code>String</code> representation of this Framed image
      */
+    @Override
     public String toString() {
-        return "new FrameImage(this.img = " + this.img.toString() + ")\n";
+        return className(this) + colorString(this.color) + ",\nthis.img = "
+                + this.img.toString() + ")\n";
+    }
+
+    @Override
+    public String toIndentedString(String indent) {
+        indent = indent + "  ";
+        return classNameString(indent, this) + colorString(indent, this.color)
+                + "\n" + indent + "this.img = "
+                + this.img.toIndentedString(indent) + ")\n";
     }
 
     /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
+     * Is this <code>FrameImage</code> the same as the given
+     * <code>FrameImage</code>?
      * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
+     * @param that
+     *            -- FrameImage to compare against
      */
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, "FrameImage")
-                + colorString(indent, this.color) + "\n" + indent
-                + "this.width = " + width + ", this.height = " + height + ")\n";
+    public boolean same(FrameImage that) {
+        return this.img.equals(that.img) && this.color.equals(that.color);
     }
 
     /**
      * Is this <code>FrameImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof FrameImage) {
-            FrameImage that = (FrameImage) o;
-            return this.width == that.width && this.height == that.height
-                    && this.color.equals(that.color)
-                    && this.img.equals(that.img);
-        } else
-            return false;
+        return o instanceof FrameImage && this.same((FrameImage) o);
     }
 
     /**
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.color.hashCode() + this.width + this.height;
+        return super.hashCode() + this.color.hashCode();
     }
 
     @Override

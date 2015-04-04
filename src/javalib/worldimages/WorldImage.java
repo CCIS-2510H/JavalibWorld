@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
- * <p>Copyright 2012 Viera K. Proulx</p>
+ * <p>Copyright 2015 Ben Lerner</p>
  * <p>This program is distributed under the terms of the 
  * GNU Lesser General Public License (LGPL)</p>
  */
@@ -16,49 +16,102 @@ import java.awt.geom.Point2D;
  * <code>Canvas</code>.
  * </p>
  * 
- * @author Viera K. Proulx
- * @since February 4 2012, April 25 2012
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4 2015
  */
 public abstract class WorldImage {
     public Posn pinhole;
 
-    /**
-     * Every image has a pinhole (<code>Posn</code>) and a color (
-     * <code>Color</code>). The color for the images derived from image files,
-     * or constructed by a combination of several images is set to
-     * <code>Color.white</code> and ignored in drawing the images.
-     * 
-     * @param pinhole
-     *            the pinhole location for this image
-     * @param color
-     *            the color for this image
-     */
     public WorldImage() {
         this(new Posn(0, 0));
     }
 
-    // Ignore this for now
+    /**
+     * Every image has a pinhole (<code>Posn</code>)
+     * 
+     * @param pinhole
+     *            -- the pinhole location for this image (using the internal
+     *            coordinate system of the image. 0, 0 is the center of the
+     *            image and the default pinhole location). By default it is the
+     *            origin
+     */
     protected WorldImage(Posn pinhole) {
         this.pinhole = pinhole;
     }
 
+    /**
+     * Get the Bounding Box of the image
+     * 
+     * @return The tight bounding box of the image
+     */
     public BoundingBox getBB() {
         return this.getBB(new AffineTransform());
     }
 
+    /**
+     * Get the Bounding Box of the image, calculated by combining the operations
+     * done on the image (represented by the passed in AffineTransform)
+     * 
+     * @param t
+     *            -- Operations done to transform the image
+     * @return The Bounding box of the image
+     */
     protected abstract BoundingBox getBB(AffineTransform t);
 
+    /**
+     * Transform a Posn by the operations as given by the AffineTransform
+     * 
+     * @param t
+     *            -- Operations on the point
+     * @param p
+     *            -- The point to transform
+     * @return A Point2D representing the transformation of <code>p</code> by
+     *         <code>t</code>
+     */
     protected static Point2D transformPosn(AffineTransform t, Posn p) {
         return transformPosn(t, p.x, p.y);
     }
 
+    /**
+     * Transform x and y coordinates by the operations as given by the
+     * AffineTransform
+     * 
+     * @param t
+     *            -- Operations on the point
+     * @param x
+     *            -- The x coordinate to transform
+     * @param y
+     *            -- The y coordinate to transform
+     * @return A Point2D representing the transformation of <code>x</code> and
+     *         <code>y</code> by <code>t</code>
+     */
     protected static Point2D transformPosn(AffineTransform t, int x, int y) {
         Point2D point = new Point(x, y);
         return t.transform(point, null);
     }
 
+    /**
+     * Move the image's pinhole to the point represented by <code>p</code>,
+     * given in the image's own coordinate system with it's own center at the
+     * origin
+     * 
+     * @param p
+     *            -- The new location of the pinhole
+     * @return a new image with an adjusted pinhole
+     */
     public abstract WorldImage movePinholeTo(Posn p);
 
+    /**
+     * Move the image's pinhole by <code>dx</code> in the x direction and
+     * <code>dy</code> in the y direction.
+     * 
+     * @param dx
+     *            -- x direction pinhole movement
+     * @param dy
+     *            -- y direction pinhole movement
+     * @return a new image with an adjusted pinhole
+     */
     public WorldImage movePinhole(double dx, double dy) {
         return movePinholeTo(new Posn((int) Math.round(this.pinhole.x + dx),
                 (int) Math.round(this.pinhole.y + dy)));
@@ -68,7 +121,7 @@ public abstract class WorldImage {
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
      * @param g
-     *            the provided <code>Graphics2D</code> context
+     *            -- the provided <code>Graphics2D</code> context
      */
     abstract public void draw(Graphics2D g);
 
@@ -83,7 +136,7 @@ public abstract class WorldImage {
      * </p>
      * 
      * @param args
-     *            an arbitrarily long list of
+     *            -- an arbitrarily long list of
      *            <code>{@link WorldImage WorldImage}</code> to add to this
      *            image
      * @return the composite image
@@ -122,32 +175,90 @@ public abstract class WorldImage {
      * given <code>indent</code>
      * 
      * @param indent
-     *            the given prefix representing the desired indentation
+     *            -- the given prefix representing the desired indentation
      * @return the <code>String</code> representation of this image
      */
     abstract public String toIndentedString(String indent);
 
     /**
-     * produce the <code>String</code> that represent the color without the
+     * Produce the <code>String</code> that represents the color without the
      * extra narrative.
      * 
+     * @param indent
+     *            -- How much to indent the string
      * @param color
-     *            the given color
+     *            -- the given color
      * @return the rgb representation S <code>String</code>
      */
     protected static String colorString(String indent, Color color) {
+        return "\n" + indent + colorString(color);
+    }
+
+    /**
+     * Produce the <code>String</code> that represents the color without the
+     * extra narrative.
+     * 
+     * @param color
+     *            -- the given color
+     * @return the rgb representation S <code>String</code>
+     */
+    protected static String colorString(Color color) {
         String result = color.toString();
         int start = result.indexOf('[');
         result = result.substring(start, result.length());
-        return "\n" + indent + "this.color = " + result + ",";
+        return "this.color = " + result + ",";
     }
 
+    /**
+     * Produce the <code>String</code> that represents the class name.
+     * 
+     * <p>
+     * Helper method for {@link #toIndentedString(String)}.
+     * </p>
+     * 
+     * @param indent
+     *            -- the indent amount of the string
+     * @param className
+     *            -- the name of the class
+     * @return the string representation of the class name
+     */
     protected static String classNameString(String indent, String className) {
         return "\n" + indent + "new " + className + "(";
     }
 
+    /**
+     * Produce the <code>String</code> that represents the class name.
+     * 
+     * <p>
+     * Helper method for {@link #toIndentedString(String)}.
+     * </p>
+     * 
+     * @param indent
+     *            -- the indent amount of the string
+     * @param o
+     *            -- the object that needs its class printed out
+     * @return the string representation of the class indented by the proper
+     *         amount
+     */
+    protected static String classNameString(String indent, WorldImage o) {
+        return classNameString(indent, className(o));
+    }
+
+    /**
+     * Produce the <code>String</code> that represents the class name.
+     * 
+     * @param o
+     *            -- the object that needs its class printed out
+     * @return the string representation of the class name
+     */
+    protected static String className(WorldImage o) {
+        return o.getClass().getSimpleName();
+    }
+
     public static void main(String[] argv) {
         System.out.println(colorString("  ", new Color(255, 255, 0, 50)));
+        System.out.println(classNameString("  ", new CircleImage(5, "outline",
+                Color.RED)));
     }
 
 }
