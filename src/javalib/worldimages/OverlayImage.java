@@ -1,7 +1,7 @@
 package javalib.worldimages;
 
 /**
- * <p>Copyright 2012 Viera K. Proulx</p>
+ * <p>Copyright 2015 Ben Lerner</p>
  * <p>This program is distributed under the terms of the 
  * GNU Lesser General Public License (LGPL)</p>
  */
@@ -15,32 +15,34 @@ package javalib.worldimages;
  * 
  * <p>
  * A convenience class that extends the
- * <code>{@link OverlayImages OverlayImages}</code> by invoking its constructor
- * with <code>dx = 0</code> and <code>dy = 0</code>.
+ * <code>{@link OverlayOffsetAlign OverlayOffsetAlign}</code> by invoking its
+ * constructor with <code>alignX = PINHOLE</code>, <code>alignY = PINHOLE</code>, <code>dx = 0</code>, and <code>dy = 0</code>.
  * 
- * @author Viera K. Proulx
- * @since February 4 2012
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4, 2015
  */
-public final class OverlayImages extends OverlayOffsetImagesBase {
+public final class OverlayImage extends OverlayOffsetAlignBase {
 
     /**
      * The only constructor - invokes the constructor in the super class
-     * <code>{@link OverlayImages OverlayImages}</code> with no offset.
+     * <code>{@link OverlayOffsetAlign OverlayOffsetAlign}</code> with no
+     * offset.
      * 
      * @param bot
      *            the bottom image for the combined image
      * @param top
      *            the bottom image for the combined image
      */
-    public OverlayImages(WorldImage top, WorldImage bot) {
-        super(top, 0, 0, bot);
+    public OverlayImage(WorldImage top, WorldImage bot) {
+        super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, 0, 0, bot);
     }
 
     /**
      * Produce a <code>String</code> representation of this overlay of images
      */
     public String toString() {
-        return "new OverlayImages(this.bot = " + this.bot.toString()
+        return className(this) + "this.bot = " + this.bot.toString()
                 + "\nthis.top = " + this.top.toString() + ")\n";
     }
 
@@ -54,21 +56,16 @@ public final class OverlayImages extends OverlayOffsetImagesBase {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "OverlayImages") + indent
-                + "this.bot = " + this.bot.toIndentedString(indent) + "\n"
-                + indent + "this.top = " + this.top.toIndentedString(indent)
-                + indent + ")\n";
+        return classNameString(indent, this) + indent + "this.bot = "
+                + this.bot.toIndentedString(indent) + "\n" + indent
+                + "this.top = " + this.top.toIndentedString(indent) + ")\n";
     }
 
     /**
-     * Is this <code>OverlayImages</code> same as the given object?
+     * Is this <code>OverlayImage</code> same as the given object?
      */
     public boolean equals(Object o) {
-        if (o instanceof OverlayImages) {
-            OverlayImages that = (OverlayImages) o;
-            return this.bot.equals(that.bot) && this.top.equals(that.top);
-        } else
-            return false;
+        return o instanceof OverlayImage && this.same((OverlayImage) o);
     }
 
     /**
@@ -77,10 +74,10 @@ public final class OverlayImages extends OverlayOffsetImagesBase {
     public int hashCode() {
         return this.bot.hashCode() + this.top.hashCode();
     }
-    
+
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new OverlayImages(this.top, this.bot);
+        WorldImage i = new OverlayImage(this.top, this.bot);
         i.pinhole = p;
         return i;
     }

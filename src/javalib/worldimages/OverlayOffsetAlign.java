@@ -260,26 +260,27 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      */
     @Override
     public String toString() {
-        return "new OverlayImagesXY(this.deltaBot = "
-                + this.deltaBot.toString() + ", this.deltaTop = "
-                + this.deltaTop.toString() + "," + "\nthis.width = "
-                + this.width + ", this.height = " + this.height + ","
-                + "\nthis.bot = " + this.bot.toString() + "\nthis.top = "
-                + this.top.toString() + ")\n";
+        return className(this) + "this.alignX = " + this.alignX
+                + ",\nthis.alignY = " + this.alignY + ",\nthis.top = "
+                + this.top.toString() + ",\nthis.dx = " + this.dx
+                + ", this.dy = " + this.dy + "\nthis.bot = "
+                + this.bot.toString() + "\nthis.top = " + ")\n";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, "OverlayImagesXY") + indent
-                + "this.deltaBot = " + this.deltaBot.toString()
-                + ", this.deltaTop = " + this.deltaTop.toString() + "\n"
-                + indent + "this.bot = " + this.bot.toString() + "\n" + indent
-                + "this.top = " + this.top.toString() + ")\n";
+        return classNameString(indent, this) + "this.alignX = " + this.alignX
+                + ",\n" + indent + "this.alignY = " + this.alignY + ",\n"
+                + indent + "this.top = " + this.top.toString() + ",\n" + indent
+                + ",\nthis.dx = " + this.dx + ", this.dy = " + this.dy + ",\n"
+                + indent + "this.bot = " + this.bot.toString() + ",\n" + indent
+                + ")\n";
     }
 
     /**
-     * Is this OverlayOffsetAlign the same as that OverlayOffsetAlign?
+     * Is this <code>OverlayOffsetAlign</code> the same as that
+     * <code>OverlayOffsetAlign</code>?
      * 
      * @param that
      * @return

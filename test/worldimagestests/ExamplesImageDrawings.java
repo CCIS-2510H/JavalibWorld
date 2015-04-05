@@ -84,14 +84,14 @@ public class ExamplesImageDrawings {
     WorldImage polygon4 = new RegularPolyImage(20.0, 6, "outline",
             Color.DARK_GRAY);
 
-    WorldImage overlay = new OverlayImages(disc, new OverlayImages(oval,
+    WorldImage overlay = new OverlayImage(disc, new OverlayImage(oval,
             rectangle));
     WorldImage overlayText = new TextImage(
-            "OverlayImages(disc, OverlayImages(oval, rectangle))", Color.BLACK);
+            "OverlayImage(disc, OverlayImage(oval, rectangle))", Color.BLACK);
 
-    WorldImage overlayXY = new OverlayOffsetImages(disc, -50, -30, rectangle);
+    WorldImage overlayXY = new OverlayOffsetImage(disc, 50, 30, rectangle);
     WorldImage overlayXYText = new TextImage(
-            "OverlayImagesXY(disc, rectangle, -50, -30)", Color.BLACK);
+            "OverlayImageXY(disc, rectangle, 50, 30)", Color.BLACK);
 
     WorldImage rotate35 = new RotateImage(new FrameImage(overlayXY), 35);
     WorldImage rotate35Text = new TextImage("RotateImage(overlayXY, 35)",
@@ -170,22 +170,21 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
             .placeImageXY(new FrameImage(allTransforms2), 400, 400);
 
-    WorldImage whitePetal = new OverlayOffsetImages(new CircleImage(15,
-            OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayOffsetImages(
+    WorldImage whitePetal = new OverlayOffsetImage(new CircleImage(15,
+            OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayOffsetImage(
             new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
                     15), OutlineMode.SOLID, Color.WHITE), 30, 0,
             new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
-    WorldImage yellowPetal = new OverlayOffsetImages(new CircleImage(15,
-            OutlineMode.SOLID, Color.YELLOW), 60, 0, new OverlayOffsetImages(
+    WorldImage yellowPetal = new OverlayOffsetImage(new CircleImage(15,
+            OutlineMode.SOLID, Color.YELLOW), 60, 0, new OverlayOffsetImage(
             new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
                     15), OutlineMode.SOLID, Color.YELLOW), 30, 0,
             new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
-    WorldImage daisyImg = new OverlayImages(new RotateImage(whitePetal, 0),
-            new OverlayImages(new RotateImage(yellowPetal, 60),
-                    new OverlayImages(new RotateImage(whitePetal, 120),
-                            new OverlayImages(
-                                    new RotateImage(yellowPetal, 180),
-                                    new OverlayImages(new RotateImage(
+    WorldImage daisyImg = new OverlayImage(new RotateImage(whitePetal, 0),
+            new OverlayImage(new RotateImage(yellowPetal, 60),
+                    new OverlayImage(new RotateImage(whitePetal, 120),
+                            new OverlayImage(new RotateImage(yellowPetal, 180),
+                                    new OverlayImage(new RotateImage(
                                             whitePetal, 240), new RotateImage(
                                             yellowPetal, 300))))));
     WorldScene daisy = scene.placeImageXY(
@@ -211,9 +210,9 @@ public class ExamplesImageDrawings {
         pinholeImages[4] = new OverlayOffsetAlign("pinhole", "pinhole",
                 pinholeImages[3], 0, 0, new RotateImage(pinholeImages[2], 180));
         pinholeImages[5] = new OverlayOffsetAlign("right", "center",
-                        new RectangleImage(pinholeImages[4].getWidth() / 2,
-                                pinholeImages[4].getHeight(), "outline",
-                                Color.RED), 0, 0, pinholeImages[4]);
+                new RectangleImage(pinholeImages[4].getWidth() / 2,
+                        pinholeImages[4].getHeight(), "outline", Color.RED), 0,
+                0, pinholeImages[4]);
         pinholeImages[6] = new OverlayOffsetAlign("left", "center",
                 new RectangleImage(pinholeImages[4].getWidth() / 2,
                         pinholeImages[4].getHeight(), "outline", Color.GREEN),

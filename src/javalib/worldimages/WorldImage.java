@@ -150,7 +150,7 @@ public abstract class WorldImage {
         // add each of the images to this one
         // They should all align on their respective centers
         for (int i = 0; i < length; i++) {
-            image = new OverlayImages(image, args[i]);
+            image = new OverlayImage(image, args[i]);
         }
 
         return image;
@@ -218,30 +218,13 @@ public abstract class WorldImage {
      * 
      * @param indent
      *            -- the indent amount of the string
-     * @param className
-     *            -- the name of the class
-     * @return the string representation of the class name
-     */
-    protected static String classNameString(String indent, String className) {
-        return "\n" + indent + "new " + className + "(";
-    }
-
-    /**
-     * Produce the <code>String</code> that represents the class name.
-     * 
-     * <p>
-     * Helper method for {@link #toIndentedString(String)}.
-     * </p>
-     * 
-     * @param indent
-     *            -- the indent amount of the string
      * @param o
      *            -- the object that needs its class printed out
      * @return the string representation of the class indented by the proper
      *         amount
      */
     protected static String classNameString(String indent, WorldImage o) {
-        return classNameString(indent, className(o));
+        return "\n" + indent + className(o);
     }
 
     /**
@@ -252,7 +235,7 @@ public abstract class WorldImage {
      * @return the string representation of the class name
      */
     protected static String className(WorldImage o) {
-        return o.getClass().getSimpleName();
+        return "new " + o.getClass().getSimpleName() + "(";
     }
 
     public static void main(String[] argv) {

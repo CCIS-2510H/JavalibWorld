@@ -143,13 +143,13 @@ public class BlobWorldFun extends World {
      * of the <code>WorldImage</code> shapes
      */
     public WorldImage blackHole =
-        new OverlayImages(
-            new OverlayImages(new CircleImage(10, OutlineMode.OUTLINE, Color.BLACK),
+        new OverlayImage(
+            new OverlayImage(new CircleImage(10, OutlineMode.OUTLINE, Color.BLACK),
                 new CircleImage(10, OutlineMode.SOLID, Color.WHITE)),
-            new OverlayOffsetImagesBase(
-                new EllipseImageBase(25, 25, OutlineMode.SOLID, Color.GREEN),
+            new OverlayOffsetImage(
+                new EllipseImage(25, 25, OutlineMode.SOLID, Color.GREEN),
                 12, this.height - 12, 
-                new RectangleImageBase(this.width, this.height, OutlineMode.SOLID, Color.BLUE)));//,
+                new RectangleImage(this.width, this.height, OutlineMode.SOLID, Color.BLUE)));//,
 //                        new OverlayImages(new RectangleImage(new Posn(100, 150), 10, 10, Color.WHITE), 
 //                            new OverlayImages(new LineImage(new Posn(95, 145), new Posn(105, 155), Color.RED),
 //                                new OverlayImages(new LineImage(new Posn(95, 155), new Posn(105, 145), Color.RED),
@@ -161,7 +161,7 @@ public class BlobWorldFun extends World {
      */
     public WorldScene makeScene() {
         return this.getEmptyScene()
-            .placeImageXY(new OverlayImages(this.blackHole, this.blob.blobImage()), 
+            .placeImageXY(new OverlayImage(this.blackHole, this.blob.blobImage()), 
                 this.width / 2, this.height / 2);
     }
 
