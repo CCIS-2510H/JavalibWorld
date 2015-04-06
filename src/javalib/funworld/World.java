@@ -566,6 +566,7 @@ abstract public class World {
      */
     private synchronized World resetWorld(World bw) {
         if (this.worldExists) {
+            bw.blankScene = this.blankScene;
             bw.theCanvas = this.theCanvas;
             bw.worldExists = true;
 
