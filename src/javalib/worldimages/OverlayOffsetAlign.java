@@ -106,13 +106,13 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         int botHeight = this.bot.getHeight();
         int topHeight = this.top.getHeight();
 
-        int rightX = (int) Math.round(Math.max((botWidth / 2.0)
+        int rightX = (int) (Math.max((botWidth / 2.0)
                 + xBotMoveDist(), (topWidth / 2.0) + xTopMoveDist()));
-        int leftX = (int) Math.round(Math.min((-botWidth / 2.0)
+        int leftX = (int) (Math.min((-botWidth / 2.0)
                 + xBotMoveDist(), (-topWidth / 2.0) + xTopMoveDist()));
-        int bottomY = (int) Math.round(Math.max((botHeight / 2.0)
+        int bottomY = (int) (Math.max((botHeight / 2.0)
                 + yBotMoveDist(), (topHeight / 2.0) + yTopMoveDist()));
-        int topY = (int) Math.round(Math.min((-botHeight / 2.0)
+        int topY = (int) (Math.min((-botHeight / 2.0)
                 + yBotMoveDist(), (-topHeight / 2.0) + yTopMoveDist()));
 
         // yBotMoveDist(), yTopMoveDist(), xBotMoveDist(), and
@@ -131,13 +131,13 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         this.deltaTop = new Posn(topDeltaX, topDeltaY);
 
         // Fix the width
-        int actualWidth = (int) Math.round(getBB().getWidth());
-        int actualHeight = (int) Math.round(getBB().getHeight());
-        // int calculatedWidth = rightX - leftX;
-        // int calculatedHeight = bottomY - topY;
+//        int actualWidth = (int) Math.round(getBB().getWidth());
+//        int actualHeight = (int) Math.round(getBB().getHeight());
+        int calculatedWidth = rightX - leftX;
+        int calculatedHeight = bottomY - topY;
 
-        this.width = actualWidth;
-        this.height = actualHeight;
+        this.width = calculatedWidth;
+        this.height = calculatedHeight;
 
         if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
                 && dx == 0 && dy == 0) {
