@@ -29,7 +29,7 @@ public class ExamplesWorld extends World {
     // just a red ball moving across the screen
     public WorldScene makeScene() {
         return this.getEmptyScene().placeImageXY(
-                new RectangleImageBase(60, 20, OutlineMode.SOLID, Color.RED),
+                new RectangleImage(60, 20, OutlineMode.SOLID, Color.RED),
                 this.pos.x, this.pos.y)
                 .placeImageXY(
                     new TextImage("hello", 12, 0, Color.BLUE),

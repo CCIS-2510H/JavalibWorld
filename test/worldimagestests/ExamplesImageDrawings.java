@@ -256,9 +256,9 @@ public class ExamplesImageDrawings {
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-        boolean makeDrawing = c.show() && c.drawScene(e.combined);
+//        boolean makeDrawing = c.show() && c.drawScene(e.combined);
         c = new WorldCanvas(800, 800);
         // boolean daisy = c.show() && c.drawScene(e.daisy);
-        // boolean pins = c.show() && c.drawScene(e.pinholes);
+        boolean pins = c.show() && c.drawScene(e.pinholes);
     }
 }

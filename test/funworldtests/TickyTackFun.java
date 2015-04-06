@@ -1,10 +1,10 @@
 package funworldtests;
 
 import java.awt.Color;
-import tester.*;
 
+import tester.*;
 import javalib.funworld.*;
-import javalib.colors.*;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 /**
@@ -28,42 +28,39 @@ class House {
         this.width = width;
         this.height = height;
         this.color = color;
-        this.person = new Person(new Posn(this.loc.x + this.width / 2,
-                this.loc.y - this.height / 4), this.width / 2, this.height / 2,
-                this.color);
+        this.person = new Person(this.width / 2, this.height / 2, this.color);
     }
 
     // make the image of this house
     WorldImage houseImage() {
-        return new RectangleImageBase(
-        // the pinhole in the center
-                new Posn(this.loc.x + this.width / 2, this.loc.y - this.height
-                        / 2), this.width, this.height, this.color)
-                .overlayImages(
-                        // the roof - the height is half the height of the house
-                        new TriangleImage(new Posn(this.loc.x, this.loc.y
-                                - this.height), new Posn(this.loc.x
-                                + this.width, this.loc.y - this.height),
-                                new Posn(this.loc.x + this.width / 2,
-                                        this.loc.y - 3 * this.height / 2),
-                                Color.red),
-                        // the door - black in the middle
-                        new RectangleImageBase(new Posn(
-                                this.loc.x + this.width / 2, this.loc.y
-                                        - this.height / 4), this.width / 2,
-                                this.height / 2, Color.gray), this.person
-                                .personImage());
+        WorldImage house = new RectangleImage(this.width, this.height, "solid",
+                this.color);
+        house = new AboveImage(new TriangleImage(new Posn(0, 0), new Posn(
+                this.width / 2, -this.height / 2), new Posn(this.width, 0),
+                "solid", Color.RED), house);
+        house = new OverlayOffsetAlign("center", "bottom", new RectangleImage(
+                this.width / 2, (int) Math.round(this.height / 2.0), "solid",
+                Color.GRAY), 0, 0, house);
+        house = new OverlayOffsetAlign("center", "bottom",
+                this.person.personImage(), 0, 0, house);
+        return house;
+    }
+
+    int getX() {
+        return this.loc.x + (this.width / 2);
+    }
+
+    int getY() {
+        return this.loc.y - (int) ((this.height + (this.height / 2.0)) / 2.0);
     }
 }
 
 class Person {
-    Posn pinhole;
     int width;
     int height;
     Color color;
 
-    Person(Posn pinhole, int width, int height, Color color) {
-        this.pinhole = pinhole;
+    Person(int width, int height, Color color) {
         this.width = width;
         this.height = height;
         this.color = color;
@@ -71,25 +68,15 @@ class Person {
 
     // make the image of this house
     WorldImage personImage() {
-        return
-        // draw the legs
-        new LineImage(this.pinhole, new Posn(this.pinhole.x - this.width / 2,
-                this.pinhole.y + this.height / 2), Color.black).overlayImages(
-                new LineImage(this.pinhole, new Posn(this.pinhole.x
-                        + this.width / 2, this.pinhole.y + this.height / 2),
-                        Color.black),
-                // draw the arms
-                new LineImage(this.pinhole, new Posn(this.pinhole.x
-                        + this.width / 2, this.pinhole.y), Color.black),
-                new LineImage(this.pinhole, new Posn(this.pinhole.x
-                        - this.width / 2, this.pinhole.y), Color.black),
-                // draw the torso
-                // new RectangleImage(this.pinhole, this.width / 3, 2 *
-                // this.height / 3,
-                // this.color),
-                // draw the head
-                new CircleImage(new Posn(this.pinhole.x, this.pinhole.y
-                        - this.height / 4), this.height / 4, Color.black));
+        WorldImage leftLeg = new LineImage(new Posn(this.width / 2,
+                -this.height / 2), Color.BLACK);
+        WorldImage rightLeg = new LineImage(new Posn(-this.width / 2,
+                -this.height / 2), Color.BLACK);
+        WorldImage arms = new LineImage(new Posn(this.width, 0), Color.BLACK);
+        WorldImage head = new CircleImage(this.height / 4 - 1, "outline",
+                Color.BLACK);
+        WorldImage legs = new BesideImage(leftLeg, rightLeg);
+        return new AboveImage(head, arms, legs);
     }
 }
 
@@ -109,13 +96,17 @@ class Tree {
 
     // make the image of this tree
     WorldImage treeImage() {
-        return
-        // the trunk
-        new RectangleImageBase(new Posn(this.loc.x + 5, this.loc.y
-                - this.trunkHeight / 2), 10, this.trunkHeight, new Color(0x84,
-                0x3c, 0x24)).overlayImages(new EllipseImageBase(OutlineMode.OUTLINE, new Posn(
-                this.loc.x + 5, this.loc.y - this.trunkHeight - this.height / 2
-                        + 3), this.width, this.height, Color.green));
+        return new AboveImage(new EllipseImage(this.width, this.height,
+                "solid", Color.GREEN), new RectangleImage(this.width / 4,
+                this.trunkHeight, "solid", new Color(0x84, 0x3c, 0x24)));
+    }
+
+    int getX() {
+        return loc.x + (this.width / 8);
+    }
+
+    int getY() {
+        return loc.y - ((this.trunkHeight + this.height) / 2);
     }
 }
 
@@ -147,13 +138,13 @@ class Cloud {
 
     // make the image of this cloud
     WorldImage cloudImage() {
-        return new EllipseImageBase(OutlineMode.OUTLINE, this.loc, this.width, this.height, Color.white)
-                .overlayImages(new EllipseImageBase(OutlineMode.OUTLINE, new Posn(this.loc.x - this.width
-                        / 4, this.loc.y - this.height / 4), this.width / 2,
-                        this.width / 2, Color.white), new EllipseImageBase(OutlineMode.OUTLINE, new Posn(
-                        this.loc.x + this.width / 4, this.loc.y - this.height
-                                / 2), this.width / 2, this.height / 2,
-                        Color.white));
+        return new OverlayOffsetImage(new EllipseImage(this.width / 2,
+                this.height / 2, "solid", Color.WHITE), -this.width / 2,
+                this.height / 3, new OverlayOffsetImage(new EllipseImage(
+                        this.width, this.height, "solid", Color.WHITE),
+                        -this.width / 4, -this.height / 2, new EllipseImage(
+                                this.width / 2, this.height / 2, "solid",
+                                Color.WHITE)));
     }
 }
 
@@ -167,8 +158,7 @@ class Sun {
 
     // make the image of this sun - somewhat transparent
     WorldImage sunImage() {
-        return new CircleImage(new Posn(50, 50), this.size, new Color(255, 255,
-                0, 230));
+        return new CircleImage(this.size, "solid", new Color(255, 255, 0, 230));
     }
 }
 
@@ -182,9 +172,6 @@ public class TickyTackFun extends World {
     House h6 = new House(new Posn(360, 300), 80, 60, Color.magenta);
     House h7 = new House(new Posn(440, 300), 90, 70, Color.orange);
 
-    WorldImage familyImage = new FromFileImage(new Posn(30, 272),
-            "Images/family.png");
-
     Tree t1 = new Tree(new Posn(550, 300), 40, 50, 80);
     Tree t2 = new Tree(new Posn(580, 300), 20, 30, 30);
 
@@ -192,20 +179,26 @@ public class TickyTackFun extends World {
 
     Sun sun = new Sun(20);
 
-    TickyTackFun(Cloud cloud, Sun sun) {
+    int width, height;
+
+    TickyTackFun(Cloud cloud, Sun sun, int width, int height) {
         this.cloud = cloud;
         this.sun = sun;
+        this.width = width;
+        this.height = height;
     }
 
     // move the cloud, making sure there is always a cloud in the sky
     public World onTick() {
-        return new TickyTackFun(this.cloud.moveInBounds(4, 600), this.sun);
+        return new TickyTackFun(this.cloud.moveInBounds(4, 600), this.sun,
+                this.width, this.height);
     }
 
     // the space bar makes the sun grow till max, then shrink and grow again
     public World onKeyEvent(String ke) {
         if (ke.equals(" "))
-            return new TickyTackFun(this.cloud, new Sun(this.sun.size + 3));
+            return new TickyTackFun(this.cloud, new Sun(this.sun.size + 3),
+                    this.width, this.height);
 
         else if (ke.equals("x")) {
             return this.endOfWorld("Have a nice Day!");
@@ -217,7 +210,7 @@ public class TickyTackFun extends World {
     public World onMouseClicked(Posn p) {
         if (p.y < 100)
             return new TickyTackFun(new Cloud(p, this.cloud.width,
-                    this.cloud.height), this.sun);
+                    this.cloud.height), this.sun, this.width, this.height);
         else
             return this;
     }
@@ -225,28 +218,46 @@ public class TickyTackFun extends World {
     // say goodbye to the sun, when it gets to be big enough again
     public WorldEnd worldEnds() {
         if (10 < sun.size && sun.size < 20)
-            return new WorldEnd(true, this.makeImage().overlayImages(
-                    new TextImage(new Posn(150, 80), "Goodbye sun!", 15, 3,
-                            Color.RED)));
+            return new WorldEnd(true, this.makeScene().placeImageXY(
+                    new TextImage("Goodbye sun!", 15, 3, Color.RED), 150, 80));
         else
-            return new WorldEnd(false, this.makeImage());
+            return new WorldEnd(false, this.makeScene());
     }
 
-    // produce the image of the whole world -
-    // with all houses, both trees, the cloud and the sun
-    public WorldImage makeImage() {
-        return new RectangleImageBase(new Posn(300, 150), 600, 300, Color.blue)
-                .overlayImages(this.h1.houseImage(), this.h2.houseImage(),
-                        this.h3.houseImage(), this.h4.houseImage(),
-                        this.h5.houseImage(), this.h6.houseImage(),
-                        this.h7.houseImage(), this.t1.treeImage(),
-                        this.t2.treeImage(), this.cloud.cloudImage(),
-                        this.familyImage, this.sun.sunImage());
+    @Override
+    public WorldScene makeScene() {
+        return this
+                .getEmptyScene()
+                .placeImageXY(
+                        new RectangleImage(width, height, "solid", Color.BLUE),
+                        width / 2, height / 2)
+                .placeImageXY(this.h1.houseImage(), this.h1.getX(),
+                        this.h1.getY())
+                .placeImageXY(this.h2.houseImage(), this.h2.getX(),
+                        this.h2.getY())
+                .placeImageXY(this.h3.houseImage(), this.h3.getX(),
+                        this.h3.getY())
+                .placeImageXY(this.h4.houseImage(), this.h4.getX(),
+                        this.h4.getY())
+                .placeImageXY(this.h5.houseImage(), this.h5.getX(),
+                        this.h5.getY())
+                .placeImageXY(this.h6.houseImage(), this.h6.getX(),
+                        this.h6.getY())
+                .placeImageXY(this.h7.houseImage(), this.h7.getX(),
+                        this.h7.getY())
+                .placeImageXY(this.t1.treeImage(), this.t1.getX(),
+                        this.t1.getY())
+                .placeImageXY(this.t2.treeImage(), this.t2.getX(),
+                        this.t2.getY())
+                .placeImageXY(this.cloud.cloudImage(), this.cloud.loc.x,
+                        this.cloud.loc.y)
+                .placeImageXY(this.sun.sunImage(), 50, 50);
     }
 
-    public WorldImage lastImage(String s) {
-        return this.makeImage().overlayImages(
-                new TextImage(new Posn(150, 80), s, 15, 3, Color.RED));
+    @Override
+    public WorldScene lastScene(String s) {
+        return this.makeScene().placeImageXY(
+                new TextImage(s, 15, 3, Color.RED), 150, 80);
     }
 
     // support for the regression tests
@@ -273,19 +284,7 @@ class ExamplesTickyTack {
 
     Sun sun = new Sun(25);
 
-    WorldImage wholeworld = new RectangleImageBase(new Posn(300, 150), 600, 300,
-            Color.blue).overlayImages(this.h1.houseImage(),
-            this.h2.houseImage(), this.h3.houseImage(), this.h4.houseImage(),
-            this.h5.houseImage(), this.h6.houseImage(), this.h7.houseImage(),
-            this.t1.treeImage(), this.t2.treeImage(), this.cloud.cloudImage(),
-            this.sun.sunImage());
-
-    /*
-     * WorldCanvas c = new WorldCanvas(600, 300);
-     * 
-     * boolean showWorld = c.show() && c.drawImage(this.wholeworld);
-     */
-    TickyTackFun tworld = new TickyTackFun(this.cloud, new Sun(25));
+    TickyTackFun tworld = new TickyTackFun(this.cloud, new Sun(25), 600, 300);
 
     // test the method move in the class Cloud
     boolean testMove(Tester t) {
@@ -311,24 +310,24 @@ class ExamplesTickyTack {
     // test the method onTick for the ticky-tack world
     boolean testOnTick(Tester t) {
         return t.checkExpect(this.tworld.onTick(), new TickyTackFun(new Cloud(
-                new Posn(204, 100), 90, 60), this.sun));
+                new Posn(204, 100), 90, 60), this.sun, 600, 300));
     }
 
     // test the method onKeyEvent for the ticky-tack world
     boolean testOnKeyEvent(Tester t) {
         return t.checkExpect(this.tworld.onKeyEvent(" "), new TickyTackFun(
-                this.cloud, new Sun(28)))
-                && t.checkExpect(new TickyTackFun(this.cloud, new Sun(28))
-                        .onKeyEvent(" "), new TickyTackFun(this.cloud, new Sun(
-                        1)))
+                this.cloud, new Sun(28), 600, 300))
+                && t.checkExpect(new TickyTackFun(this.cloud, new Sun(28), 600,
+                        300).onKeyEvent(" "), new TickyTackFun(this.cloud,
+                        new Sun(1), 600, 300))
                 && t.checkExpect(this.tworld.onKeyEvent("x"), this.tworld);
     }
 
     // test the method onMouseClicked in the class Cloud
     boolean testOnMouseClicked(Tester t) {
-        return t.checkExpect(
-                this.tworld.onMouseClicked(new Posn(150, 80)),
-                new TickyTackFun(new Cloud(new Posn(150, 80), 90, 60), this.sun))
+        return t.checkExpect(this.tworld.onMouseClicked(new Posn(150, 80)),
+                new TickyTackFun(new Cloud(new Posn(150, 80), 90, 60),
+                        this.sun, 600, 300))
                 && t.checkExpect(
                         this.tworld.onMouseClicked(new Posn(150, 180)),
                         this.tworld);
@@ -339,7 +338,7 @@ class ExamplesTickyTack {
 
         Tester.runReport(ett, false, false);
 
-        TickyTackFun tworld = new TickyTackFun(ett.cloud, ett.sun);
+        TickyTackFun tworld = new TickyTackFun(ett.cloud, ett.sun, 600, 300);
         tworld.bigBang(600, 300, 0.1);
     }
 
