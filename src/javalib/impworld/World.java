@@ -54,10 +54,10 @@ abstract public class World {
     private transient WindowListener windowClosing;
 
     /** a blank image, to avoid <code>null</code> in the <code>lastWorld</code> */
-    private transient WorldScene blankScene;
+    private transient WorldScene blankScene = new WorldScene(0, 0);
 
     /** the last world - if needed */
-    public WorldEnd lastWorld;
+    public WorldEnd lastWorld = new WorldEnd(false, this.blankScene);
 
     /**
      * The default constructor. To start the world one must invoke the
@@ -155,8 +155,10 @@ abstract public class World {
         System.out.println(Versions.CURRENT_VERSION);
     }
 
-    public WorldScene getEmptyScene() { return this.blankScene; }
-    
+    public WorldScene getEmptyScene() {
+        return this.blankScene;
+    }
+
     /**
      * EFFECT:
      * <p>
