@@ -59,6 +59,7 @@ public class WorldCanvas {
         // Label the frame as "Canvas" and set up the layout
         f = new JFrame(title);
         f.setLayout(new BorderLayout());
+        f.setResizable(false);
 
         // End the application when the last window closes
         f.addWindowListener(winapt);
@@ -71,6 +72,7 @@ public class WorldCanvas {
         panel = new CanvasPanel(width, height);
         panel.addNotify();
         f.getContentPane().add(panel, BorderLayout.CENTER);
+        f.getContentPane().setMinimumSize(new Dimension(width, height));
 
         f.pack();
         Graphics g = panel.getGraphics();
@@ -139,11 +141,11 @@ public class WorldCanvas {
     // ///////////////////////////////////////////////////////////////////////
     // Methods for drawing and erasing shapes and text //
     // ///////////////////////////////////////////////////////////////////////
-    
+
     public boolean drawScene(WorldScene scene) {
         if (f.getWidth() != scene.width || f.getHeight() != scene.height) {
-            f.setSize(scene.width, scene.height);
-            ((CanvasPanel) panel).setSize(scene.width, scene.height);
+            f.getContentPane().setMinimumSize(
+                    new Dimension(scene.width, scene.height));
         }
         ((CanvasPanel) panel).drawScene(scene);
         return true;
@@ -245,9 +247,9 @@ public class WorldCanvas {
 
         nextStep("To show the canvas ... ");
         sm1.show();
-        
+
         WorldScene scene1 = new WorldScene(200, 200);
-        
+
         nextStep("Canvas shown - should be blank - add red and blue disk");
         scene1.placeImageXY(new CircleImage(20, "outline", Color.red), 50, 50);
         scene1.placeImageXY(new CircleImage(20, "outline", Color.blue), 150, 50);
@@ -255,9 +257,10 @@ public class WorldCanvas {
 
         nextStep("Show the canvas again - it should not do anything");
         sm1.show();
-        
+
         nextStep("Draw a green disk");
-        scene1.placeImageXY(new CircleImage(50, "outline", Color.green), 50, 150);
+        scene1.placeImageXY(new CircleImage(50, "outline", Color.green), 50,
+                150);
         sm1.drawScene(scene1);
 
         nextStep("Close the Canvas");
@@ -267,9 +270,10 @@ public class WorldCanvas {
         sm1.show();
 
         nextStep("Paint one disks on the canvas");
-        
+
         WorldScene scene2 = new WorldScene(200, 200);
-        scene2.placeImageXY(new CircleImage(25, "outline", Color.black), 50, 150);
+        scene2.placeImageXY(new CircleImage(25, "outline", Color.black), 50,
+                150);
         sm1.drawScene(scene2);
 
         nextStep("Construct a second canvas with the name Smiley");
@@ -280,7 +284,7 @@ public class WorldCanvas {
 
         nextStep("Paint two disks on the Smiley canvas");
         WorldScene scene3 = new WorldScene(200, 200);
-        
+
         scene3.placeImageXY(new CircleImage(20, "outline", Color.red), 50, 50);
         scene3.placeImageXY(new CircleImage(50, "outline", Color.blue), 150, 50);
         sm2.drawScene(scene3);
@@ -293,9 +297,10 @@ public class WorldCanvas {
         WorldScene scene4 = new WorldScene(200, 200);
         scene4.placeImageXY(new CircleImage(30, "outline", Color.red), 50, 50);
         scene4.placeImageXY(new CircleImage(30, "outline", Color.blue), 150, 50);
-        scene4.placeImageXY(new CircleImage(30, "outline", Color.green), 50, 150);
+        scene4.placeImageXY(new CircleImage(30, "outline", Color.green), 50,
+                150);
         sm1.drawScene(scene4);
-        
+
         nextStep("The first canvas has three disks drawn");
 
         System.out.println("Close both canvas windows to end the program");

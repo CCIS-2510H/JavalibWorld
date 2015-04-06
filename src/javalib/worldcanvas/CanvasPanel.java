@@ -30,10 +30,6 @@ public class CanvasPanel extends JPanel {
     /** The internal painter panel. */
     protected transient CanvasPanel.Painter painter = null;
 
-    /** The width and height for this buffered panel. */
-    protected int WIDTH;
-    protected int HEIGHT;
-
     /**
      * <p>
      * Constructs a BufferedPanel containing a buffered image with the given
@@ -309,12 +305,12 @@ public class CanvasPanel extends JPanel {
         return (c.getRed() == 255) && (c.getBlue() == 255)
                 && (c.getGreen() == 255);
     }
-    
+
     public void drawScene(WorldScene scene) {
         scene.draw(getBufferGraphics());
         repaint();
     }
-    
+
     /**
      * Draw the given image into this panel at the specified coordinates
      * 
