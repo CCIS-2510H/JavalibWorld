@@ -3,7 +3,7 @@ package impworldtests;
 import java.awt.Color;
 
 import javalib.impworld.*;
-import javalib.colors.*;
+import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 /**
@@ -31,21 +31,16 @@ public class WormWorld extends World {
 
     // what happens when the clock ticks
     public void onTick() {
-        // System.out.println("Tick");
         this.move(this.w.move(this.w.whereTo()));
     }
 
     // what happens when the player presses a key
     public void onKeyEvent(String ke) {
-        // System.out.println("Key event " + ke);
         this.move(this.w.move(ke));
     }
 
     // what happens when the player presses a key
     public void onMouseClicked(Posn loc) {
-        // System.out.println("Worm at (" + this.w.head.x + ", " + this.w.head.y
-        // + ")");
-        // System.out.println("Mouse click at (" + loc.x + ", " + loc.y + ")");
         this.f.moveTo(loc);
     }
 
@@ -64,26 +59,26 @@ public class WormWorld extends World {
     }
 
     /**
-     * Check whether the worm ate itself or ran into itself.
+     * Check whether the Worm is out of bounds, or ate itself
      */
     public WorldEnd worldEnds() {
-        // worm ate itself
+        // if the blob is outside the canvas, stop
         if (w.ateItself())
-            return new WorldEnd(true, new OverlayImages(this.makeImage(),
-                    new TextImage(new Posn(100, 40), "Your worm ate itself.",
-                            13, Color.red)));
+            return new WorldEnd(true, this.makeScene().placeImageXY(
+                    new TextImage("Your worm ate itself.", 13, Color.red), 100,
+                    40));
         else if (w.ranIntoWall(this.b))
-            return new WorldEnd(true, new OverlayImages(this.makeImage(),
-                    new TextImage(new Posn(100, 40),
-                            "Your worm ran into a wall.", 13, Color.red)));
+            return new WorldEnd(true, this.makeScene().placeImageXY(
+                    new TextImage("Your worm ran into a wall.", 13, Color.red),
+                    100, 40));
         else
-            return new WorldEnd(false, this.makeImage());
+            return new WorldEnd(false, this.makeScene());
     }
 
     // produce an image of this world
-    public WorldImage makeImage() {
-        return new OverlayImages(this.b.drawImage(), new OverlayImages(
-                this.w.drawImage(), f.drawImage()));
+    public WorldScene makeScene() {
+        return this.w.drawOnScene(this.f.drawOnScene(this.b.drawOnScene(this
+                .getEmptyScene())));
     }
 
     public static void main(String[] argv) {
@@ -153,9 +148,8 @@ class Worm {
                 this.head, this.body));
     }
 
-    // make an image of this nonempty list of segments
-    protected WorldImage drawImage() {
-        return new OverlayImages(this.head.drawImage(), this.body.drawImage());
+    protected WorldScene drawOnScene(WorldScene scn) {
+        return this.head.drawOnScene(this.body.drawOnScene(scn));
     }
 }
 
@@ -225,8 +219,9 @@ class Segment {
         return f.inside(this.posn());
     }
 
-    protected WorldImage drawImage() {
-        return new CircleImage(new Posn(this.x, this.y), this.radius, this.color);
+    protected WorldScene drawOnScene(WorldScene scn) {
+        return scn.placeImageXY(new CircleImage(this.radius, "solid",
+                this.color), this.x, this.y);
     }
 
     // --- auxiliaries that are only needed for this class: motivate private ---
@@ -253,9 +248,8 @@ class MtSegment extends ListSegment {
         return new MtSegment();
     }
 
-    // make an image of this empty segment
-    protected WorldImage drawImage() {
-        return new RectangleImageBase(new Posn(0, 0), 0, 0, Color.BLUE);
+    protected WorldScene drawOnScene(WorldScene scn) {
+        return scn;
     }
 }
 
@@ -280,9 +274,9 @@ class ConsSegment extends ListSegment {
         return new ConsSegment(pred, this.rest.move(this.first));
     }
 
-    // make an image of this nonempty list of segments
-    protected WorldImage drawImage() {
-        return new OverlayImages(this.first.drawImage(), this.rest.drawImage());
+    // draw this nonempty list of segments
+    protected WorldScene drawOnScene(WorldScene scn) {
+        return this.rest.drawOnScene(this.first.drawOnScene(scn));
     }
 
 }
@@ -300,8 +294,8 @@ abstract class ListSegment {
     // predecessor, given the new position for the predecessor (head originally)
     protected abstract ListSegment move(Segment pred);
 
-    // make an image of this list of segments
-    protected abstract WorldImage drawImage();
+    // draw this list of segments
+    protected abstract WorldScene drawOnScene(WorldScene scn);
 }
 
 // -----------------------------------------------------------------------------
@@ -352,9 +346,9 @@ class Food {
     }
 
     // make an image of this food
-    protected WorldImage drawImage() {
-        return new RectangleImageBase(new Posn(this.x, this.y), this.width,
-                this.height, this.color);
+    protected WorldScene drawOnScene(WorldScene scn) {
+        return scn.placeImageXY(new RectangleImage(this.width, this.height,
+                "solid", this.color), this.x, this.y);
     }
 }
 
@@ -376,8 +370,9 @@ class Box {
                 && (0 <= p.y && p.y <= this.height);
     }
 
-    // make an image of this box
-    protected WorldImage drawImage() {
-        return new RectangleImageBase(new Posn(100, 100), width, height, Color.BLUE);
+    // draw this box
+    protected WorldScene drawOnScene(WorldScene scn) {
+        return scn.placeImageXY(new RectangleImage(width, height, "solid",
+                Color.BLUE), scn.width / 2, scn.height / 2);
     }
 }

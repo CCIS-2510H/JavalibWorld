@@ -229,14 +229,14 @@ public class ExamplesImageDrawings {
             s = s.placeImageXY(new FrameImage(circles[i]), x, y)
                     .placeImageXY(arrow, x + horizDist / 2, y)
                     .placeImageXY(new FrameImage(circles[i + 1]),
-                            x + horizDist, y)
-                    .placeImageXY(center, x, y)
-                    .placeImageXY(center, x + horizDist, y)
-                    .placeImageXY(pinhole, x + circles[i].pinhole.x,
-                            y + circles[i].pinhole.y)
-                    .placeImageXY(pinhole,
-                            x + horizDist + circles[i + 1].pinhole.x,
-                            y + circles[i + 1].pinhole.y);
+                            x + horizDist, y);
+//                    .placeImageXY(center, x, y)
+//                    .placeImageXY(center, x + horizDist, y)
+//                    .placeImageXY(pinhole, x + circles[i].pinhole.x,
+//                            y + circles[i].pinhole.y)
+//                    .placeImageXY(pinhole,
+//                            x + horizDist + circles[i + 1].pinhole.x,
+//                            y + circles[i + 1].pinhole.y);
         }
         return s;
     }

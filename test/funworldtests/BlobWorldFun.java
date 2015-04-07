@@ -21,8 +21,6 @@ class Blob {
     int radius;
     Color col;
 
-    // ImageMaker image = new ImageMaker("shark.png");
-
     /** The constructor */
     Blob(Posn center, int radius, Color col) {
         this.center = center;
@@ -32,9 +30,7 @@ class Blob {
 
     /** produce the image of this blob at its current location and color */
     WorldImage blobImage() {
-        // return new CircleImage(this.center, this.radius, this.col);
-        return new FromFileImage("Images/small-shark.png")
-                .overlayImages(new CircleImage(this.radius, OutlineMode.SOLID, this.col));
+        return new CircleImage(this.radius, "outline", this.col);
     }
 
     /**
@@ -62,6 +58,7 @@ class Blob {
             return new Blob(this.center, this.radius, Color.GREEN);
         } else if (ke.equals("R")) {
             return new Blob(this.center, this.radius, Color.RED);
+
         } else
             return this;
     }
@@ -117,17 +114,6 @@ public class BlobWorldFun extends World {
      * hole in the middle. If all is well, move the Blob in a random direction.
      */
     public World onTick() {
-        /*
-         * // if the blob is outside the canvas, stop if
-         * (this.blob.outsideBounds(this.width, this.height)){ return
-         * this.endOfWorld("Blob is outside the bounds"); }
-         * 
-         * // time ends is the blob falls into the black hole in the middle if
-         * (this.blob.nearCenter(this.width, this.height) &&
-         * this.endOfTime("Black hole ate the blob")) return this;
-         * 
-         * // else move the blob randomly at most 5 pixels in any direction else
-         */
         return new BlobWorldFun(this.blob.randomMove(5));
     }
 
@@ -142,35 +128,29 @@ public class BlobWorldFun extends World {
      * The entire background image for this world It illustrates the use of most
      * of the <code>WorldImage</code> shapes
      */
-    public WorldImage blackHole =
-        new OverlayImage(
-            new OverlayImage(new CircleImage(10, OutlineMode.OUTLINE, Color.BLACK),
-                new CircleImage(10, OutlineMode.SOLID, Color.WHITE)),
-            new OverlayOffsetImage(
-                new EllipseImage(25, 25, OutlineMode.SOLID, Color.GREEN),
-                12, this.height - 12, 
-                new RectangleImage(this.width, this.height, OutlineMode.SOLID, Color.BLUE)));//,
-//                        new OverlayImages(new RectangleImage(new Posn(100, 150), 10, 10, Color.WHITE), 
-//                            new OverlayImages(new LineImage(new Posn(95, 145), new Posn(105, 155), Color.RED),
-//                                new OverlayImages(new LineImage(new Posn(95, 155), new Posn(105, 145), Color.RED),
-//                                    new EllipseImage(OutlineMode.OUTLINE, new Posn(187, 287), 25, 25, Color.GREEN))))))));
+    public WorldImage blackHole = new OverlayImage(new CircleImage(10,
+            OutlineMode.SOLID, Color.BLACK), new RectangleImage(this.width,
+            this.height, OutlineMode.SOLID, Color.BLUE));
 
     /**
      * produce the image of this world by adding the moving blob to the
      * background image
      */
     public WorldScene makeScene() {
-        return this.getEmptyScene()
-            .placeImageXY(new OverlayImage(this.blackHole, this.blob.blobImage()), 
-                this.width / 2, this.height / 2);
+        return this
+                .getEmptyScene()
+                .placeImageXY(this.blackHole, this.width / 2, this.height / 2)
+                .placeImageXY(this.blob.blobImage(), this.blob.center.x,
+                        this.blob.center.y);
     }
 
     /**
      * produce the image of this world by adding the moving blob to the
      * background image
      */
-    public WorldScene lastImage(String s) {
-        return this.makeScene().placeImageXY(new TextImage(s, Color.red), 100, 40);
+    public WorldScene lastScene(String s) {
+        return this.makeScene().placeImageXY(new TextImage(s, Color.red), 100,
+                40);
     }
 
     /**
@@ -180,13 +160,14 @@ public class BlobWorldFun extends World {
     public WorldEnd worldEnds() {
         // if the blob is outside the canvas, stop
         if (this.blob.outsideBounds(this.width, this.height)) {
-            return new WorldEnd(true, this.lastScene("Blob is outside the bounds"));
+            return new WorldEnd(true,
+                    this.lastScene("Blob is outside the bounds"));
         }
         // time ends is the blob falls into the black hole in the middle
         if (this.blob.nearCenter(this.width, this.height)) {
-            return new WorldEnd(true, 
-                this.makeScene().placeImageXY(new TextImage("Black hole ate the blob",
-                            13, 3, Color.red), 100, 40));
+            return new WorldEnd(true, this.makeScene().placeImageXY(
+                    new TextImage("Black hole ate the blob", 13, 3, Color.red),
+                    100, 40));
         } else {
             return new WorldEnd(false, this.makeScene());
         }
@@ -263,8 +244,8 @@ class BlobExamples {
                 // to test the world ending, verify the value of the lastWorld
                 t.checkExpect(
                         this.b1Gw.onKeyEvent("x").lastWorld,
-                        new WorldEnd(true, 
-                            this.b1Gw.makeScene().placeImageXY(new TextImage("Goodbye", Color.red), 100, 40)));
+                        new WorldEnd(true, this.b1Gw.makeScene().placeImageXY(
+                                new TextImage("Goodbye", Color.red), 100, 40)));
     }
 
     /** test the method outsideBounds in the Blob class */
@@ -347,15 +328,16 @@ class BlobExamples {
         t.checkExpect(
                 this.bwOutOfBounds.testOnTick().lastWorld,
                 new WorldEnd(true, this.bwOutOfBounds
-                        .lastImage("Blob is outside the bounds")))
+                        .lastScene("Blob is outside the bounds")))
                 &&
 
                 t.checkExpect(
                         this.bwInTheCenter.testOnTick().lastWorld,
-                        new WorldEnd(true, 
-                            this.bwInTheCenter.makeScene()
-                            .placeImageXY(new TextImage(
-                                "Black hole ate the blob", 13, 3, Color.red), 100, 40)));
+                        new WorldEnd(true, this.bwInTheCenter.makeScene()
+                                .placeImageXY(
+                                        new TextImage(
+                                                "Black hole ate the blob", 13,
+                                                3, Color.red), 100, 40)));
     }
 
     /** test the method onTick in the BlobWorldFun class */
@@ -377,16 +359,20 @@ class BlobExamples {
 
     // test the method worldEnds for the class BlobWorld
     boolean testWorldEnds(Tester t) {
-        return t.checkExpect(this.bwOutOfBounds.worldEnds(), new WorldEnd(true,
-                this.bwOutOfBounds.makeScene().placeImageXY(
-                    new TextImage("Blob is outside the bounds", Color.red), 100, 40)))
+        return t.checkExpect(
+                this.bwOutOfBounds.worldEnds(),
+                new WorldEnd(true, this.bwOutOfBounds.makeScene().placeImageXY(
+                        new TextImage("Blob is outside the bounds", Color.red),
+                        100, 40)))
                 &&
 
-                t.checkExpect(this.bwInTheCenter.worldEnds(), new WorldEnd(
-                        true, 
-                        this.bwInTheCenter.makeScene().placeImageXY(
-                                new TextImage("Black hole ate the blob", 13, 3,
-                                        Color.red), 100, 40)))
+                t.checkExpect(
+                        this.bwInTheCenter.worldEnds(),
+                        new WorldEnd(true, this.bwInTheCenter.makeScene()
+                                .placeImageXY(
+                                        new TextImage(
+                                                "Black hole ate the blob", 13,
+                                                3, Color.red), 100, 40)))
                 &&
 
                 t.checkExpect(this.b1w.worldEnds(), new WorldEnd(false,

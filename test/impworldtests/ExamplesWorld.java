@@ -18,22 +18,23 @@ import java.awt.Color;
 public class ExamplesWorld extends World {
     Posn pos;
     boolean worldEnd = false;
+    int width;
 
-    ExamplesWorld(Posn pos, boolean worldEnd) {
+    ExamplesWorld(Posn pos, boolean worldEnd, int width) {
         this.pos = pos;
         this.worldEnd = worldEnd;
+        this.width = width;
     }
 
-    ExamplesWorld(Posn pos) {
-        this(pos, false);
+    ExamplesWorld(Posn pos, int width) {
+        this(pos, false, width);
     }
 
     // just a red ball moving across the screen
     public WorldScene makeScene() {
-        return this.getEmptyScene()
-            .placeImageXY(new RectangleImageBase(60, 20, OutlineMode.SOLID, Color.RED), this.pos.x, this.pos.y)
-            .placeImageXY(new TextImage("hello", 12, 0, Color.BLUE), this.pos.x, this.pos.y)
-            .placeImageXY(new LineImage(new Posn(this.pos.x + 5, this.pos.y - 5), Color.BLACK), this.pos.x, this.pos.y);
+        return this.getEmptyScene().placeImageXY(
+                new CircleImage(30, OutlineMode.SOLID, Color.RED), this.pos.x,
+                this.pos.y);
     }
 
     // test all kinds of actions using key events:
@@ -62,9 +63,10 @@ public class ExamplesWorld extends World {
     public WorldEnd worldEnds() {
         // if the blob is outside the canvas, stop
         if (this.worldEnd)
-            return new WorldEnd(true, 
-                this.makeScene().placeImageXY(new TextImage("End of the World!!", 13,
-                            Color.red), 100, 40));
+            return new WorldEnd(true, this.makeScene()
+                    .placeImageXY(
+                            new TextImage("End of the World!!", 13, Color.red),
+                            100, 40));
         else
             return new WorldEnd(false, this.makeScene());
     }
@@ -73,7 +75,7 @@ public class ExamplesWorld extends World {
     public void onTick() {
         System.out.println("Tick -- pos = (" + this.pos.x + ", " + this.pos.y
                 + ")");
-        this.pos.x = (this.pos.x + 2) % 100;
+        this.pos.x = (this.pos.x + 2) % this.width;
     }
 
     // at each mouse click print the location of the mouse click
@@ -86,8 +88,8 @@ public class ExamplesWorld extends World {
     // run two worlds concurrently - the one in focus responds to mouse and key
     // events, but the clock ticks regardless
     public static void main(String[] argv) {
-        ExamplesWorld ew = new ExamplesWorld(new Posn(50, 60));
-        ExamplesWorld ew2 = new ExamplesWorld(new Posn(50, 20));
+        ExamplesWorld ew = new ExamplesWorld(new Posn(50, 60), 200);
+        ExamplesWorld ew2 = new ExamplesWorld(new Posn(50, 20), 400);
 
         // runs two worlds: switch between by clicking on the window top bar
         // output coordinates report on the window currently in focus
