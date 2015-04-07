@@ -28,7 +28,7 @@ class Blob {
         this.col = col;
     }
 
-    /** produce the image of this blob at its current location and color */
+    /** produce the image of this blob */
     WorldImage blobImage() {
         return new CircleImage(this.radius, OutlineMode.OUTLINE, this.col);
     }
@@ -46,7 +46,6 @@ class Blob {
             this.center.y = this.center.y - 5;
         } else if (ke.equals("down")) {
             this.center.y = this.center.y + 5;
-            ;
         }
         // change the color to Y, G, R
         else if (ke.equals("Y")) {
@@ -104,24 +103,18 @@ public class BlobWorldImp extends World {
             this.blob.moveBlob(ke);
     }
 
-    /**
-     * On tick check whether the Blob is out of bounds, or fell into the black
-     * hole in the middle. If all is well, move the Blob in a random direction.
-     */
+    /** On tick move the Blob in a random direction. */
     public void onTick() {
         this.blob.randomMove(5);
     }
 
-    /**
-     * On mouse click move the blob to the mouse location, make the color red.
-     */
+    /** On mouse click move the blob to the mouse location */
     public void onMouseClicked(Posn loc) {
         this.blob.center = loc;
     }
 
     /**
-     * The entire background image for this world It illustrates the use of most
-     * of the <code>WorldImage</code> shapes
+     * The entire background image for this world
      */
     public WorldImage blackHole = new OverlayImage(new CircleImage(10,
             OutlineMode.SOLID, Color.BLACK), new RectangleImage(this.width,

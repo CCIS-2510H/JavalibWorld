@@ -81,7 +81,7 @@ class CartPt extends Posn implements OceanWorldConstants {
     }
 }
 
-// A Shark swims in the ocean, looking for fish to eat
+// A Shark is on the left edge of the ocean, looking to eat some fish
 class Shark implements OceanWorldConstants {
     int y; // the horizontal coordinate
     int health; // the hunger level, when zero, the shark dies
@@ -171,8 +171,10 @@ class Fish implements OceanWorldConstants {
     }
 
     WorldImage fishImage() {
-        return new EllipseImage(this.size, this.size / 2, OutlineMode.SOLID,
-                this.color);
+        return new BesideImage(new EllipseImage(this.size, this.size / 2,
+                OutlineMode.SOLID, this.color), new TriangleImage(
+                new Posn(0, 0), new Posn(this.size / 4, -this.size / 4),
+                new Posn(this.size / 4, this.size / 4), "solid", this.color));
     }
 
     // produce the image of this fish at its position
@@ -249,7 +251,7 @@ class ConsSchool implements School, OceanWorldConstants {
         this.rest = rest;
     }
 
-    // produce the image of this school of fish
+    // draw this school of fish
     public WorldScene drawFishesOnScene(WorldScene scn) {
         return this.first.drawImageOnScene(this.rest.drawFishesOnScene(scn));
     }

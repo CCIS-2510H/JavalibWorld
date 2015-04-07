@@ -66,7 +66,7 @@ class Person {
         this.color = color;
     }
 
-    // make the image of this house
+    // make the image of this person
     WorldImage personImage() {
         WorldImage leftLeg = new LineImage(new Posn(this.width / 2,
                 -this.height / 2), Color.BLACK);

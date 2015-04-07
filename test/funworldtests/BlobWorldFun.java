@@ -14,7 +14,7 @@ import javalib.worldimages.*;
  * GNU Lesser General Public License (LGPL)
  */
 
-/** Class that represents a colored disk that moves around the Canvas */
+/** Class that represents a colored circle that moves around the Canvas */
 class Blob {
 
     Posn center;
@@ -28,13 +28,13 @@ class Blob {
         this.col = col;
     }
 
-    /** produce the image of this blob at its current location and color */
+    /** produce the image of this blob */
     WorldImage blobImage() {
         return new CircleImage(this.radius, "outline", this.col);
     }
 
     /**
-     * move this blob 20 pixels in the direction given by the ke or change its
+     * move this blob 5 pixels in the direction given by the ke or change its
      * color to Green, Red or Yellow
      */
     public Blob moveBlob(String ke) {
@@ -110,8 +110,7 @@ public class BlobWorldFun extends World {
     }
 
     /**
-     * On tick check whether the Blob is out of bounds, or fell into the black
-     * hole in the middle. If all is well, move the Blob in a random direction.
+     * On tick move the Blob in a random direction.
      */
     public World onTick() {
         return new BlobWorldFun(this.blob.randomMove(5));
@@ -124,10 +123,7 @@ public class BlobWorldFun extends World {
         return new BlobWorldFun(new Blob(loc, 20, Color.RED));
     }
 
-    /**
-     * The entire background image for this world It illustrates the use of most
-     * of the <code>WorldImage</code> shapes
-     */
+    /** The entire background image for this world */
     public WorldImage blackHole = new OverlayImage(new CircleImage(10,
             OutlineMode.SOLID, Color.BLACK), new RectangleImage(this.width,
             this.height, OutlineMode.SOLID, Color.BLUE));
@@ -144,10 +140,7 @@ public class BlobWorldFun extends World {
                         this.blob.center.y);
     }
 
-    /**
-     * produce the image of this world by adding the moving blob to the
-     * background image
-     */
+    /** produce the last image of this world by adding text to the image */
     public WorldScene lastScene(String s) {
         return this.makeScene().placeImageXY(new TextImage(s, Color.red), 100,
                 40);
