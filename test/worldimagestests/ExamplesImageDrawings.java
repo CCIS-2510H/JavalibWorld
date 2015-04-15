@@ -210,13 +210,15 @@ public class ExamplesImageDrawings {
         pinholeImages[4] = new OverlayOffsetAlign("pinhole", "pinhole",
                 pinholeImages[3], 0, 0, new RotateImage(pinholeImages[2], 180));
         pinholeImages[5] = new OverlayOffsetAlign("right", "center",
-                new RectangleImage(pinholeImages[4].getWidth() / 2,
-                        pinholeImages[4].getHeight(), "outline", Color.RED), 0,
-                0, pinholeImages[4]);
+                new RectangleImage(
+                        (int) Math.round(pinholeImages[4].getWidth() / 2),
+                        (int) Math.round(pinholeImages[4].getHeight()),
+                        "outline", Color.RED), 0, 0, pinholeImages[4]);
         pinholeImages[6] = new OverlayOffsetAlign("left", "center",
-                new RectangleImage(pinholeImages[4].getWidth() / 2,
-                        pinholeImages[4].getHeight(), "outline", Color.GREEN),
-                0, 0, pinholeImages[5]);
+                new RectangleImage(
+                        (int) Math.round(pinholeImages[4].getWidth() / 2),
+                        (int) Math.round(pinholeImages[4].getHeight()),
+                        "outline", Color.GREEN), 0, 0, pinholeImages[5]);
         return pinholeImages;
     }
 

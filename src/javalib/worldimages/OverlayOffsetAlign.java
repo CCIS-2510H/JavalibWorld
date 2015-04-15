@@ -81,14 +81,14 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     public WorldImage top;
 
     /** how much the top and bottom images need to move relative to each other */
-    protected Posn deltaTop, deltaBot;
+    protected DPosn deltaTop, deltaBot;
     public double dx, dy;
 
     /** The base alignments */
     public AlignModeX alignX;
     public AlignModeY alignY;
 
-    private int width, height;
+    private double width, height;
 
     public OverlayOffsetAlignBase(AlignModeX alignX, AlignModeY alignY,
             WorldImage top, double dx, double dy, WorldImage bot) {
@@ -101,42 +101,43 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         this.dy = dy;
 
         // Calculate proper center point
-        int botWidth = this.bot.getWidth();
-        int topWidth = this.top.getWidth();
-        int botHeight = this.bot.getHeight();
-        int topHeight = this.top.getHeight();
+        double botWidth = this.bot.getWidth();
+        double topWidth = this.top.getWidth();
+        double botHeight = this.bot.getHeight();
+        double topHeight = this.top.getHeight();
 
-        int rightX = (int) (Math.max((botWidth / 2.0) + xBotMoveDist(),
-                (topWidth / 2.0) + xTopMoveDist()));
-        int leftX = (int) (Math.min((-botWidth / 2.0) + xBotMoveDist(),
-                (-topWidth / 2.0) + xTopMoveDist()));
-        int bottomY = (int) (Math.max((botHeight / 2.0) + yBotMoveDist(),
-                (topHeight / 2.0) + yTopMoveDist()));
-        int topY = (int) (Math.min((-botHeight / 2.0) + yBotMoveDist(),
-                (-topHeight / 2.0) + yTopMoveDist()));
+        double rightX = Math.max((botWidth / 2.0) + xBotMoveDist(),
+                (topWidth / 2.0) + xTopMoveDist());
+        double leftX = Math.min((-botWidth / 2.0) + xBotMoveDist(),
+                (-topWidth / 2.0) + xTopMoveDist());
+        double bottomY = Math.max((botHeight / 2.0) + yBotMoveDist(),
+                (topHeight / 2.0) + yTopMoveDist());
+        double topY = Math.min((-botHeight / 2.0) + yBotMoveDist(),
+                (-topHeight / 2.0) + yTopMoveDist());
 
         // yBotMoveDist(), yTopMoveDist(), xBotMoveDist(), and
         // xTopMoveDist() position the two images relative to
         // each other, but not correctly positioned at the origin,
         // which is why centerX and centerY exist
-        int centerX = (int) Math.round((rightX + leftX) / 2.0);
-        int centerY = (int) Math.round((bottomY + topY) / 2.0);
+        double centerX = (rightX + leftX) / 2.0;
+        double centerY = (bottomY + topY) / 2.0;
 
-        int botDeltaY = -centerY + yBotMoveDist();
-        int topDeltaY = -centerY + yTopMoveDist();
-        int botDeltaX = -centerX + xBotMoveDist();
-        int topDeltaX = -centerX + xTopMoveDist();
+        double botDeltaY = -centerY + yBotMoveDist();
+        double topDeltaY = -centerY + yTopMoveDist();
+        double botDeltaX = -centerX + xBotMoveDist();
+        double topDeltaX = -centerX + xTopMoveDist();
 
-        this.deltaBot = new Posn(botDeltaX, botDeltaY);
-        this.deltaTop = new Posn(topDeltaX, topDeltaY);
+        this.deltaBot = new DPosn(botDeltaX, botDeltaY);
+        this.deltaTop = new DPosn(topDeltaX, topDeltaY);
 
-        this.width = (int) Math.round(getBB().getWidth());
-        this.height = (int) Math.round(getBB().getHeight());
+        this.width = getBB().getWidth();
+        this.height = getBB().getHeight();
 
         if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
                 && dx == 0 && dy == 0) {
             // Set the pinhole
-            this.pinhole = new Posn(-centerX, -centerY);
+            this.pinhole = new Posn((int) -Math.round(centerX),
+                    (int) -Math.round(centerY));
         }
     }
 
@@ -157,11 +158,11 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      * 
      * @return y move distance
      */
-    private int yBotMoveDist() {
+    private double yBotMoveDist() {
         double moveDist = 0;
         if (this.alignY == AlignModeY.TOP || this.alignY == AlignModeY.BOTTOM) {
-            int h1 = this.top.getHeight();
-            int h2 = this.bot.getHeight();
+            double h1 = this.top.getHeight();
+            double h2 = this.bot.getHeight();
             if (this.alignY == AlignModeY.TOP) {
                 moveDist = (h2 - h1) / 2.0;
             } else if (this.alignY == AlignModeY.BOTTOM) {
@@ -171,7 +172,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
             moveDist = -this.bot.pinhole.y;
         }
         moveDist += dy;
-        return (int) Math.round(moveDist);
+        return moveDist;
     }
 
     /**
@@ -180,7 +181,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      * 
      * @return y move distance
      */
-    private int yTopMoveDist() {
+    private double yTopMoveDist() {
         if (this.alignY == AlignModeY.PINHOLE) {
             return -this.top.pinhole.y;
         }
@@ -193,11 +194,11 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      * 
      * @return x move distance
      */
-    private int xBotMoveDist() {
+    private double xBotMoveDist() {
         double moveDist = 0;
         if (this.alignX == AlignModeX.LEFT || this.alignX == AlignModeX.RIGHT) {
-            int w1 = this.top.getWidth();
-            int w2 = this.bot.getWidth();
+            double w1 = this.top.getWidth();
+            double w2 = this.bot.getWidth();
             if (this.alignX == AlignModeX.LEFT) {
                 moveDist = (w2 - w1) / 2.0;
             } else if (this.alignX == AlignModeX.RIGHT) {
@@ -207,7 +208,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
             moveDist = -this.bot.pinhole.x;
         }
         moveDist += dx;
-        return (int) Math.round(moveDist);
+        return moveDist;
     }
 
     /**
@@ -216,7 +217,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      * 
      * @return x move distance
      */
-    private int xTopMoveDist() {
+    private double xTopMoveDist() {
         if (this.alignX == AlignModeX.PINHOLE) {
             return -this.top.pinhole.x;
         }
@@ -240,12 +241,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 

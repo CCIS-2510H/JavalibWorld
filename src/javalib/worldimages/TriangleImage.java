@@ -53,10 +53,12 @@ public final class TriangleImage extends WorldImage {
         this.fill = fill;
 
         // find the center of the triangle
-        int centerX = Math.min(this.p1.x, Math.min(this.p2.x, this.p3.x))
-                + (this.getWidth() / 2);
-        int centerY = Math.min(this.p1.y, Math.min(this.p2.y, this.p3.y))
-                + (this.getHeight() / 2);
+        int centerX = (int) Math.round(Math.min(this.p1.x,
+                Math.min(this.p2.x, this.p3.x))
+                + (this.getWidth() / 2));
+        int centerY = (int) Math.round(Math.min(this.p1.y,
+                Math.min(this.p2.y, this.p3.y))
+                + (this.getHeight() / 2));
 
         int[] xCoord = new int[] { p1.x - centerX, p2.x - centerX,
                 p3.x - centerX };
@@ -117,13 +119,13 @@ public final class TriangleImage extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return Math.max(p1.x, Math.max(p2.x, p3.x))
                 - Math.min(p1.x, Math.min(p2.x, p3.x));
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return Math.max(p1.y, Math.max(p2.y, p3.y))
                 - Math.min(p1.y, Math.min(p2.y, p3.y));
     }

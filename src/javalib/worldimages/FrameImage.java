@@ -27,8 +27,8 @@ public final class FrameImage extends RectangleImageBase {
      *            -- Color of the fram
      */
     public FrameImage(WorldImage img, Color color) {
-        super((int) img.getBB().getWidth(), (int) img.getBB().getHeight(),
-                OutlineMode.OUTLINE, color);
+        super((int) Math.round(img.getBB().getWidth()), (int) Math.round(img
+                .getBB().getHeight()), OutlineMode.OUTLINE, color);
         this.img = img;
     }
 

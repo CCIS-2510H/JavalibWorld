@@ -22,8 +22,8 @@ package javalib.worldimages;
 public final class BesideAlignImage extends OverlayOffsetAlignBase {
 
     private BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage im2) {
-        super(AlignModeX.PINHOLE, mode, im1, (int) Math.round(im1.getWidth()
-                / 2.0 + im2.getWidth() / 2.0), 0, im2);
+        super(AlignModeX.PINHOLE, mode, im1, im1.getWidth() / 2.0
+                + im2.getWidth() / 2.0, 0, im2);
     }
 
     /**

@@ -182,7 +182,7 @@ abstract class RegularPolyImageBase extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         int minX = this.poly.xpoints[0];
         int maxX = this.poly.xpoints[0];
         for (int i = 0; i < this.sides; i = i + 1) {
@@ -193,7 +193,7 @@ abstract class RegularPolyImageBase extends WorldImage {
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         int minY = this.poly.ypoints[0];
         int maxY = this.poly.ypoints[0];
         for (int i = 0; i < this.sides; i = i + 1) {

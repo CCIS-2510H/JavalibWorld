@@ -15,7 +15,7 @@ import java.awt.geom.Point2D;
 public final class RotateImage extends WorldImage {
     public WorldImage img;
     public double rotationDegrees;
-    private int width, height;
+    private double width, height;
 
     /**
      * Rotate the image
@@ -34,12 +34,11 @@ public final class RotateImage extends WorldImage {
         AffineTransform newT = new AffineTransform();
         newT.rotate(Math.toRadians(this.rotationDegrees));
         Point2D p = WorldImage.transformPosn(newT, img.pinhole);
-        this.pinhole = new Posn((int) Math.round(p.getX()), (int) Math.round(p
-                .getY()));
-        
+        this.pinhole = new DPosn(p.getX(), p.getY()).asPosn();
+
         // Set width & height
-        this.width = (int) Math.round(getBB().getWidth());
-        this.height = (int) Math.round(getBB().getHeight());
+        this.width = getBB().getWidth();
+        this.height = getBB().getHeight();
     }
 
     @Override
@@ -99,16 +98,16 @@ public final class RotateImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.width + this.height;
+        return (int) this.width + (int) this.height;
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 

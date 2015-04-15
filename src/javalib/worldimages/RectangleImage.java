@@ -102,14 +102,14 @@ abstract class RectangleImageBase extends WorldImage {
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D tl = WorldImage.transformPosn(t, -this.width / 2,
-                -this.height / 2);
-        Point2D tr = WorldImage.transformPosn(t, this.width / 2,
-                -this.height / 2);
-        Point2D bl = WorldImage.transformPosn(t, -this.width / 2,
-                this.height / 2);
-        Point2D br = WorldImage.transformPosn(t, this.width / 2,
-                this.height / 2);
+        Point2D tl = WorldImage.transformPosn(t, -this.width / 2.0,
+                -this.height / 2.0);
+        Point2D tr = WorldImage.transformPosn(t, this.width / 2.0,
+                -this.height / 2.0);
+        Point2D bl = WorldImage.transformPosn(t, -this.width / 2.0,
+                this.height / 2.0);
+        Point2D br = WorldImage.transformPosn(t, this.width / 2.0,
+                this.height / 2.0);
         return new BoundingBox(tl, tr).add(bl).add(br);
     }
 
@@ -128,10 +128,10 @@ abstract class RectangleImageBase extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(new Rectangle2D.Double(-this.width / 2, -this.height / 2,
+            g.draw(new Rectangle2D.Double(-this.width / 2.0, -this.height / 2.0,
                     this.width, this.height));
         } else if (this.fill == OutlineMode.SOLID) {
-            g.fill(new Rectangle2D.Double(-this.width / 2, -this.height / 2,
+            g.fill(new Rectangle2D.Double(-this.width / 2.0, -this.height / 2.0,
                     this.width, this.height));
         }
         // reset the original paint
@@ -139,12 +139,12 @@ abstract class RectangleImageBase extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return this.width;
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return this.height;
     }
 

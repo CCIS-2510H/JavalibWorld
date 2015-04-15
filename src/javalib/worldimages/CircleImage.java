@@ -52,16 +52,6 @@ public final class CircleImage extends EllipseImageBase {
         this(radius, OutlineMode.fromString(fill), color);
     }
 
-    @Override
-    public int getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.height;
-    }
-
     /**
      * Produce a <code>String</code> representation of this circle image
      */

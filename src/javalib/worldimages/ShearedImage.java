@@ -36,8 +36,7 @@ public final class ShearedImage extends WorldImage {
         AffineTransform newT = new AffineTransform();
         newT.shear(this.sx, this.sy);
         Point2D p = WorldImage.transformPosn(newT, img.pinhole);
-        this.pinhole = new Posn((int) Math.round(p.getX()), (int) Math.round(p
-                .getY()));
+        this.pinhole = new DPosn(p.getX(), p.getY()).asPosn();
     }
 
     @Override
@@ -56,13 +55,13 @@ public final class ShearedImage extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
-        return (int) Math.round(getBB().getWidth());
+    public double getWidth() {
+        return getBB().getWidth();
     }
 
     @Override
-    public int getHeight() {
-        return (int) Math.round(getBB().getHeight());
+    public double getHeight() {
+        return getBB().getHeight();
     }
 
     /**

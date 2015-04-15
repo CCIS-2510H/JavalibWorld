@@ -102,18 +102,18 @@ abstract class EllipseImageBase extends WorldImage {
         double m12 = t.getShearY();
         double m22 = t.getScaleY();
         double m32 = t.getTranslateY();
-        int xOffset = (int) Math.sqrt((Math.pow(m11, 2) * Math.pow(rx, 2))
+        double xOffset = Math.sqrt((Math.pow(m11, 2) * Math.pow(rx, 2))
                 + (Math.pow(m21, 2) * Math.pow(ry, 2)));
-        int yOffset = (int) Math.sqrt((Math.pow(m12, 2) * Math.pow(rx, 2))
+        double yOffset = Math.sqrt((Math.pow(m12, 2) * Math.pow(rx, 2))
                 + (Math.pow(m22, 2) * Math.pow(ry, 2)));
 
-        int centerX = (int) m31; // Transform center of
-        int centerY = (int) m32; // ellipse using M
-        int xMin = centerX - xOffset;
-        int xMax = centerX + xOffset;
+        double centerX = m31; // Transform center of
+        double centerY = m32; // ellipse using M
+        double xMin = centerX - xOffset;
+        double xMax = centerX + xOffset;
 
-        int yMin = centerY - yOffset;
-        int yMax = centerY + yOffset;
+        double yMin = centerY - yOffset;
+        double yMax = centerY + yOffset;
 
         return new BoundingBox(xMin, yMin, xMax, yMax);
     }
@@ -133,10 +133,10 @@ abstract class EllipseImageBase extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         if (this.fill == OutlineMode.SOLID) {
-            g.fill(new Ellipse2D.Double(-this.width / 2, -this.height / 2,
+            g.fill(new Ellipse2D.Double(-this.width / 2.0, -this.height / 2.0,
                     this.width, this.height));
         } else if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(new Ellipse2D.Double(-this.width / 2, -this.height / 2,
+            g.draw(new Ellipse2D.Double(-this.width / 2.0, -this.height / 2.0,
                     this.width, this.height));
         }
         // reset the original paint
@@ -144,12 +144,12 @@ abstract class EllipseImageBase extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return this.width;
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return this.height;
     }
 
@@ -157,18 +157,17 @@ abstract class EllipseImageBase extends WorldImage {
      * Produce a <code>String</code> representation of this ellipse image
      */
     public String toString() {
-        return className(this) + "this.width = " + this.width 
-                + ", this.height = " + this.height + ","
-                + "\nthis.fill = " + this.fill + ",\n"
-                + colorString(this.color) + ")";
+        return className(this) + "this.width = " + this.width
+                + ", this.height = " + this.height + "," + "\nthis.fill = "
+                + this.fill + ",\n" + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this)
-                + "this.width = " + this.width + ", this.height = " + this.height + ","
-                + "\n" + indent + "this.fill = " + this.fill + ","
+        return classNameString(indent, this) + "this.width = " + this.width
+                + ", this.height = " + this.height + "," + "\n" + indent
+                + "this.fill = " + this.fill + ","
                 + colorString(indent, this.color) + ")";
     }
 

@@ -72,6 +72,20 @@ public abstract class WorldImage {
     protected static Point2D transformPosn(AffineTransform t, Posn p) {
         return transformPosn(t, p.x, p.y);
     }
+    
+    /**
+     * Transform a DPosn by the operations as given by the AffineTransform
+     * 
+     * @param t
+     *            -- Operations on the point
+     * @param p
+     *            -- The point to transform
+     * @return A Point2D representing the transformation of <code>p</code> by
+     *         <code>t</code>
+     */
+    protected static Point2D transformPosn(AffineTransform t, DPosn p) {
+        return transformPosn(t, p.x, p.y);
+    }
 
     /**
      * Transform x and y coordinates by the operations as given by the
@@ -86,8 +100,8 @@ public abstract class WorldImage {
      * @return A Point2D representing the transformation of <code>x</code> and
      *         <code>y</code> by <code>t</code>
      */
-    protected static Point2D transformPosn(AffineTransform t, int x, int y) {
-        Point2D point = new Point(x, y);
+    protected static Point2D transformPosn(AffineTransform t, double x, double y) {
+        Point2D point = new Point2D.Double(x, y);
         return t.transform(point, null);
     }
 
@@ -161,14 +175,14 @@ public abstract class WorldImage {
      * 
      * @return the width of this image
      */
-    abstract public int getWidth();
+    abstract public double getWidth();
 
     /**
      * Produce the height of this image
      * 
      * @return the height of this image
      */
-    abstract public int getHeight();
+    abstract public double getHeight();
 
     /**
      * Produce a <code>String</code> that represents this image, indented by the

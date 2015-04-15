@@ -50,12 +50,12 @@ public final class FromFileImage extends WorldImage {
     @Override
     public void draw(Graphics2D g) {
         // Adjust the position of the frame
-        g.translate(-(this.imread.width / 2), -(this.imread.height / 2));
+        g.translate(-(this.imread.width / 2.0), -(this.imread.height / 2.0));
 
         g.drawRenderedImage(this.imread.image, new AffineTransform());
 
         // Reset to original position
-        g.translate((this.imread.width / 2), (this.imread.height / 2));
+        g.translate((this.imread.width / 2.0), (this.imread.height / 2.0));
     }
 
     /**
@@ -70,23 +70,22 @@ public final class FromFileImage extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return this.imread.width;
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return this.imread.height;
     }
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D tl = t.transform(
-                new Point(-this.getWidth() / 2, -this.getHeight() / 2), null);
-        Point2D br = t.transform(
-                new Point(this.getWidth() / 2, this.getHeight() / 2), null);
-        return new BoundingBox((int) tl.getX(), (int) tl.getY(),
-                (int) br.getX(), (int) br.getY());
+        double w = this.getWidth();
+        double h = this.getHeight();
+        Point2D tl = t.transform(new Point.Double(-w / 2, -h / 2), null);
+        Point2D br = t.transform(new Point.Double(w / 2, h / 2), null);
+        return new BoundingBox(tl.getX(), tl.getY(), br.getX(), br.getY());
     }
 
     /**

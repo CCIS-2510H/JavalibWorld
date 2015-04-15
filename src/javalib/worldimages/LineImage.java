@@ -46,10 +46,10 @@ public final class LineImage extends WorldImage {
 
     @Override
     protected BoundingBox getBB(AffineTransform t) {
-        Point2D end1 = WorldImage.transformPosn(t, -this.endPoint.x / 2,
-                -this.endPoint.y / 2);
-        Point2D end2 = WorldImage.transformPosn(t, this.endPoint.x / 2,
-                this.endPoint.y / 2);
+        Point2D end1 = WorldImage.transformPosn(t, -this.endPoint.x / 2.0,
+                -this.endPoint.y / 2.0);
+        Point2D end2 = WorldImage.transformPosn(t, this.endPoint.x / 2.0,
+                this.endPoint.y / 2.0);
         return new BoundingBox(end1, end2);
     }
 
@@ -58,7 +58,7 @@ public final class LineImage extends WorldImage {
         if (color == null)
             color = new Color(0, 0, 0);
 
-        Posn midpoint = new Posn(this.endPoint.x / 2, this.endPoint.y / 2);
+        DPosn midpoint = new DPosn(this.endPoint.x / 2.0, this.endPoint.y / 2.0);
 
         // save the current paint
         Paint oldPaint = g.getPaint();
@@ -72,12 +72,12 @@ public final class LineImage extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return Math.abs(this.endPoint.x);
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return Math.abs(this.endPoint.y);
     }
 

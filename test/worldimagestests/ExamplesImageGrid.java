@@ -13,7 +13,7 @@ import javalib.worldimages.WorldImage;
 
 class Cell {
     static Random r = new Random();
-    static int DEFAULT_SIZE = 6;
+    static int DEFAULT_SIZE = 5;
     int size;
     int x, y;
     Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));

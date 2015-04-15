@@ -42,10 +42,10 @@ public final class TextImage extends WorldImage {
     public int style = 0;
 
     /** the width of the bounding box */
-    public int width = 0;
+    public double width = 0;
 
     /** the height of the bounding box */
-    public int height = 0;
+    public double height = 0;
 
     /**
      * <p>
@@ -147,7 +147,8 @@ public final class TextImage extends WorldImage {
 
         if (alignment == 1) {
             // draw the object
-            g.drawString(this.text, -this.width / 2, this.height / 4);
+            g.drawString(this.text, (int) -Math.round(this.width / 2),
+                    (int) Math.round(this.height / 4));
         }
 
         // reset the original paint and font
@@ -175,8 +176,8 @@ public final class TextImage extends WorldImage {
         g.setTransform(t);
         Rectangle2D bounds = getBoundingBox();
         g.setTransform(old);
-        return new BoundingBox((int) bounds.getMinX(), (int) bounds.getMinY(),
-                (int) bounds.getMaxX(), (int) bounds.getMaxY());
+        return new BoundingBox(bounds.getMinX(), bounds.getMinY(),
+                bounds.getMaxX(), bounds.getMaxY());
     }
 
     /**
@@ -206,12 +207,12 @@ public final class TextImage extends WorldImage {
     }
 
     @Override
-    public int getWidth() {
+    public double getWidth() {
         return this.width;
     }
 
     @Override
-    public int getHeight() {
+    public double getHeight() {
         return this.height;
     }
 
