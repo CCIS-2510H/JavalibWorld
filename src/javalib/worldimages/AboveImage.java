@@ -21,8 +21,8 @@ package javalib.worldimages;
 public final class AboveImage extends OverlayOffsetAlignBase {
 
     private AboveImage(WorldImage im1, WorldImage im2) {
-        super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, im1, 0, (int) Math
-                .round(im1.getHeight() / 2.0 + im2.getHeight() / 2.0), im2);
+        super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, im1, 0, im1.getHeight()
+                / 2 + im2.getHeight() / 2, im2);
     }
 
     /**
