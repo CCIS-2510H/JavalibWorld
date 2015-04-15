@@ -7,6 +7,7 @@ import java.util.Random;
 import javalib.impworld.*;
 import javalib.worldimages.AboveImage;
 import javalib.worldimages.BesideImage;
+import javalib.worldimages.EmptyImage;
 import javalib.worldimages.RectangleImage;
 import javalib.worldimages.WorldImage;
 
@@ -15,6 +16,7 @@ class Cell {
     static int DEFAULT_SIZE = 6;
     int size;
     int x, y;
+    Color c = new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
 
     Cell(int x, int y, int size) {
         this.x = x;
@@ -27,8 +29,7 @@ class Cell {
     }
 
     WorldImage draw() {
-        return new RectangleImage(this.size, this.size, "solid", new Color(
-                r.nextInt(256), r.nextInt(256), r.nextInt(256)));
+        return new RectangleImage(this.size, this.size, "solid", c);
     }
 
     int getX() {
@@ -64,21 +65,13 @@ class GridWorld extends World {
 
     public WorldImage overlay() {
         long start = System.currentTimeMillis();
-        WorldImage grid = null;
+        WorldImage grid = new EmptyImage();
         for (ArrayList<Cell> row : this.cells) {
-            WorldImage r = null;
+            WorldImage r = new EmptyImage();
             for (Cell c : row) {
-                if (r == null) {
-                    r = c.draw();
-                } else {
-                    r = new BesideImage(r, c.draw());
-                }
+                r = new BesideImage(r, c.draw());
             }
-            if (grid == null) {
-                grid = r;
-            } else {
-                grid = new AboveImage(grid, r);
-            }
+            grid = new AboveImage(grid, r);
         }
         System.out.println("Overlay time: "
                 + (System.currentTimeMillis() - start));
@@ -114,10 +107,10 @@ class GridWorld extends World {
 public class ExamplesImageGrid {
 
     public static void main(String[] args) {
-        // GridWorld w = new GridWorld("overlay", 100);
-        // w.bigBang(w.pixelSize, w.pixelSize, 3);
+        GridWorld w = new GridWorld("overlay", 100);
+        w.bigBang(w.pixelSize, w.pixelSize, 3);
 
-        GridWorld w2 = new GridWorld("placeImage", 100);
-        w2.bigBang(w2.pixelSize, w2.pixelSize, 0.01);
+        // GridWorld w2 = new GridWorld("placeImage", 100);
+        // w2.bigBang(w2.pixelSize, w2.pixelSize, 0.01);
     }
 }
