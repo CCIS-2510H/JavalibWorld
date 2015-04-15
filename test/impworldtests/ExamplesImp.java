@@ -2,6 +2,7 @@ package impworldtests;
 
 import java.awt.Color;
 
+import javalib.impworld.WorldScene;
 import javalib.worldcanvas.*;
 import javalib.worldimages.*;
 
@@ -21,14 +22,13 @@ public class ExamplesImp {
 
     // a text inside a red rectangle with a small black line
     public static WorldScene makeImage(WorldScene scene, Posn pos) {
-        return scene
-                .placeImageXY(
-                        new RectangleImage(60, 20, OutlineMode.SOLID, Color.RED),
-                        pos.x, pos.y)
-                .placeImageXY(new TextImage("hello", 12, 0, Color.BLUE), pos.x,
-                        pos.y)
-                .placeImageXY(new LineImage(new Posn(5, 5), Color.BLACK),
-                        pos.x, pos.y + 5);
+        scene.placeImageXY(new RectangleImage(60, 20, OutlineMode.SOLID,
+                Color.RED), pos.x, pos.y);
+        scene.placeImageXY(new TextImage("hello", 12, 0, Color.BLUE), pos.x,
+                pos.y);
+        scene.placeImageXY(new LineImage(new Posn(5, 5), Color.BLACK), pos.x,
+                pos.y + 5);
+        return scene;
     }
 
     @SuppressWarnings("unused")
@@ -37,19 +37,11 @@ public class ExamplesImp {
         WorldCanvas c = new WorldCanvas(600, 600);
         WorldScene s = new WorldScene(600, 600);
 
-        WorldScene pic = ExamplesImp.makeImage(s, new Posn(300, 100));
-
         // show several images in the canvas
         boolean makeDrawing = c.show()
-                && c.drawScene(ExamplesImp.makeImage(
-                        s.placeImageXY(
-                                new LineImage(new Posn(200, 200), Color.RED),
-                                500, 500).placeImageXY(
-                                new CircleImage(5, OutlineMode.SOLID,
-                                        Color.BLACK), 100, 100), new Posn(300,
-                                100)));
+                && c.drawScene(ExamplesImp.makeImage(s, new Posn(300, 100)));
 
-        pic = ExamplesImp.makeImage(s, new Posn(200, 100));
+        WorldScene pic = ExamplesImp.makeImage(s, new Posn(200, 100));
         boolean makeAnotherDrawing = c.drawScene(pic);
 
     }

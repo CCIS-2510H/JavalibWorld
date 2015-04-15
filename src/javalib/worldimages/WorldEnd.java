@@ -1,6 +1,6 @@
 package javalib.worldimages;
 
-import javalib.worldcanvas.WorldScene;
+import javalib.worldcanvas.WorldSceneBase;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -11,7 +11,7 @@ import javalib.worldcanvas.WorldScene;
 /**
  * <p>
  * The class to represent a pair of values <code>boolean</code> and
- * <code>{@link WorldScene WorldScene}</code>.
+ * <code>{@link WorldSceneBase WorldScene}</code>.
  * </p>
  * <p>
  * This is used to indicate when the world should end and allow for creating one
@@ -31,7 +31,7 @@ public final class WorldEnd {
     public boolean worldEnds;
 
     /** the last scene to display when the world ends */
-    public WorldScene lastScene;
+    public WorldSceneBase lastScene;
 
     /**
      * The standard full constructor.
@@ -42,7 +42,7 @@ public final class WorldEnd {
      *            -- the last image to display when the world ends (ignored if
      *            the world goes on)
      */
-    public WorldEnd(boolean worldEnds, WorldScene lastScene) {
+    public WorldEnd(boolean worldEnds, WorldSceneBase lastScene) {
         this.worldEnds = worldEnds;
         this.lastScene = lastScene;
     }

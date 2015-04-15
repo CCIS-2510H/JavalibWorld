@@ -1,7 +1,7 @@
 package javalib.funworld;
 
 import javalib.worldcanvas.WorldCanvas;
-import javalib.worldcanvas.WorldScene;
+import javalib.worldcanvas.WorldSceneBase;
 import javalib.worldimages.*;
 
 import java.awt.Insets;
@@ -35,7 +35,7 @@ abstract public class World {
 
     /** the canvas that displays the current world */
     public WorldCanvas theCanvas;
-    
+
     /** true if 'bigBang' started the world and it did not end, did not stop */
     private transient boolean worldExists = false;
 
@@ -153,7 +153,11 @@ abstract public class World {
 
         return this.drawWorld("");
     }
-    public WorldScene getEmptyScene() { return this.blankScene; }
+
+    public WorldScene getEmptyScene() {
+        return this.blankScene;
+    }
+
     /**
      * Start the world by creating a canvas of the given size, creating and
      * adding the key and mouse adapters, without running the the timer.
@@ -622,7 +626,7 @@ abstract public class World {
      * 
      * @return the image that represents this world at this moment
      */
-    abstract public WorldScene makeScene();
+    abstract public WorldSceneBase makeScene();
 
     /**
      * <P>
@@ -634,7 +638,7 @@ abstract public class World {
      * 
      * @return the image that represents the last world to be drawn
      */
-    public WorldScene lastScene(String s) {
+    public WorldSceneBase lastScene(String s) {
         return this.makeScene();
     }
 }

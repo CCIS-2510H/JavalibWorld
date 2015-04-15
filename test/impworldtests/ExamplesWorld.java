@@ -1,7 +1,6 @@
 package impworldtests;
 
 import javalib.impworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.Color;
@@ -32,9 +31,10 @@ public class ExamplesWorld extends World {
 
     // just a red ball moving across the screen
     public WorldScene makeScene() {
-        return this.getEmptyScene().placeImageXY(
-                new CircleImage(30, OutlineMode.SOLID, Color.RED), this.pos.x,
-                this.pos.y);
+        WorldScene scn = this.getEmptyScene();
+        scn.placeImageXY(new CircleImage(30, OutlineMode.SOLID, Color.RED),
+                this.pos.x, this.pos.y);
+        return scn;
     }
 
     // test all kinds of actions using key events:
@@ -62,13 +62,14 @@ public class ExamplesWorld extends World {
      */
     public WorldEnd worldEnds() {
         // if the blob is outside the canvas, stop
-        if (this.worldEnd)
-            return new WorldEnd(true, this.makeScene()
-                    .placeImageXY(
-                            new TextImage("End of the World!!", 13, Color.red),
-                            100, 40));
-        else
+        if (this.worldEnd) {
+            WorldScene scn = this.makeScene();
+            scn.placeImageXY(
+                    new TextImage("End of the World!!", 13, Color.red), 100, 40);
+            return new WorldEnd(true, scn);
+        } else {
             return new WorldEnd(false, this.makeScene());
+        }
     }
 
     // at each tick print the current position of the ball

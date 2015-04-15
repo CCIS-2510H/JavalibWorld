@@ -58,6 +58,8 @@ abstract public class World {
 
     /** the last world - if needed */
     public WorldEnd lastWorld = new WorldEnd(false, this.blankScene);
+    
+    private int width, height;
 
     /**
      * The default constructor. To start the world one must invoke the
@@ -91,6 +93,8 @@ abstract public class World {
             return;
         }
         // throw runtime exceptions if w, h <= 0
+        this.width = w;
+        this.height = h;
         this.theCanvas = new WorldCanvas(w, h);
         this.blankScene = new WorldScene(w, h);
         this.lastWorld = new WorldEnd(false, this.blankScene);
@@ -156,7 +160,7 @@ abstract public class World {
     }
 
     public WorldScene getEmptyScene() {
-        return this.blankScene;
+        return new WorldScene(this.width, this.height);
     }
 
     /**
@@ -584,7 +588,7 @@ abstract public class World {
      * 
      * @return the image that represents this world at this moment
      */
-    abstract public WorldScene makeScene();
+    abstract public WorldSceneBase makeScene();
 
     /**
      * <P>
@@ -596,7 +600,7 @@ abstract public class World {
      * 
      * @return the image that represents the last world to be drawn
      */
-    public WorldScene lastScene(String s) {
+    public WorldSceneBase lastScene(String s) {
         return this.makeScene();
     }
 }

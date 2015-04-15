@@ -1,7 +1,6 @@
 package impworldtests;
 
 import javalib.impworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.Color;
@@ -217,37 +216,29 @@ public class TickyTackImp extends World {
     // produce the image of the whole world -
     // with all houses, both trees, the cloud and the sun
     public WorldScene makeScene() {
-        return this
-                .getEmptyScene()
-                .placeImageXY(
-                        new RectangleImage(width, height, "solid", Color.BLUE),
-                        width / 2, height / 2)
-                .placeImageXY(this.h1.houseImage(), this.h1.getX(),
-                        this.h1.getY())
-                .placeImageXY(this.h2.houseImage(), this.h2.getX(),
-                        this.h2.getY())
-                .placeImageXY(this.h3.houseImage(), this.h3.getX(),
-                        this.h3.getY())
-                .placeImageXY(this.h4.houseImage(), this.h4.getX(),
-                        this.h4.getY())
-                .placeImageXY(this.h5.houseImage(), this.h5.getX(),
-                        this.h5.getY())
-                .placeImageXY(this.h6.houseImage(), this.h6.getX(),
-                        this.h6.getY())
-                .placeImageXY(this.h7.houseImage(), this.h7.getX(),
-                        this.h7.getY())
-                .placeImageXY(this.t1.treeImage(), this.t1.getX(),
-                        this.t1.getY())
-                .placeImageXY(this.t2.treeImage(), this.t2.getX(),
-                        this.t2.getY())
-                .placeImageXY(this.cloud.cloudImage(), this.cloud.loc.x,
-                        this.cloud.loc.y)
-                .placeImageXY(this.sun.sunImage(), 50, 50);
+        WorldScene scn = this.getEmptyScene();
+        scn.placeImageXY(
+                new RectangleImage(width, height, "solid", Color.BLUE),
+                width / 2, height / 2);
+        scn.placeImageXY(this.h1.houseImage(), this.h1.getX(), this.h1.getY());
+        scn.placeImageXY(this.h2.houseImage(), this.h2.getX(), this.h2.getY());
+        scn.placeImageXY(this.h3.houseImage(), this.h3.getX(), this.h3.getY());
+        scn.placeImageXY(this.h4.houseImage(), this.h4.getX(), this.h4.getY());
+        scn.placeImageXY(this.h5.houseImage(), this.h5.getX(), this.h5.getY());
+        scn.placeImageXY(this.h6.houseImage(), this.h6.getX(), this.h6.getY());
+        scn.placeImageXY(this.h7.houseImage(), this.h7.getX(), this.h7.getY());
+        scn.placeImageXY(this.t1.treeImage(), this.t1.getX(), this.t1.getY());
+        scn.placeImageXY(this.t2.treeImage(), this.t2.getX(), this.t2.getY());
+        scn.placeImageXY(this.cloud.cloudImage(), this.cloud.loc.x,
+                this.cloud.loc.y);
+        scn.placeImageXY(this.sun.sunImage(), 50, 50);
+        return scn;
     }
 
     public WorldScene lastScene(String s) {
-        return this.makeScene().placeImageXY(
-                new TextImage(s, 15, 3, Color.RED), 150, 80);
+        WorldScene scn = this.makeScene();
+        scn.placeImageXY(new TextImage(s, 15, 3, Color.RED), 150, 80);
+        return scn;
     }
 
     // support for the regression tests

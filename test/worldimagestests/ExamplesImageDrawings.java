@@ -1,8 +1,8 @@
 package worldimagestests;
 
 import javalib.worldcanvas.WorldCanvas;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
+import javalib.funworld.WorldScene;
 
 import java.awt.*;
 
@@ -230,13 +230,13 @@ public class ExamplesImageDrawings {
                     .placeImageXY(arrow, x + horizDist / 2, y)
                     .placeImageXY(new FrameImage(circles[i + 1]),
                             x + horizDist, y);
-//                    .placeImageXY(center, x, y)
-//                    .placeImageXY(center, x + horizDist, y)
-//                    .placeImageXY(pinhole, x + circles[i].pinhole.x,
-//                            y + circles[i].pinhole.y)
-//                    .placeImageXY(pinhole,
-//                            x + horizDist + circles[i + 1].pinhole.x,
-//                            y + circles[i + 1].pinhole.y);
+            // .placeImageXY(center, x, y)
+            // .placeImageXY(center, x + horizDist, y)
+            // .placeImageXY(pinhole, x + circles[i].pinhole.x,
+            // y + circles[i].pinhole.y)
+            // .placeImageXY(pinhole,
+            // x + horizDist + circles[i + 1].pinhole.x,
+            // y + circles[i + 1].pinhole.y);
         }
         return s;
     }
@@ -256,7 +256,7 @@ public class ExamplesImageDrawings {
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-//        boolean makeDrawing = c.show() && c.drawScene(e.combined);
+        // boolean makeDrawing = c.show() && c.drawScene(e.combined);
         c = new WorldCanvas(800, 800);
         // boolean daisy = c.show() && c.drawScene(e.daisy);
         boolean pins = c.show() && c.drawScene(e.pinholes);

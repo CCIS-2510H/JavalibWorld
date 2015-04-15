@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import tester.*;
 import javalib.funworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 /**

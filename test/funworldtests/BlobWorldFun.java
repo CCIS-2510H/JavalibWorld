@@ -5,7 +5,6 @@ import java.util.Random;
 
 import tester.*;
 import javalib.funworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 /**

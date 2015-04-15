@@ -2,7 +2,6 @@ package impworldtests;
 
 import tester.*;
 import javalib.impworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.util.*;
@@ -179,7 +178,8 @@ class Fish implements OceanWorldConstants {
 
     // produce the image of this fish at its position
     WorldScene drawImageOnScene(WorldScene scn) {
-        return scn.placeImageXY(this.fishImage(), this.p.x, this.p.y);
+        scn.placeImageXY(this.fishImage(), this.p.x, this.p.y);
+        return scn;
     }
 }
 
@@ -317,22 +317,24 @@ class Ocean extends World implements OceanWorldConstants {
 
     // produce the image of the fish and shark swimming in the sea of blue
     public WorldScene makeScene() {
-        return this.fish.drawFishesOnScene(
-                this.getEmptyScene()
-                        .placeImageXY(
-                                new RectangleImage(WIDTH, HEIGHT,
-                                        OutlineMode.SOLID, new Color(50, 150,
-                                                255)), WIDTH / 2, HEIGHT / 2))
-                .placeImageXY(this.shark.sharkImage(), 0, this.shark.y);
+        WorldScene scn = this.getEmptyScene();
+        scn.placeImageXY(new RectangleImage(WIDTH, HEIGHT, OutlineMode.SOLID,
+                new Color(50, 150, 255)), WIDTH / 2, HEIGHT / 2);
+        this.fish.drawFishesOnScene(scn);
+        scn.placeImageXY(this.shark.sharkImage(), 0, this.shark.y);
+        return scn;
     }
 
     // the world ends when the shark starves to death
     public WorldEnd worldEnds() {
-        if (this.shark.isDead())
-            return new WorldEnd(true, this.makeScene().placeImageXY(
-                    new TextImage("The shark died", Color.RED), 100, 50));
-        else
+        if (this.shark.isDead()) {
+            WorldScene scn = this.makeScene();
+            scn.placeImageXY(new TextImage("The shark died", Color.RED), 100,
+                    50);
+            return new WorldEnd(true, scn);
+        } else {
             return new WorldEnd(false, this.makeScene());
+        }
     }
 
 }
@@ -563,11 +565,12 @@ class ExamplesOceanWorldImp implements OceanWorldConstants {
     public void testOceanWorldEnds(Tester t) {
         t.checkExpect(this.ocean.worldEnds(),
                 new WorldEnd(false, this.ocean.makeScene()));
+        WorldScene scn = new Ocean(new Shark(HEIGHT / 2, 0), this.allFish)
+                .makeScene();
+        scn.placeImageXY(new TextImage("The shark died", Color.RED), 100, 50);
         t.checkExpect(
                 (new Ocean(new Shark(HEIGHT / 2, 0), this.allFish)).worldEnds(),
-                new WorldEnd(true, new Ocean(new Shark(HEIGHT / 2, 0),
-                        this.allFish).makeScene().placeImageXY(
-                        new TextImage("The shark died", Color.RED), 100, 50)));
+                new WorldEnd(true, scn));
     }
 
     public void testRun(Tester t) {

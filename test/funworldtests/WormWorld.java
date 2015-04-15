@@ -3,7 +3,6 @@ package funworldtests;
 import java.awt.Color;
 
 import javalib.funworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 /**

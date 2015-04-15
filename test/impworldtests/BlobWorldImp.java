@@ -1,7 +1,6 @@
 package impworldtests;
 
 import javalib.impworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.Color;
@@ -125,11 +124,11 @@ public class BlobWorldImp extends World {
      * background image
      */
     public WorldScene makeScene() {
-        return this
-                .getEmptyScene()
-                .placeImageXY(this.blackHole, this.width / 2, this.height / 2)
-                .placeImageXY(this.blob.blobImage(), this.blob.center.x,
-                        this.blob.center.y);
+        WorldScene scn = this.getEmptyScene();
+        scn.placeImageXY(this.blackHole, this.width / 2, this.height / 2);
+        scn.placeImageXY(this.blob.blobImage(), this.blob.center.x,
+                this.blob.center.y);
+        return scn;
     }
 
     /**
@@ -137,8 +136,9 @@ public class BlobWorldImp extends World {
      * to the image with the blob at its point of demise
      */
     public WorldScene lastScene(String s) {
-        return this.makeScene().placeImageXY(new TextImage(s, Color.red), 100,
-                40);
+        WorldScene scn = this.makeScene();
+        scn.placeImageXY(new TextImage(s, Color.red), 100, 40);
+        return scn;
     }
 
     /**
@@ -153,9 +153,10 @@ public class BlobWorldImp extends World {
         }
         // time ends is the blob falls into the black hole in the middle
         if (this.blob.nearCenter(this.width, this.height)) {
-            return new WorldEnd(true, this.makeScene().placeImageXY(
-                    new TextImage("Black hole ate the blob", 13, 3, Color.red),
-                    100, 40));
+            WorldScene scn = this.makeScene();
+            scn.placeImageXY(new TextImage("Black hole ate the blob", 13, 3,
+                    Color.red), 100, 40);
+            return new WorldEnd(true, scn);
         } else {
             return new WorldEnd(false, this.makeScene());
         }
@@ -286,10 +287,9 @@ class BlobExamples {
 
         this.reset();
         this.b1Gw.onKeyEvent("x");
-        t.checkExpect(
-                this.b1Gw.lastWorld,
-                new WorldEnd(true, this.b1Gw.makeScene().placeImageXY(
-                        new TextImage("Goodbye", Color.red), 100, 40)));
+        WorldScene scn = this.b1Gw.makeScene();
+        scn.placeImageXY(new TextImage("Goodbye", Color.red), 100, 40);
+        t.checkExpect(this.b1Gw.lastWorld, new WorldEnd(true, scn));
     }
 
     /** test the method outsideBounds in the Blob class */
@@ -380,18 +380,16 @@ class BlobExamples {
     void testWorldEnds(Tester t) {
 
         this.reset();
-        t.checkExpect(
-                this.bwOutOfBounds.worldEnds(),
-                new WorldEnd(true, this.bwOutOfBounds.makeScene().placeImageXY(
-                        new TextImage("Blob is outside the bounds", Color.red),
-                        100, 40)));
+        WorldScene scn = this.bwOutOfBounds.makeScene();
+        scn.placeImageXY(
+                new TextImage("Blob is outside the bounds", Color.red), 100, 40);
+        t.checkExpect(this.bwOutOfBounds.worldEnds(), new WorldEnd(true, scn));
 
         this.reset();
-        t.checkExpect(
-                this.bwInTheCenter.worldEnds(),
-                new WorldEnd(true, this.bwInTheCenter.makeScene().placeImageXY(
-                        new TextImage("Black hole ate the blob", 13, 3,
-                                Color.red), 100, 40)));
+        scn = this.bwInTheCenter.makeScene();
+        scn.placeImageXY(new TextImage("Black hole ate the blob", 13, 3,
+                Color.red), 100, 40);
+        t.checkExpect(this.bwInTheCenter.worldEnds(), new WorldEnd(true, scn));
 
         this.reset();
         t.checkExpect(this.b1w.worldEnds(),

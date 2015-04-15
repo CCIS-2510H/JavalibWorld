@@ -306,7 +306,7 @@ public class CanvasPanel extends JPanel {
                 && (c.getGreen() == 255);
     }
 
-    public void drawScene(WorldScene scene) {
+    public void drawScene(WorldSceneBase scene) {
         scene.draw(getBufferGraphics());
         repaint();
     }

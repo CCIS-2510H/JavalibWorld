@@ -9,27 +9,22 @@ import javalib.worldimages.OutlineMode;
 import javalib.worldimages.RectangleImage;
 import javalib.worldimages.WorldImage;
 
-public class WorldScene {
+public abstract class WorldSceneBase {
     public int width, height;
-    private List<PlaceImage> imgs;
+    protected List<PlaceImage> imgs;
 
-    public WorldScene(int width, int height) {
+    protected WorldSceneBase(int width, int height) {
         this.width = width;
         this.height = height;
         this.imgs = new LinkedList<PlaceImage>();
         this.imgs.add(new PlaceImage(new RectangleImage(width, height,
                 OutlineMode.OUTLINE, Color.black), width / 2, height / 2));
     }
-    private WorldScene(int width, int height, List<PlaceImage> imgs) {
+
+    protected WorldSceneBase(int width, int height, List<PlaceImage> imgs) {
         this.width = width;
         this.height = height;
         this.imgs = imgs;
-    }
-
-    public WorldScene placeImageXY(WorldImage image, int x, int y) {
-        List<PlaceImage> newImgs = new LinkedList<PlaceImage>(imgs);
-        newImgs.add(new PlaceImage(image, x, y));
-        return new WorldScene(width, height, newImgs);
     }
 
     protected void draw(Graphics2D g) {
@@ -39,15 +34,15 @@ public class WorldScene {
             g.translate(-i.x, -i.y);
         }
     }
-}
+    
+    protected class PlaceImage {
+        WorldImage img;
+        int x, y;
 
-class PlaceImage {
-    WorldImage img;
-    int x, y;
-
-    PlaceImage(WorldImage i, int x, int y) {
-        this.img = i;
-        this.x = x;
-        this.y = y;
+        public PlaceImage(WorldImage i, int x, int y) {
+            this.img = i;
+            this.x = x;
+            this.y = y;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package javalib.worldcanvas;
 
+import javalib.impworld.WorldScene;
 import javalib.worldimages.*;
 
 import java.awt.*;
@@ -142,7 +143,7 @@ public class WorldCanvas {
     // Methods for drawing and erasing shapes and text //
     // ///////////////////////////////////////////////////////////////////////
 
-    public boolean drawScene(WorldScene scene) {
+    public boolean drawScene(WorldSceneBase scene) {
         if (f.getWidth() != scene.width || f.getHeight() != scene.height) {
             f.getContentPane().setMinimumSize(
                     new Dimension(scene.width, scene.height));

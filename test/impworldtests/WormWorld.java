@@ -3,7 +3,6 @@ package impworldtests;
 import java.awt.Color;
 
 import javalib.impworld.*;
-import javalib.worldcanvas.WorldScene;
 import javalib.worldimages.*;
 
 /**
@@ -63,16 +62,18 @@ public class WormWorld extends World {
      */
     public WorldEnd worldEnds() {
         // if the blob is outside the canvas, stop
-        if (w.ateItself())
-            return new WorldEnd(true, this.makeScene().placeImageXY(
-                    new TextImage("Your worm ate itself.", 13, Color.red), 100,
-                    40));
-        else if (w.ranIntoWall(this.b))
-            return new WorldEnd(true, this.makeScene().placeImageXY(
-                    new TextImage("Your worm ran into a wall.", 13, Color.red),
-                    100, 40));
-        else
-            return new WorldEnd(false, this.makeScene());
+        WorldScene scn = this.makeScene();
+        if (w.ateItself()) {
+            scn.placeImageXY(new TextImage("Your worm ate itself.", 13,
+                    Color.red), 100, 40);
+            return new WorldEnd(true, scn);
+        } else if (w.ranIntoWall(this.b)) {
+            scn.placeImageXY(new TextImage("Your worm ran into a wall.", 13,
+                    Color.red), 100, 40);
+            return new WorldEnd(true, scn);
+        } else {
+            return new WorldEnd(false, scn);
+        }
     }
 
     // produce an image of this world
@@ -220,8 +221,9 @@ class Segment {
     }
 
     protected WorldScene drawOnScene(WorldScene scn) {
-        return scn.placeImageXY(new CircleImage(this.radius, "solid",
-                this.color), this.x, this.y);
+        scn.placeImageXY(new CircleImage(this.radius, "solid", this.color),
+                this.x, this.y);
+        return scn;
     }
 
     // --- auxiliaries that are only needed for this class: motivate private ---
@@ -347,8 +349,9 @@ class Food {
 
     // make an image of this food
     protected WorldScene drawOnScene(WorldScene scn) {
-        return scn.placeImageXY(new RectangleImage(this.width, this.height,
-                "solid", this.color), this.x, this.y);
+        scn.placeImageXY(new RectangleImage(this.width, this.height, "solid",
+                this.color), this.x, this.y);
+        return scn;
     }
 }
 
@@ -372,7 +375,9 @@ class Box {
 
     // draw this box
     protected WorldScene drawOnScene(WorldScene scn) {
-        return scn.placeImageXY(new RectangleImage(width, height, "solid",
-                Color.BLUE), scn.width / 2, scn.height / 2);
+        scn.placeImageXY(
+                new RectangleImage(width, height, "solid", Color.BLUE),
+                scn.width / 2, scn.height / 2);
+        return scn;
     }
 }

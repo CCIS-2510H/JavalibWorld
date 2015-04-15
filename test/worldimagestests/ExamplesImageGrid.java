@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javalib.impworld.World;
-import javalib.worldcanvas.WorldScene;
+import javalib.impworld.*;
 import javalib.worldimages.AboveImage;
 import javalib.worldimages.BesideImage;
 import javalib.worldimages.RectangleImage;
@@ -90,7 +89,7 @@ class GridWorld extends World {
         long start = System.currentTimeMillis();
         for (ArrayList<Cell> row : cells) {
             for (Cell c : row) {
-                scene = scene.placeImageXY(c.draw(), c.getX(), c.getY());
+                scene.placeImageXY(c.draw(), c.getX(), c.getY());
             }
         }
         System.out.println("Place Image time: "
@@ -101,8 +100,10 @@ class GridWorld extends World {
     @Override
     public WorldScene makeScene() {
         if (this.worldType.equals("overlay")) {
-            return new WorldScene(this.pixelSize, this.pixelSize).placeImageXY(
-                    this.overlay(), this.pixelSize / 2, this.pixelSize / 2);
+            WorldScene scn = new WorldScene(this.pixelSize, this.pixelSize);
+            scn.placeImageXY(this.overlay(), this.pixelSize / 2,
+                    this.pixelSize / 2);
+            return scn;
         } else {
             return this.placeImages(new WorldScene(this.pixelSize,
                     this.pixelSize));
@@ -113,10 +114,10 @@ class GridWorld extends World {
 public class ExamplesImageGrid {
 
     public static void main(String[] args) {
-        GridWorld w = new GridWorld("overlay", 100);
-        w.bigBang(w.pixelSize, w.pixelSize, 3);
+        // GridWorld w = new GridWorld("overlay", 100);
+        // w.bigBang(w.pixelSize, w.pixelSize, 3);
 
         GridWorld w2 = new GridWorld("placeImage", 100);
-        w2.bigBang(w2.pixelSize, w2.pixelSize, 1);
+        w2.bigBang(w2.pixelSize, w2.pixelSize, 0.01);
     }
 }
