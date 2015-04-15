@@ -136,18 +136,18 @@ public final class TriangleImage extends WorldImage {
                 + "),\nthis.p2 = (" + this.p2.x + ", " + this.p2.y
                 + "),\nthis.p3 = (" + this.p3.x + ", " + this.p3.y
                 + "),\nthis.fill = " + this.fill + ",\n"
-                + colorString(this.color) + ")\n";
+                + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
-        indent = indent + " ";
+        indent = indent + "  ";
         return classNameString(indent, this) + "this.p1 = (" + this.p1.x + ", "
                 + this.p1.y + "),\n" + indent + "this.p2 = (" + this.p2.x
                 + ", " + this.p2.y + "),\n" + indent + "this.p3 = ("
                 + this.p3.x + ", " + this.p3.y + "),\n" + indent
                 + "this.fill = " + this.fill + ","
-                + colorString(indent, this.color) + ")\n";
+                + colorString(indent, this.color) + ")";
     }
 
     /**

@@ -231,7 +231,7 @@ public final class TextImage extends WorldImage {
         indent = indent + "  ";
         return classNameString(indent, this) + "this.text = " + c + this.text
                 + c + ",\n" + indent + "this.size = " + this.size
-                + ", this.style = " + this.style + ",\n"
+                + ", this.style = " + this.style + ","
                 + colorString(indent, this.color) + ")";
     }
 

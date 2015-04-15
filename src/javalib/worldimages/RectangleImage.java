@@ -162,7 +162,7 @@ abstract class RectangleImageBase extends WorldImage {
         indent = indent + "  ";
         return classNameString(indent, this) + "this.width = " + width
                 + ", this.height = " + height + ",\n" + indent + "this.fill = "
-                + this.fill + ",\n" + colorString(indent, this.color) + ")";
+                + this.fill + "," + colorString(indent, this.color) + ")";
     }
 
     /**

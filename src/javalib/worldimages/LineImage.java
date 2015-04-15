@@ -86,7 +86,7 @@ public final class LineImage extends WorldImage {
      */
     public String toString() {
         return className(this) + "this.endPoint = (" + this.endPoint.x + ", "
-                + this.endPoint.y + ")\n" + colorString(this.color) + ")";
+                + this.endPoint.y + "),\n" + colorString(this.color) + ")";
     }
 
     @Override
