@@ -57,14 +57,12 @@ public final class ShearedImage extends WorldImage {
 
     @Override
     public int getWidth() {
-        return (int) (this.img.getHeight() * Math.abs(this.sx)
-                + this.img.getWidth() + 1.0);
+        return (int) Math.round(getBB().getWidth());
     }
 
     @Override
     public int getHeight() {
-        return (int) (this.img.getWidth() * Math.abs(this.sy)
-                + this.img.getHeight() + 1.0);
+        return (int) Math.round(getBB().getHeight());
     }
 
     /**

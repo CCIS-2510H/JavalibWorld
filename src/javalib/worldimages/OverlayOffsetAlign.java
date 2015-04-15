@@ -130,14 +130,8 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         this.deltaBot = new Posn(botDeltaX, botDeltaY);
         this.deltaTop = new Posn(topDeltaX, topDeltaY);
 
-        // Fix the width
-        // int actualWidth = (int) Math.round(getBB().getWidth());
-        // int actualHeight = (int) Math.round(getBB().getHeight());
-        int calculatedWidth = rightX - leftX;
-        int calculatedHeight = bottomY - topY;
-
-        this.width = calculatedWidth;
-        this.height = calculatedHeight;
+        this.width = (int) Math.round(getBB().getWidth());
+        this.height = (int) Math.round(getBB().getHeight());
 
         if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
                 && dx == 0 && dy == 0) {
@@ -243,12 +237,6 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
         // Reset the transformation matrix
         g.setTransform(old);
-
-        // Draw the center and pinhole
-        // new CircleImage(2, "solid", Color.GREEN).draw(g);
-        // g.translate(this.pinhole.x, this.pinhole.y);
-        // new CircleImage(2, "solid", Color.RED).draw(g);
-        // g.setTransform(old);
     }
 
     @Override
