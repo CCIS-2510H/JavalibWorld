@@ -132,21 +132,22 @@ public final class TriangleImage extends WorldImage {
      * Produce a <code>String</code> representation of this triangle image
      */
     public String toString() {
-        return className(this) + colorString(this.color) + "\nthis.p1 = ("
-                + this.p1.x + ", " + this.p1.y + "),\nthis.p2 = (" + this.p2.x
-                + ", " + this.p2.y + "),\nthis.p3 = (" + this.p3.x + ", "
-                + this.p3.y + ")\nthis.fill = " + this.fill + ")\n";
+        return className(this) + "this.p1 = (" + this.p1.x + ", " + this.p1.y
+                + "),\nthis.p2 = (" + this.p2.x + ", " + this.p2.y
+                + "),\nthis.p3 = (" + this.p3.x + ", " + this.p3.y
+                + "),\nthis.fill = " + this.fill + ",\n"
+                + colorString(this.color) + ")\n";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + " ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.p1 = (" + this.p1.x + ", " + this.p1.y
-                + "),\n" + indent + "this.p2 = (" + this.p2.x + ", "
-                + this.p2.y + "),\n" + indent + "this.p3 = (" + this.p3.x
-                + ", " + this.p3.y + "),\n" + indent + "this.fill = "
-                + this.fill + ")\n";
+        return classNameString(indent, this) + "this.p1 = (" + this.p1.x + ", "
+                + this.p1.y + "),\n" + indent + "this.p2 = (" + this.p2.x
+                + ", " + this.p2.y + "),\n" + indent + "this.p3 = ("
+                + this.p3.x + ", " + this.p3.y + "),\n" + indent
+                + "this.fill = " + this.fill + ","
+                + colorString(indent, this.color) + ")\n";
     }
 
     /**

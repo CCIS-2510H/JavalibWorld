@@ -85,17 +85,16 @@ public final class LineImage extends WorldImage {
      * Produce a <code>String</code> representation of this Line image
      */
     public String toString() {
-        return className(this) + colorString(this.color)
-                + "\nthis.endPoint = (" + this.endPoint.x + ", "
-                + this.endPoint.y + "))\n";
+        return className(this) + "this.endPoint = (" + this.endPoint.x + ", "
+                + this.endPoint.y + ")\n" + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.endPoint = (" + this.endPoint.x + ", "
-                + this.endPoint.y + "))\n";
+        return classNameString(indent, this) + "this.endPoint = ("
+                + this.endPoint.x + ", " + this.endPoint.y + "),"
+                + colorString(indent, this.color) + ")";
     }
 
     /**

@@ -42,8 +42,8 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
      * Produce a <code>String</code> representation of this overlay of images
      */
     public String toString() {
-        return className(this) + "this.bot = " + this.bot.toString()
-                + "\nthis.top = " + this.top.toString() + ")\n";
+        return className(this) + "this.top = " + this.top.toString()
+                + "\nthis.bot = " + this.bot.toString() + ")";
     }
 
     /**
@@ -56,9 +56,10 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + indent + "this.bot = "
-                + this.bot.toIndentedString(indent) + "\n" + indent
-                + "this.top = " + this.top.toIndentedString(indent) + ")\n";
+        return classNameString(indent, this) + "this.top = "
+                + this.top.toIndentedString(indent) + ",\n" + indent
+                + "this.bot = " + this.bot.toIndentedString(indent)
+                + ")";
     }
 
     /**

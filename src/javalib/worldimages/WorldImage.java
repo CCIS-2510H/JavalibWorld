@@ -206,7 +206,7 @@ public abstract class WorldImage {
         String result = color.toString();
         int start = result.indexOf('[');
         result = result.substring(start, result.length());
-        return "this.color = " + result + ",";
+        return "this.color = " + result;
     }
 
     /**

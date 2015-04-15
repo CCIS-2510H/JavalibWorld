@@ -93,9 +93,7 @@ public final class FromFileImage extends WorldImage {
      * Produce a <code>String</code> representation of this from-file image
      */
     public String toString() {
-        return className(this) + "this.fileName = " + this.fileName
-                + "this.width = " + this.getWidth() + ", " + "this.height = "
-                + this.getHeight() + ")\n";
+        return className(this) + "this.fileName = \"" + this.fileName + "\")";
     }
 
     /**
@@ -108,10 +106,8 @@ public final class FromFileImage extends WorldImage {
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + "this.fileName = "
-                + this.fileName + ",\n" + indent + "this.width = "
-                + this.getWidth() + ",\n" + indent + "this.height = "
-                + this.getHeight() + ")\n";
+        return classNameString(indent, this) + "this.fileName = \""
+                + this.fileName + "\")";
     }
 
     /**

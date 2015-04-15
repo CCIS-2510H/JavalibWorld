@@ -47,7 +47,7 @@ public final class OverlayOffsetImage extends OverlayOffsetAlignBase {
     public String toString() {
         return className(this) + "this.top = " + this.top.toString()
                 + ",\nthis.dx = " + this.dx + ", this.dy = " + this.dy
-                + ",\nthis.bot = " + this.bot.toString() + ")\n";
+                + ",\nthis.bot = " + this.bot.toString() + ")";
     }
 
     /**
@@ -63,7 +63,8 @@ public final class OverlayOffsetImage extends OverlayOffsetAlignBase {
         return classNameString(indent, this) + "this.top = "
                 + this.top.toIndentedString(indent) + ",\n" + indent
                 + "this.dx = " + this.dx + ", this.dy = " + this.dy + ",\n"
-                + indent + "this.bot = " + this.bot.toString() + ")\n";
+                + indent + "this.bot = " + this.bot.toIndentedString(indent)
+                + ")";
     }
 
     @Override

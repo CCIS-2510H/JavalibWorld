@@ -67,17 +67,17 @@ public final class CircleImage extends EllipseImageBase {
      */
     @Override
     public String toString() {
-        return className(this) + colorString(this.color) 
-                + "\nthis.radius = " + this.radius + "\nthis.fill = "
-                + this.fill + ")\n";
+        return className(this) + "this.radius = " + this.radius
+                + ",\nthis.fill = " + this.fill + ",\n"
+                + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.radius = " + this.radius + ",\n"
-                + indent + "this.fill = " + this.fill + ")\n";
+        return classNameString(indent, this) + "this.radius = " + this.radius
+                + ",\n" + indent + "this.fill = " + this.fill + ","
+                + colorString(indent, this.color) + ")";
     }
 
     /**

@@ -6,7 +6,6 @@ import funworldtests.*;
 import impworldtests.*;
 import worldimagestests.ExamplesImageDrawings;
 import worldimagestests.ExamplesImageMethods;
-import worldimagestests.ExamplesTextImages;
 
 public class WorldTests {
 
@@ -20,8 +19,7 @@ public class WorldTests {
     BlobWorldFun.examplesInstance, TickyTackFun.examplesInstance,
             BlobWorldImp.examplesInstance, TickyTackImp.examplesInstance,
             ExamplesImageDrawings.examplesInstance,
-            ExamplesImageMethods.examplesInstance,
-            ExamplesTextImages.examplesInstance };
+            ExamplesImageMethods.examplesInstance };
 
     /**
      * Run the tests in the given <code>Examples</code> class.

@@ -157,18 +157,19 @@ abstract class EllipseImageBase extends WorldImage {
      * Produce a <code>String</code> representation of this ellipse image
      */
     public String toString() {
-        return className(this) + colorString(this.color) + ",\nthis.fill = "
-                + this.fill + "\nthis.width = " + this.width
-                + ", this.height = " + this.height + ")\n";
+        return className(this) + "this.width = " + this.width 
+                + ", this.height = " + this.height + ","
+                + "\nthis.fill = " + this.fill + ",\n"
+                + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.fill = " + this.fill + ",\n" + indent
-                + "this.width = " + this.width + ",\n" + indent
-                + "this.height = " + this.height + ")\n";
+        return classNameString(indent, this)
+                + "this.width = " + this.width + ", this.height = " + this.height + ","
+                + "\n" + indent + "this.fill = " + this.fill + ","
+                + colorString(indent, this.color) + ")";
     }
 
     public boolean same(EllipseImageBase that) {

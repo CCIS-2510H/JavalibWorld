@@ -106,14 +106,14 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         int botHeight = this.bot.getHeight();
         int topHeight = this.top.getHeight();
 
-        int rightX = (int) (Math.max((botWidth / 2.0)
-                + xBotMoveDist(), (topWidth / 2.0) + xTopMoveDist()));
-        int leftX = (int) (Math.min((-botWidth / 2.0)
-                + xBotMoveDist(), (-topWidth / 2.0) + xTopMoveDist()));
-        int bottomY = (int) (Math.max((botHeight / 2.0)
-                + yBotMoveDist(), (topHeight / 2.0) + yTopMoveDist()));
-        int topY = (int) (Math.min((-botHeight / 2.0)
-                + yBotMoveDist(), (-topHeight / 2.0) + yTopMoveDist()));
+        int rightX = (int) (Math.max((botWidth / 2.0) + xBotMoveDist(),
+                (topWidth / 2.0) + xTopMoveDist()));
+        int leftX = (int) (Math.min((-botWidth / 2.0) + xBotMoveDist(),
+                (-topWidth / 2.0) + xTopMoveDist()));
+        int bottomY = (int) (Math.max((botHeight / 2.0) + yBotMoveDist(),
+                (topHeight / 2.0) + yTopMoveDist()));
+        int topY = (int) (Math.min((-botHeight / 2.0) + yBotMoveDist(),
+                (-topHeight / 2.0) + yTopMoveDist()));
 
         // yBotMoveDist(), yTopMoveDist(), xBotMoveDist(), and
         // xTopMoveDist() position the two images relative to
@@ -131,8 +131,8 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         this.deltaTop = new Posn(topDeltaX, topDeltaY);
 
         // Fix the width
-//        int actualWidth = (int) Math.round(getBB().getWidth());
-//        int actualHeight = (int) Math.round(getBB().getHeight());
+        // int actualWidth = (int) Math.round(getBB().getWidth());
+        // int actualHeight = (int) Math.round(getBB().getHeight());
         int calculatedWidth = rightX - leftX;
         int calculatedHeight = bottomY - topY;
 
@@ -243,6 +243,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
         // Reset the transformation matrix
         g.setTransform(old);
+
+        // Draw the center and pinhole
+        // new CircleImage(2, "solid", Color.GREEN).draw(g);
+        // g.translate(this.pinhole.x, this.pinhole.y);
+        // new CircleImage(2, "solid", Color.RED).draw(g);
+        // g.setTransform(old);
     }
 
     @Override
@@ -305,8 +311,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      */
     @Override
     public int hashCode() {
-        return this.deltaBot.hashCode() + this.deltaTop.hashCode()
-                + this.bot.hashCode() + this.top.hashCode()
+        return this.bot.hashCode() + this.top.hashCode()
                 + this.alignX.hashCode() + this.alignY.hashCode()
                 + (int) this.dx * 37 + (int) this.dy * 16;
     }

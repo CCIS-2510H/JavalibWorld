@@ -72,16 +72,16 @@ public final class FrameImage extends RectangleImageBase {
      */
     @Override
     public String toString() {
-        return className(this) + colorString(this.color) + ",\nthis.img = "
-                + this.img.toString() + ")\n";
+        return className(this) + "this.img = " + this.img.toString() + ",\n"
+                + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.img = "
-                + this.img.toIndentedString(indent) + ")\n";
+        return classNameString(indent, this) + "this.img = "
+                + this.img.toIndentedString(indent) + ","
+                + colorString(indent, this.color) + ")";
     }
 
     /**

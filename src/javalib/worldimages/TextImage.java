@@ -220,21 +220,19 @@ public final class TextImage extends WorldImage {
      */
     public String toString() {
         char c = '"';
-        return className(this) + colorString(this.color) + "\nthis.size = "
-                + this.size + ", this.style = " + this.style
-                + ", this.alignment = " + this.alignment + "\n,this.text = "
-                + c + this.text + c + ")\n";
+        return className(this) + "this.text = " + c + this.text + c
+                + ",\nthis.size = " + this.size + ", this.style = "
+                + this.style + ",\n" + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         char c = '"';
         indent = indent + "  ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.size = " + this.size + "\n" + indent
-                + "this.style = " + this.style + "\n" + indent
-                + "this.alignment = " + this.alignment + "\n" + indent
-                + "this.text = " + c + this.text + c + ")\n";
+        return classNameString(indent, this) + "this.text = " + c + this.text
+                + c + ",\n" + indent + "this.size = " + this.size
+                + ", this.style = " + this.style + ",\n"
+                + colorString(indent, this.color) + ")";
     }
 
     /**

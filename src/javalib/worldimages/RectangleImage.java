@@ -152,17 +152,17 @@ abstract class RectangleImageBase extends WorldImage {
      * Produce a <code>String</code> representation of this rectangle image
      */
     public String toString() {
-        return className(this) + colorString(this.color) + "\nthis.fill = "
-                + this.fill + ",\nthis.width = " + width + ", this.height = "
-                + height + ")\n";
+        return className(this) + "this.width = " + width + ", this.height = "
+                + height + ",\nthis.fill = " + this.fill + ",\n"
+                + colorString(this.color) + ")";
     }
 
     @Override
     public String toIndentedString(String indent) {
         indent = indent + "  ";
-        return classNameString(indent, this) + colorString(indent, this.color)
-                + "\n" + indent + "this.fill = " + this.fill + ",\n" + indent
-                + "this.width = " + width + ", this.height = " + height + ")\n";
+        return classNameString(indent, this) + "this.width = " + width
+                + ", this.height = " + height + ",\n" + indent + "this.fill = "
+                + this.fill + ",\n" + colorString(indent, this.color) + ")";
     }
 
     /**
