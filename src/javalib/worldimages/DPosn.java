@@ -11,9 +11,9 @@ class DPosn {
     public double x;
     public double y;
 
-    public DPosn(double botDeltaX, double botDeltaY) {
-        this.x = botDeltaX;
-        this.y = botDeltaY;
+    public DPosn(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -21,7 +21,8 @@ class DPosn {
         if (!(other instanceof DPosn))
             return false;
         DPosn that = (DPosn) other;
-        return this.x == that.x && this.y == that.y;
+        return Math.abs(this.x - that.x) < 0.00000001 && 
+                Math.abs(this.y - that.y) < 0.00000001;
     }
 
     public Posn asPosn() {
