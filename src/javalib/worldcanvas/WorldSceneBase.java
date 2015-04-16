@@ -61,7 +61,6 @@ public abstract class WorldSceneBase {
             return s.first;
         }
 
-        @Override
         public void remove() {
             throw new UnsupportedOperationException("Remove is not supported");
         }
