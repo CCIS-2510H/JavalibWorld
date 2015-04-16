@@ -1,7 +1,6 @@
 package javalib.funworld;
 
 import javalib.worldcanvas.WorldCanvas;
-import javalib.worldcanvas.WorldSceneBase;
 import javalib.worldimages.*;
 
 import java.awt.Insets;
@@ -626,7 +625,7 @@ abstract public class World {
      * 
      * @return the image that represents this world at this moment
      */
-    abstract public WorldSceneBase makeScene();
+    abstract public WorldScene makeScene();
 
     /**
      * <P>
@@ -638,7 +637,7 @@ abstract public class World {
      * 
      * @return the image that represents the last world to be drawn
      */
-    public WorldSceneBase lastScene(String s) {
+    public WorldScene lastScene(String s) {
         return this.makeScene();
     }
 }

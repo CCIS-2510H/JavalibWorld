@@ -4,10 +4,12 @@ import javalib.worldcanvas.CanvasPanel;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -54,6 +56,8 @@ public final class TextImage extends WorldImage {
      * <em>not yet implemented - currently the text is centered</em>
      */
     public int alignment = 1;
+    
+    private double baselineDy = 0;
 
     /** the Canvas for defining the font for this text image */
     public static CanvasPanel c = new CanvasPanel(600, 600);
@@ -146,9 +150,8 @@ public final class TextImage extends WorldImage {
         g.setPaint(this.color);
 
         if (alignment == 1) {
-            // draw the object
             g.drawString(this.text, (int) -Math.round(this.width / 2),
-                    (int) Math.round(this.height / 4));
+                    (int)-this.baselineDy);
         }
 
         // reset the original paint and font
@@ -161,13 +164,10 @@ public final class TextImage extends WorldImage {
      * and size
      */
     protected void setWidthHeight() {
-        AffineTransform t = g.getTransform();
         Rectangle2D bounds = getBoundingBox();
-        g.setTransform(t);
 
         this.width = (int) bounds.getWidth();
         this.height = (int) bounds.getHeight();
-
     }
 
     @Override
@@ -188,22 +188,69 @@ public final class TextImage extends WorldImage {
      * @return
      */
     private Rectangle2D getBoundingBox() {
-        // change the font style and size as given
-        g.setFont(font.deriveFont(this.style, this.size));
-        // now get this new font
-        Font newFont = g.getFont();
+        // Taken from
+        // https://docs.oracle.com/javase/tutorial/2d/text/measuringtext.html
+        Font newFont = font.deriveFont(this.style, this.size);
 
         FontRenderContext frc = g.getFontRenderContext();
+        TextLayout layout = new TextLayout(this.text, newFont, frc);
+        // layout.draw(g, 0, 0);
 
-        Point2D loc = new Point2D.Double(300, 300);
+        double width = layout.getAdvance();
+        double height = layout.getAscent() + layout.getDescent();
 
-        TextLayout layout = new TextLayout(text, newFont, frc);
-        layout.draw(g, (float) loc.getX(), (float) loc.getY());
+        this.baselineDy = height / 2.0 - layout.getAscent();
+        
+        Rectangle2D ans = new Rectangle2D.Double(-width / 2.0,
+                -height / 2.0, width, height);
 
-        g.setFont(font);
+        AffineTransform t = g.getTransform();
+        Point2D topLeft = new Point2D.Double(ans.getMinX(), ans.getMinY());
+        Point2D botRight = new Point2D.Double(ans.getMaxX(), ans.getMaxY());
+        Point2D topRight = new Point2D.Double(ans.getMaxX(), ans.getMinY());
+        Point2D botLeft = new Point2D.Double(ans.getMinX(), ans.getMaxY());
+        t.transform(topLeft, topLeft);
+        t.transform(topRight, topRight);
+        t.transform(botRight, botRight);
+        t.transform(botLeft, botLeft);
+        double minX = 
+                Math.min(Math.min(topLeft.getX(), topRight.getX()),
+                         Math.min(botLeft.getX(), botRight.getX()));
+        double minY = 
+                Math.min(Math.min(topLeft.getY(), topRight.getY()),
+                         Math.min(botLeft.getY(), botRight.getY()));
+        double maxX = 
+                Math.max(Math.max(topLeft.getX(), topRight.getX()),
+                         Math.max(botLeft.getX(), botRight.getX()));
+        double maxY = 
+                Math.max(Math.max(topLeft.getY(), topRight.getY()),
+                         Math.max(botLeft.getY(), botRight.getY()));
+        return new Rectangle2D.Double(minX, minY, maxX - minX, maxY - minY);
+        // FontRenderContext frc = g.getFontRenderContext();
+        // GlyphVector gv = newFont.createGlyphVector(frc, this.text);
+        // Rectangle ans = gv.getPixelBounds(frc, 0, 0);
+        // return new Rectangle2D.Double(0,0, ans.getWidth(), ans.getHeight());
 
-        Rectangle2D bounds = layout.getBounds();
-        return bounds;
+        // g.setFont(newFont);
+        // // get metrics from the graphics
+        // FontMetrics metrics = g.getFontMetrics(newFont);
+        // // get the height of a line of text in this
+        // // font and render context
+        // int hgt = metrics.getHeight();
+        // // get the advance of my text in this font
+        // // and render context
+        // int adv = metrics.stringWidth(text);
+        // // calculate the size of a box to hold the
+        // // text with some padding.
+        // Dimension size = new Dimension(adv, hgt);
+        //
+        // // Due to our different coordinate system, the actual bounding
+        // // box needs to be adjusted to the left
+        // Rectangle2D adjusted = new Rectangle2D.Double(-size
+        // .getWidth() / 2, -size.getHeight() / 2, size.getWidth(),
+        // size.getHeight());
+        //
+        // return adjusted;
     }
 
     @Override

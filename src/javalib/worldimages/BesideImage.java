@@ -55,7 +55,7 @@ public final class BesideImage extends OverlayOffsetAlignBase {
         indent = indent + "  ";
         return classNameString(indent, this) + "this.im1 = "
                 + this.top.toIndentedString(indent) + ",\n" + indent
-                + "this.im2 = " + this.bot.toIndentedString(indent) + ")\n";
+                + "this.im2 = " + this.bot.toIndentedString(indent) + ")";
     }
 
     /**
@@ -64,7 +64,7 @@ public final class BesideImage extends OverlayOffsetAlignBase {
     @Override
     public String toString() {
         return className(this) + "this.im1 = " + this.top.toString()
-                + ",\nthis.im2 = " + this.bot.toString() + ")\n";
+                + ",\nthis.im2 = " + this.bot.toString() + ")";
     }
 
     /**
