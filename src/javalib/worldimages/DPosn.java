@@ -8,6 +8,7 @@ package javalib.worldimages;
  * @since April 4, 2015
  */
 class DPosn {
+    private static final double EPSILON = 10e-7;
     public double x;
     public double y;
 
@@ -21,13 +22,13 @@ class DPosn {
         if (!(other instanceof DPosn))
             return false;
         DPosn that = (DPosn) other;
-        return Math.abs(this.x - that.x) < 0.00000001 && 
-                Math.abs(this.y - that.y) < 0.00000001;
+        return Math.abs(this.x - that.x) < EPSILON && 
+                Math.abs(this.y - that.y) < EPSILON;
     }
     
     @Override
     public int hashCode() {
-        return (int) this.x * 96 + (int) this.y * 35;
+        return (int) (this.x * 2939.0 + this.y);
     }
 
     public Posn asPosn() {

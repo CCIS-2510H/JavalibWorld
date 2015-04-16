@@ -93,13 +93,12 @@ class GridWorld extends World {
     @Override
     public WorldScene makeScene() {
         if (this.worldType.equals("overlay")) {
-            WorldScene scn = new WorldScene(this.pixelSize, this.pixelSize);
+            WorldScene scn = this.getEmptyScene();
             scn.placeImageXY(this.overlay(), this.pixelSize / 2,
                     this.pixelSize / 2);
             return scn;
         } else {
-            return this.placeImages(new WorldScene(this.pixelSize,
-                    this.pixelSize));
+            return this.placeImages(this.getEmptyScene());
         }
     }
 }
