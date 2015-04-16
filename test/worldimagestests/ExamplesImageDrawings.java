@@ -32,8 +32,8 @@ public class ExamplesImageDrawings {
     WorldScene scene = new WorldScene(800, 800);
 
     WorldImage circle = new CircleImage(10, OutlineMode.OUTLINE, Color.RED);
-    WorldImage circleText = new TextImage(
-            "CircleImage(10, \"outline\", Color.RED)", Color.RED);
+    WorldImage circleText = new FrameImage(new TextImage(
+            "CircleImage(10, \"outline\", Color.RED)", Color.RED));
 
     WorldImage disc = new CircleImage(10, "solid", Color.RED);
     WorldImage discText = new TextImage(
@@ -128,10 +128,15 @@ public class ExamplesImageDrawings {
             Color.LIGHT_GRAY), new EllipseImage(10, 20, "outline",
             Color.LIGHT_GRAY));
 
+    WorldImage hello = new TextImage("Hello ", 24, Color.BLACK);
+    WorldImage world = new TextImage("World", 24, Color.BLACK);
+    WorldImage hw = new BesideImage(hello, world);
+
     WorldScene combined = scene
             .placeImageXY(new FrameImage(rectangle), 600, 330)
             .placeImageXY(rectangleText, 600, 300)
-            .placeImageXY(frame, 600, 130).placeImageXY(frameText, 600, 100)
+            .placeImageXY(frame, 600, 130)
+            .placeImageXY(frameText, 600, 100)
             .placeImageXY(circleText, 200, 20)
             .placeImageXY(new FrameImage(circle), 200, 60)
             .placeImageXY(discText, 200, 100)
@@ -168,7 +173,8 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(beside), 400, 100)
             .placeImageXY(new FrameImage(above), 400, 200)
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
-            .placeImageXY(new FrameImage(allTransforms2), 400, 400);
+            //.placeImageXY(new FrameImage(allTransforms2), 400, 400)
+            .placeImageXY(new FrameImage(hw), 400, 400);
 
     WorldImage whitePetal = new OverlayOffsetImage(new CircleImage(15,
             OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayOffsetImage(
@@ -187,9 +193,7 @@ public class ExamplesImageDrawings {
                                     new OverlayImage(new RotateImage(
                                             whitePetal, 240), new RotateImage(
                                             yellowPetal, 300))))));
-    WorldScene daisy = scene.placeImageXY(
-            new RectangleImage(400, 400, OutlineMode.SOLID, Color.GRAY), 100,
-            100).placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
+    WorldScene daisy = scene.placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
             100, 100);
 
     WorldImage arrow = new BesideImage(new RectangleImage(10, 5, "outline",
@@ -209,12 +213,12 @@ public class ExamplesImageDrawings {
         pinholeImages[3] = new RotateImage(pinholeImages[2], 90);
         pinholeImages[4] = new OverlayOffsetAlign("pinhole", "pinhole",
                 pinholeImages[3], 0, 0, new RotateImage(pinholeImages[2], 180));
-        pinholeImages[5] = new OverlayOffsetAlign("right", "center",
+        pinholeImages[5] = new OverlayOffsetAlign("right", "middle",
                 new RectangleImage(
                         (int) Math.round(pinholeImages[4].getWidth() / 2),
                         (int) Math.round(pinholeImages[4].getHeight()),
                         "outline", Color.RED), 0, 0, pinholeImages[4]);
-        pinholeImages[6] = new OverlayOffsetAlign("left", "center",
+        pinholeImages[6] = new OverlayOffsetAlign("left", "middle",
                 new RectangleImage(
                         (int) Math.round(pinholeImages[4].getWidth() / 2),
                         (int) Math.round(pinholeImages[4].getHeight()),
@@ -258,9 +262,9 @@ public class ExamplesImageDrawings {
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-        // boolean makeDrawing = c.show() && c.drawScene(e.combined);
+//        boolean makeDrawing = c.show() && c.drawScene(e.combined);
         c = new WorldCanvas(800, 800);
-        // boolean daisy = c.show() && c.drawScene(e.daisy);
-        boolean pins = c.show() && c.drawScene(e.pinholes);
+        boolean daisy = c.show() && c.drawScene(e.daisy);
+        // boolean pins = c.show() && c.drawScene(e.pinholes);
     }
 }

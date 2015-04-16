@@ -9,7 +9,7 @@ package javalib.worldimages;
  * 
  */
 public enum AlignModeY {
-    BOTTOM, TOP, MIDDLE, CENTER, PINHOLE;
+    BOTTOM, TOP, MIDDLE, PINHOLE;
     
     @Override
     public String toString() {
