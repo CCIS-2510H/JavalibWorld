@@ -22,6 +22,7 @@ import java.awt.geom.Point2D;
  */
 public abstract class WorldImage {
     public Posn pinhole;
+    private BoundingBox bbCache;
 
     public WorldImage() {
         this(new Posn(0, 0));
@@ -38,6 +39,7 @@ public abstract class WorldImage {
      */
     protected WorldImage(Posn pinhole) {
         this.pinhole = pinhole;
+        this.bbCache = null;
     }
 
     /**
@@ -46,7 +48,9 @@ public abstract class WorldImage {
      * @return The tight bounding box of the image
      */
     public BoundingBox getBB() {
-        return this.getBB(new AffineTransform());
+        if (this.bbCache == null)
+            this.bbCache = this.getBB(new AffineTransform());
+        return this.bbCache;
     }
 
     /**

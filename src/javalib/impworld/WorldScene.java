@@ -10,6 +10,7 @@ public class WorldScene extends WorldSceneBase {
     }
 
     public void placeImageXY(WorldImage image, int x, int y) {
-        imgs.add(new PlaceImage(image, x, y));
+        this.imgs = this.imgs.add(new PlaceImage(image, x, y));
+        this.revImgs = null;
     }
 }

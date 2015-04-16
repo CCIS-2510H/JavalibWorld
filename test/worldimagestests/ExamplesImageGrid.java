@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javalib.impworld.*;
+import javalib.funworld.*;
 import javalib.worldimages.AboveImage;
 import javalib.worldimages.BesideImage;
 import javalib.worldimages.EmptyImage;
@@ -82,7 +82,7 @@ class GridWorld extends World {
         long start = System.currentTimeMillis();
         for (ArrayList<Cell> row : cells) {
             for (Cell c : row) {
-                scene.placeImageXY(c.draw(), c.getX(), c.getY());
+                scene = scene.placeImageXY(c.draw(), c.getX(), c.getY());
             }
         }
         System.out.println("Place Image time: "
@@ -94,7 +94,7 @@ class GridWorld extends World {
     public WorldScene makeScene() {
         if (this.worldType.equals("overlay")) {
             WorldScene scn = this.getEmptyScene();
-            scn.placeImageXY(this.overlay(), this.pixelSize / 2,
+            scn = scn.placeImageXY(this.overlay(), this.pixelSize / 2,
                     this.pixelSize / 2);
             return scn;
         } else {
