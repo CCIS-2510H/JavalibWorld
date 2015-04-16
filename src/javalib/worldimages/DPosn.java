@@ -24,6 +24,11 @@ class DPosn {
         return Math.abs(this.x - that.x) < 0.00000001 && 
                 Math.abs(this.y - that.y) < 0.00000001;
     }
+    
+    @Override
+    public int hashCode() {
+        return (int) this.x * 96 + (int) this.y * 35;
+    }
 
     public Posn asPosn() {
         return new Posn((int) Math.round(this.x), (int) Math.round(this.y));
