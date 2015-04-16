@@ -4,12 +4,10 @@ import javalib.worldcanvas.CanvasPanel;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -188,13 +186,10 @@ public final class TextImage extends WorldImage {
      * @return
      */
     private Rectangle2D getBoundingBox() {
-        // Taken from
-        // https://docs.oracle.com/javase/tutorial/2d/text/measuringtext.html
         Font newFont = font.deriveFont(this.style, this.size);
 
         FontRenderContext frc = g.getFontRenderContext();
         TextLayout layout = new TextLayout(this.text, newFont, frc);
-        // layout.draw(g, 0, 0);
 
         double width = layout.getAdvance();
         double height = layout.getAscent() + layout.getDescent();
@@ -226,31 +221,6 @@ public final class TextImage extends WorldImage {
                 Math.max(Math.max(topLeft.getY(), topRight.getY()),
                          Math.max(botLeft.getY(), botRight.getY()));
         return new Rectangle2D.Double(minX, minY, maxX - minX, maxY - minY);
-        // FontRenderContext frc = g.getFontRenderContext();
-        // GlyphVector gv = newFont.createGlyphVector(frc, this.text);
-        // Rectangle ans = gv.getPixelBounds(frc, 0, 0);
-        // return new Rectangle2D.Double(0,0, ans.getWidth(), ans.getHeight());
-
-        // g.setFont(newFont);
-        // // get metrics from the graphics
-        // FontMetrics metrics = g.getFontMetrics(newFont);
-        // // get the height of a line of text in this
-        // // font and render context
-        // int hgt = metrics.getHeight();
-        // // get the advance of my text in this font
-        // // and render context
-        // int adv = metrics.stringWidth(text);
-        // // calculate the size of a box to hold the
-        // // text with some padding.
-        // Dimension size = new Dimension(adv, hgt);
-        //
-        // // Due to our different coordinate system, the actual bounding
-        // // box needs to be adjusted to the left
-        // Rectangle2D adjusted = new Rectangle2D.Double(-size
-        // .getWidth() / 2, -size.getHeight() / 2, size.getWidth(),
-        // size.getHeight());
-        //
-        // return adjusted;
     }
 
     @Override
