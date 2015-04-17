@@ -2,7 +2,8 @@ package javalib.worldcanvas;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 
 import javalib.worldimages.OutlineMode;
@@ -67,7 +68,7 @@ public abstract class WorldSceneBase {
     }
 
     protected IList<PlaceImage> imgs;
-    protected ArrayList<PlaceImage> revImgs;
+    protected Deque<PlaceImage> revImgs;
 
     protected WorldSceneBase(int width, int height) {
         this.width = width;
@@ -83,6 +84,7 @@ public abstract class WorldSceneBase {
         this.width = width;
         this.height = height;
         this.imgs = imgs;
+        this.revImgs = null;
     }
 
     protected void draw(Graphics2D g) {
@@ -96,9 +98,9 @@ public abstract class WorldSceneBase {
 
     private void revImagesIfNeeded() {
         if (this.revImgs == null) {
-            this.revImgs = new ArrayList<PlaceImage>();
+            revImgs = new ArrayDeque<PlaceImage>();
             for (PlaceImage i : this.imgs) {
-                this.revImgs.add(i);
+                this.revImgs.push(i);
             }
         }
     }
