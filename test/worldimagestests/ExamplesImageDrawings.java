@@ -135,8 +135,7 @@ public class ExamplesImageDrawings {
     WorldScene combined = scene
             .placeImageXY(new FrameImage(rectangle), 600, 330)
             .placeImageXY(rectangleText, 600, 300)
-            .placeImageXY(frame, 600, 130)
-            .placeImageXY(frameText, 600, 100)
+            .placeImageXY(frame, 600, 130).placeImageXY(frameText, 600, 100)
             .placeImageXY(circleText, 200, 20)
             .placeImageXY(new FrameImage(circle), 200, 60)
             .placeImageXY(discText, 200, 100)
@@ -173,28 +172,22 @@ public class ExamplesImageDrawings {
             .placeImageXY(new FrameImage(beside), 400, 100)
             .placeImageXY(new FrameImage(above), 400, 200)
             .placeImageXY(new FrameImage(allTransforms), 400, 700)
-            //.placeImageXY(new FrameImage(allTransforms2), 400, 400)
+            // .placeImageXY(new FrameImage(allTransforms2), 400, 400)
             .placeImageXY(new FrameImage(hw), 400, 400);
 
+    // For the Daisy image, drawn in main()
     WorldImage whitePetal = new OverlayOffsetImage(new CircleImage(15,
-            OutlineMode.SOLID, Color.WHITE), 60, 0, new OverlayOffsetImage(
+            OutlineMode.SOLID, Color.WHITE), 0, 0, new OverlayOffsetImage(
             new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
                     15), OutlineMode.SOLID, Color.WHITE), 30, 0,
-            new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
+            new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))))
+            .movePinhole(-60, 0);
     WorldImage yellowPetal = new OverlayOffsetImage(new CircleImage(15,
-            OutlineMode.SOLID, Color.YELLOW), 60, 0, new OverlayOffsetImage(
+            OutlineMode.SOLID, Color.YELLOW), 0, 0, new OverlayOffsetImage(
             new TriangleImage(new Posn(0, 0), new Posn(60, -15), new Posn(60,
                     15), OutlineMode.SOLID, Color.YELLOW), 30, 0,
-            new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))));
-    WorldImage daisyImg = new OverlayImage(new RotateImage(whitePetal, 0),
-            new OverlayImage(new RotateImage(yellowPetal, 60),
-                    new OverlayImage(new RotateImage(whitePetal, 120),
-                            new OverlayImage(new RotateImage(yellowPetal, 180),
-                                    new OverlayImage(new RotateImage(
-                                            whitePetal, 240), new RotateImage(
-                                            yellowPetal, 300))))));
-    WorldScene daisy = scene.placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
-            100, 100);
+            new CircleImage(75, OutlineMode.SOLID, new Color(0, 0, 255, 0))))
+            .movePinhole(-60, 0);
 
     WorldImage arrow = new BesideImage(new RectangleImage(10, 5, "outline",
             Color.BLACK), new TriangleImage(new Posn(0, -10), new Posn(0, 10),
@@ -262,9 +255,22 @@ public class ExamplesImageDrawings {
         ExamplesImageDrawings e = new ExamplesImageDrawings();
 
         // show several images in the canvas
-//        boolean makeDrawing = c.show() && c.drawScene(e.combined);
+        // boolean makeDrawing = c.show() && c.drawScene(e.combined);
         c = new WorldCanvas(800, 800);
-        boolean daisy = c.show() && c.drawScene(e.daisy);
-        // boolean pins = c.show() && c.drawScene(e.pinholes);
+        
+        // boolean pins = c.show() && c.drawScene(e.pinholes); 
+
+        // Draw a daisy
+        WorldImage daisyImg = new OverlayImage(new CircleImage(20, "outline", Color.BLACK),
+                new CircleImage(20, "solid", Color.YELLOW));
+        for (int i = 0; i < 360; i += 23) {
+            daisyImg = new OverlayImage(daisyImg, new RotateImage(
+                    i % 2 == 1 ? e.whitePetal : e.yellowPetal, i));
+        }
+        WorldScene daisy = e.scene.placeImageXY(
+                new RectangleImage(300, 300, "solid", Color.GRAY), 150, 150)
+                .placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
+                        100, 100);
+        boolean d = c.show() && c.drawScene(daisy);
     }
 }
