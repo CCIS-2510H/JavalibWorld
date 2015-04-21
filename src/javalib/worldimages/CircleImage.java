@@ -10,8 +10,7 @@ import java.awt.*;
 
 /**
  * <p>
- * The class to represent circle images drawn by the world when drawing on its
- * <code>Canvas</code>.
+ * The class to represent circle images
  * </p>
  * 
  * @author Eric Kelly

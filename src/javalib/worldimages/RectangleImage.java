@@ -59,8 +59,17 @@ public final class RectangleImage extends RectangleImageBase {
  * @since April 4 2015
  */
 abstract class RectangleImageBase extends WorldImage {
-    public int width, height;
+
+    /** the width of the rectangle */
+    public int width;
+
+    /** the height of the rectangle */
+    public int height;
+
+    /** the color of the rectangle */
     public Color color;
+
+    /** the outline mode of the rectangle - solid/outline */
     public OutlineMode fill;
 
     /**
@@ -128,11 +137,11 @@ abstract class RectangleImageBase extends WorldImage {
         g.setPaint(this.color);
         // draw the object
         if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(new Rectangle2D.Double(-this.width / 2.0, -this.height / 2.0,
-                    this.width, this.height));
+            g.draw(new Rectangle2D.Double(-this.width / 2.0,
+                    -this.height / 2.0, this.width, this.height));
         } else if (this.fill == OutlineMode.SOLID) {
-            g.fill(new Rectangle2D.Double(-this.width / 2.0, -this.height / 2.0,
-                    this.width, this.height));
+            g.fill(new Rectangle2D.Double(-this.width / 2.0,
+                    -this.height / 2.0, this.width, this.height));
         }
         // reset the original paint
         g.setPaint(oldPaint);

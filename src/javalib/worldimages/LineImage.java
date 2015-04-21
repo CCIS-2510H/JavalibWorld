@@ -21,9 +21,7 @@ import java.awt.geom.*;
  */
 public final class LineImage extends WorldImage {
 
-    /**
-     * the ending point of this line. the starting point is (0, 0)
-     */
+    /** the ending point of this line. the starting point is (0, 0) */
     public Posn endPoint;
 
     /** The color of the line */

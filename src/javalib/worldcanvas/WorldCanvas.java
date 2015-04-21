@@ -79,11 +79,6 @@ public class WorldCanvas {
         Graphics g = panel.getGraphics();
         f.update(g);
         f.setVisible(false);
-
-        // do not update the counter of open windows
-        // this is done when the Canvas is 'show'-n
-        // WINDOWS_OPEN = WINDOWS_OPEN + 1;
-        // System.out.println(WINDOWS_OPEN + " open windows.");
     }
 
     /**

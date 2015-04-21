@@ -276,12 +276,6 @@ public class CanvasPanel extends JPanel {
 
         // save the current paint
         Paint oldPaint = g.getPaint();
-        /*
-         * Color cc = imread.getColorPixel(4, 4);
-         * 
-         * System.out.println("color is: " + cc.getRed() + ", " + cc.getGreen()
-         * + ", " + cc.getBlue() + " is white: " + this.isWhite(cc));
-         */
         Color c;
         for (int col = 0; col < imread.width; col++)
             for (int row = 0; row < imread.height; row++) {

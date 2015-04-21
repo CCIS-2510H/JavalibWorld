@@ -30,9 +30,9 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
      * offset.
      * 
      * @param bot
-     *            the bottom image for the combined image
+     *            -- the bottom image for the combined image
      * @param top
-     *            the bottom image for the combined image
+     *            -- the bottom image for the combined image
      */
     public OverlayImage(WorldImage top, WorldImage bot) {
         super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, 0, 0, bot);
@@ -51,15 +51,14 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
      * given <code>indent</code>
      * 
      * @param indent
-     *            the given prefix representing the desired indentation
+     *            -- the given prefix representing the desired indentation
      * @return the <code>String</code> representation of this image
      */
     public String toIndentedString(String indent) {
         indent = indent + "  ";
         return classNameString(indent, this) + "this.top = "
                 + this.top.toIndentedString(indent) + ",\n" + indent
-                + "this.bot = " + this.bot.toIndentedString(indent)
-                + ")";
+                + "this.bot = " + this.bot.toIndentedString(indent) + ")";
     }
 
     /**

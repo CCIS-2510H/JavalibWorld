@@ -21,11 +21,22 @@ import java.awt.geom.Point2D;
  * @since April 4, 2015
  */
 public final class TriangleImage extends WorldImage {
+
+    /** the first point of the triangle */
     public Posn p1;
+
+    /** the second point of the triangle */
     public Posn p2;
+
+    /** the third point of the triangle */
     public Posn p3;
+
+    /** the outline mode of the triangle - outline/solid */
     public OutlineMode fill;
+
+    /** the color of the triangle */
     public Color color;
+
     private Polygon poly;
 
     /**

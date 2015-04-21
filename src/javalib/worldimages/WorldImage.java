@@ -21,6 +21,12 @@ import java.awt.geom.Point2D;
  * @since April 4 2015
  */
 public abstract class WorldImage {
+    
+    /**
+     * the pinhole of the image. When this image gets overlaid on top of another
+     * image, they will be aligned on their respective pinholes (unless
+     * otherwise specified)
+     */
     public Posn pinhole;
     private BoundingBox bbCache;
 
@@ -76,7 +82,7 @@ public abstract class WorldImage {
     protected static Point2D transformPosn(AffineTransform t, Posn p) {
         return transformPosn(t, p.x, p.y);
     }
-    
+
     /**
      * Transform a DPosn by the operations as given by the AffineTransform
      * 

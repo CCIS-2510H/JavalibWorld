@@ -107,13 +107,10 @@ abstract public class World {
         this.windowClosing = new MyWindowClosingListener(this);
         this.theCanvas.f.addWindowListener(this.windowClosing);
 
-        // this.imageList = new HashMap<String, PictureImage>();
-
         // pause a bit so that two canvases do not compete when being opened
         // almost at the same time
         long start = System.currentTimeMillis();
         long tmp = System.currentTimeMillis();
-        // System.out.println("Going to sleep.");
 
         while (tmp - start < 1000) {
             tmp = System.currentTimeMillis();
@@ -623,12 +620,6 @@ class MyWindowClosingListener extends WindowAdapter {
     public void windowClosing(WindowEvent we) {
         if (this.w != null && this.w.mytime != null)
             this.w.mytime.stopTimer();
-
-        /**
-         * if (tunes.MusicBox.SYNTH_READY){ // clear the tick tune bucket
-         * this.w.tickTunes.clearBucket(); // clear the key tune bucket
-         * this.w.keyTunes.clearBucket(); }
-         **/
     }
 }
 

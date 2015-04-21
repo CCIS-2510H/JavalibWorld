@@ -101,13 +101,10 @@ abstract public class World {
         this.windowClosing = new MyWindowClosingListener(this);
         this.theCanvas.f.addWindowListener(this.windowClosing);
 
-        // this.imageList = new HashMap<String, PictureImage>();
-
         // pause a bit so that two canvases do not compete when being opened
         // almost at the same time
         long start = System.currentTimeMillis();
         long tmp = System.currentTimeMillis();
-        // System.out.println("Going to sleep.");
 
         while (tmp - start < 1000) {
             tmp = System.currentTimeMillis();
@@ -134,7 +131,6 @@ abstract public class World {
         // all listeners and the timer are installed for theCanvas
         start = System.currentTimeMillis();
         tmp = System.currentTimeMillis();
-        // System.out.println("Going to sleep again.");
 
         while (tmp - start < 1000) {
             tmp = System.currentTimeMillis();

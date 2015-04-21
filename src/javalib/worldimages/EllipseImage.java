@@ -13,6 +13,15 @@ import java.awt.geom.*;
  * </p>
  */
 
+/**
+ * <p>
+ * The class to represent Ellipse images.
+ * </p>
+ * 
+ * @author Eric Kelly
+ * @author Ben Lerner
+ * @since April 4 2015
+ */
 public final class EllipseImage extends EllipseImageBase {
 
     /**
@@ -49,16 +58,6 @@ public final class EllipseImage extends EllipseImageBase {
     }
 }
 
-/**
- * <p>
- * The class to represent Ellipse images drawn by the world when drawing on its
- * <code>Canvas</code>.
- * </p>
- * 
- * @author Eric Kelly
- * @author Ben Lerner
- * @since April 4 2015
- */
 abstract class EllipseImageBase extends WorldImage {
 
     /** the width of this ellipse */

@@ -12,8 +12,20 @@ import java.awt.image.BufferedImage;
  * 
  */
 final public class CropImage extends WorldImage {
-    int x, y;
-    int width, height;
+
+    /** upper left x coordinate of the crop location on the img */
+    int x;
+
+    /** upper left y coordinate of the crop location on the img */
+    int y;
+
+    /** width of the crop */
+    int width;
+
+    /** height of the crop */
+    int height;
+
+    /** the image to crop */
     WorldImage img;
 
     /**

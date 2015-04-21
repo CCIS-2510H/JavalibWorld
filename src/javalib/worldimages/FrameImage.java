@@ -16,6 +16,8 @@ import java.awt.geom.Rectangle2D;
  * 
  */
 public final class FrameImage extends RectangleImageBase {
+
+    /** The image being framed */
     public WorldImage img;
 
     /**

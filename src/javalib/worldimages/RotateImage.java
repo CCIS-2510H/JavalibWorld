@@ -13,8 +13,13 @@ import java.awt.geom.Point2D;
  * 
  */
 public final class RotateImage extends WorldImage {
+
+    /** the image to rotate */
     public WorldImage img;
+
+    /** the number of degrees to rotate the image by */
     public double rotationDegrees;
+
     private double width, height;
 
     /**

@@ -64,11 +64,20 @@ public final class RegularPolyImage extends RegularPolyImageBase {
 }
 
 abstract class RegularPolyImageBase extends WorldImage {
+
+    /** the number of sides of this polygon */
     public int sides;
+
+    /** the length of each side of this polygon */
     public double sideLen;
+
+    /** the outline mode - solid/outline of this polygon */
     public OutlineMode fill;
-    private Polygon poly;
+
+    /** the color of this polygon */
     public Color color;
+
+    private Polygon poly;
 
     /**
      * The full constructor for an equilateral regular polygon

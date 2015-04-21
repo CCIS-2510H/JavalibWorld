@@ -54,7 +54,7 @@ public final class TextImage extends WorldImage {
      * <em>not yet implemented - currently the text is centered</em>
      */
     public int alignment = 1;
-    
+
     private double baselineDy = 0;
 
     /** the Canvas for defining the font for this text image */
@@ -149,7 +149,7 @@ public final class TextImage extends WorldImage {
 
         if (alignment == 1) {
             g.drawString(this.text, (int) -Math.round(this.width / 2),
-                    (int)-this.baselineDy);
+                    (int) -this.baselineDy);
         }
 
         // reset the original paint and font
@@ -195,9 +195,9 @@ public final class TextImage extends WorldImage {
         double height = layout.getAscent() + layout.getDescent();
 
         this.baselineDy = height / 2.0 - layout.getAscent();
-        
-        Rectangle2D ans = new Rectangle2D.Double(-width / 2.0,
-                -height / 2.0, width, height);
+
+        Rectangle2D ans = new Rectangle2D.Double(-width / 2.0, -height / 2.0,
+                width, height);
 
         AffineTransform t = g.getTransform();
         Point2D topLeft = new Point2D.Double(ans.getMinX(), ans.getMinY());
@@ -208,18 +208,14 @@ public final class TextImage extends WorldImage {
         t.transform(topRight, topRight);
         t.transform(botRight, botRight);
         t.transform(botLeft, botLeft);
-        double minX = 
-                Math.min(Math.min(topLeft.getX(), topRight.getX()),
-                         Math.min(botLeft.getX(), botRight.getX()));
-        double minY = 
-                Math.min(Math.min(topLeft.getY(), topRight.getY()),
-                         Math.min(botLeft.getY(), botRight.getY()));
-        double maxX = 
-                Math.max(Math.max(topLeft.getX(), topRight.getX()),
-                         Math.max(botLeft.getX(), botRight.getX()));
-        double maxY = 
-                Math.max(Math.max(topLeft.getY(), topRight.getY()),
-                         Math.max(botLeft.getY(), botRight.getY()));
+        double minX = Math.min(Math.min(topLeft.getX(), topRight.getX()),
+                Math.min(botLeft.getX(), botRight.getX()));
+        double minY = Math.min(Math.min(topLeft.getY(), topRight.getY()),
+                Math.min(botLeft.getY(), botRight.getY()));
+        double maxX = Math.max(Math.max(topLeft.getX(), topRight.getX()),
+                Math.max(botLeft.getX(), botRight.getX()));
+        double maxY = Math.max(Math.max(topLeft.getY(), topRight.getY()),
+                Math.max(botLeft.getY(), botRight.getY()));
         return new Rectangle2D.Double(minX, minY, maxX - minX, maxY - minY);
     }
 

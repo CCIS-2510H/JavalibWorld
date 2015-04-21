@@ -13,8 +13,15 @@ import java.awt.geom.Point2D;
  * 
  */
 public final class ShearedImage extends WorldImage {
-    WorldImage img;
-    double sx, sy;
+
+    /** the image to shear */
+    public WorldImage img;
+
+    /** the shear amount along the x axis */
+    public double sx;
+
+    /** the shear amount along the y axis */
+    public double sy;
 
     /**
      * Shear the image

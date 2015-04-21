@@ -29,8 +29,15 @@ public final class ScaleImageXY extends ScaleImageXYBase {
 }
 
 abstract class ScaleImageXYBase extends WorldImage {
+
+    /** the image to scale */
     public WorldImage img;
-    public double scaleX, scaleY;
+
+    /** the x axis scale amount */
+    public double scaleX;
+
+    /** the y axis scale amount */
+    public double scaleY;
 
     /**
      * Scale the image

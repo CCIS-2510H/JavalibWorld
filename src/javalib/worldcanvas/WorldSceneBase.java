@@ -10,8 +10,20 @@ import javalib.worldimages.OutlineMode;
 import javalib.worldimages.RectangleImage;
 import javalib.worldimages.WorldImage;
 
+/**
+ * Class representing the common functionality (drawing, width, height) of the
+ * various types of <code>WorldScene</code>s
+ * 
+ * @author eric
+ * 
+ */
 public abstract class WorldSceneBase {
-    public int width, height;
+
+    /** width of the scene */
+    public int width;
+
+    /** height of the scene */
+    public int height;
 
     protected interface IList<T> extends Iterable<T> {
         Cons<T> add(T val);
