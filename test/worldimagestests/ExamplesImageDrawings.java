@@ -263,10 +263,11 @@ public class ExamplesImageDrawings {
         // Draw a daisy
         WorldImage daisyImg = new OverlayImage(new CircleImage(20, "outline", Color.BLACK),
                 new CircleImage(20, "solid", Color.YELLOW));
-        for (int i = 0; i < 360; i += 23) {
-            daisyImg = new OverlayImage(daisyImg, new RotateImage(
-                    i % 2 == 1 ? e.whitePetal : e.yellowPetal, i));
-        }
+//        for (int i = 0; i < 360; i += 23) {
+//            daisyImg = new OverlayImage(new RotateImage(
+//                    i % 2 == 1 ? e.whitePetal : e.yellowPetal, i), daisyImg);
+//        }
+        daisyImg = new OverlayImage(e.yellowPetal, daisyImg);
         WorldScene daisy = e.scene.placeImageXY(
                 new RectangleImage(300, 300, "solid", Color.GRAY), 150, 150)
                 .placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
