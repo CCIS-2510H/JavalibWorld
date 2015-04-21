@@ -73,7 +73,8 @@ final public class CropImage extends WorldImage {
         BufferedImage cropped = new BufferedImage(this.width, this.height,
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = cropped.createGraphics();
-        g2d.translate(this.width - this.x, this.height - this.y);
+        g2d.translate(this.img.getWidth() / 2.0 - this.x, this.img.getHeight()
+                / 2.0 - this.y);
         img.draw(g2d);
         g2d.dispose();
 

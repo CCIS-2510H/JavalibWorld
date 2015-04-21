@@ -55,6 +55,7 @@ public class ExamplesCrop {
             .placeImageXY(new FrameImage(shearedCrop), 300, 200)
             .placeImageXY(new ShearedImage(ellipse, 0.5, 0.25), 200, 300)
             .placeImageXY(new FrameImage(croppedShear), 300, 300)
+            .placeImageXY(new FrameImage(new CropImage(0, 0, 80, 100, ellipse)), 350, 300)
             .placeImageXY(new FrameImage(new OverlayImage(phantom, rectangle)),
                     100, 100);
 
