@@ -50,6 +50,7 @@ public class ExamplesCrop {
             Color.BLACK));
 
     WorldScene combined = scene
+            .placeImageXY(new VisiblePinholeImage(circle.movePinhole(-10, -10)), 200, 100)
             .placeImageXY(new FrameImage(croppedCircle), 200, 200)
             .placeImageXY(new FrameImage(croppedEllipse), 100, 200)
             .placeImageXY(new FrameImage(shearedCrop), 300, 200)
