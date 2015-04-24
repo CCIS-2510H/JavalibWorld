@@ -131,7 +131,7 @@ public final class BoundingBox {
 
     @Override
     public String toString() {
-        return String.format("BB((%d,%d)-(%d,%d))", this.tlx, this.tly,
+        return String.format("BB((%f,%f)-(%f,%f))", this.tlx, this.tly,
                 this.brx, this.bry);
     }
 }
