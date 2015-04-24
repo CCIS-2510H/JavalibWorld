@@ -77,7 +77,7 @@ public final class ImageMaker {
                 loadedImages.put(abs, this.image);
             }
         } catch (IOException e) {
-            System.out.println("Could not open the file");
+            System.out.println("Could not open the image file " + filename);
         }
     }
 
