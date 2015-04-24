@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.Stack;
 
 /**
  * This class represents the visible representation of a pinhole overlaid onto
@@ -44,6 +45,17 @@ public final class VisiblePinholeImage extends WorldImage {
         new LineImage(new Posn(10, 0), Color.BLACK).draw(g);
         new LineImage(new Posn(0, 10), Color.BLACK).draw(g);
         g.setTransform(oldTransform);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        AffineTransform t = g.getTransform();
+        t.translate(this.img.pinhole.x, this.img.pinhole.y);
+        txs.push(t);
+        images.push(new LineImage(new Posn(10, 0), Color.BLACK));
+        txs.push(t);
+        images.push(new LineImage(new Posn(0, 10), Color.BLACK));
+        txs.push(g.getTransform());
+        images.push(this.img);
     }
 
     @Override
