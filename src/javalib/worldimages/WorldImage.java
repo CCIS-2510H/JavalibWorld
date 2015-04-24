@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Stack;
+import java.util.WeakHashMap;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -29,7 +30,11 @@ public abstract class WorldImage {
      * otherwise specified)
      */
     public Posn pinhole;
-    private BoundingBox bbCache;
+    /**
+     * This can't be a field on the object itself, or else the presence or absence of a cached
+     * bounding box might affect the tester library deciding if two objects are the same or not
+     */
+    static WeakHashMap<WorldImage, BoundingBox> bbCache;
 
     public WorldImage() {
         this(new Posn(0, 0));
@@ -46,7 +51,8 @@ public abstract class WorldImage {
      */
     protected WorldImage(Posn pinhole) {
         this.pinhole = pinhole;
-        this.bbCache = null;
+        if (WorldImage.bbCache == null)
+            WorldImage.bbCache = new WeakHashMap<WorldImage, BoundingBox>();
     }
 
     /**
@@ -55,9 +61,10 @@ public abstract class WorldImage {
      * @return The tight bounding box of the image
      */
     public BoundingBox getBB() {
-        if (this.bbCache == null)
-            this.bbCache = this.getBB(new AffineTransform());
-        return this.bbCache;
+        if (!WorldImage.bbCache.containsKey(this)) {
+            WorldImage.bbCache.put(this, this.getBB(new AffineTransform()));
+        }
+        return WorldImage.bbCache.get(this);
     }
 
     /**

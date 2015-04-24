@@ -14,6 +14,8 @@ import java.util.Stack;
  */
 public final class VisiblePinholeImage extends WorldImage {
     WorldImage img;
+    static final LineImage line1 = new LineImage(new Posn(10, 0), Color.BLACK);
+    static final LineImage line2 = new LineImage(new Posn(0, 10), Color.BLACK);
 
     /**
      * VisiblePinholeImage constructor
@@ -23,6 +25,7 @@ public final class VisiblePinholeImage extends WorldImage {
      */
     public VisiblePinholeImage(WorldImage img) {
         this.img = img;
+        this.pinhole = img.pinhole;
     }
 
     @Override
@@ -32,9 +35,7 @@ public final class VisiblePinholeImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        VisiblePinholeImage img = new VisiblePinholeImage(this.img);
-        img.pinhole = p;
-        return img;
+        return new VisiblePinholeImage(this.img.movePinholeTo(p));
     }
 
     @Override

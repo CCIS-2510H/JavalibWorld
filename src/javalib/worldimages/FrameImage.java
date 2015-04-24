@@ -32,6 +32,7 @@ public final class FrameImage extends RectangleImageBase {
         super((int) Math.round(img.getBB().getWidth()), (int) Math.round(img
                 .getBB().getHeight()), OutlineMode.OUTLINE, color);
         this.img = img;
+        this.pinhole = this.img.pinhole;
     }
 
     /**
@@ -113,8 +114,6 @@ public final class FrameImage extends RectangleImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new FrameImage(this.img, this.color);
-        i.pinhole = p;
-        return i;
+        return new FrameImage(this.img.movePinholeTo(p), this.color);
     }
 }

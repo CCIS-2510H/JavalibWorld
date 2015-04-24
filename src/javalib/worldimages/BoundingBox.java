@@ -134,4 +134,15 @@ public final class BoundingBox {
         return String.format("BB((%f,%f)-(%f,%f))", this.tlx, this.tly,
                 this.brx, this.bry);
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BoundingBox)) return false;
+        BoundingBox other = (BoundingBox)obj;
+        return this.tlx == other.tlx && this.tly == other.tly
+            && this.brx == other.brx && this.bry == other.bry;
+    }
+    @Override
+    public int hashCode() {
+        return (int)(this.tlx * 37.0 + this.tly * 43.0 + this.brx * 91.0 + this.bry * 103.0);
+    }
 }

@@ -1,8 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.util.Stack;
 
 /**
  * Class representing the scaling of an image in 2 directions
@@ -29,11 +27,7 @@ public final class ScaleImageXY extends ScaleImageXYBase {
     }
 }
 
-abstract class ScaleImageXYBase extends WorldImage {
-
-    /** the image to scale */
-    public WorldImage img;
-
+abstract class ScaleImageXYBase extends TransformImageBase {
     /** the x axis scale amount */
     public double scaleX;
 
@@ -51,50 +45,10 @@ abstract class ScaleImageXYBase extends WorldImage {
      *            -- amount to scale on the Y axis
      */
     public ScaleImageXYBase(WorldImage img, double scaleX, double scaleY) {
-        super();
+        super(img, AffineTransform.getScaleInstance(scaleX, scaleY));
         this.img = img;
         this.scaleX = scaleX;
         this.scaleY = scaleY;
-
-        // Scale the pinhole
-        this.pinhole = new DPosn(img.pinhole.x * this.scaleX, img.pinhole.y
-                * this.scaleY).asPosn();
-    }
-
-    @Override
-    protected BoundingBox getBB(AffineTransform t) {
-        AffineTransform newT = new AffineTransform(t);
-        newT.scale(this.scaleX, this.scaleY);
-        return this.img.getBB(newT);
-    }
-    
-    @Override
-    public void draw(Graphics2D g) {
-        if (this.getWidth() <= 0)
-            return;
-        if (this.getHeight() <= 0)
-            return;
-
-        // draw the object
-        AffineTransform old = g.getTransform();
-        g.scale(this.scaleX, this.scaleY);
-
-        // draw scaled shape/image
-        this.img.draw(g);
-
-        // reset the original paint/scale
-        g.setTransform(old);
-    }
-    @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        if (this.getWidth() <= 0)
-            return;
-        if (this.getHeight() <= 0)
-            return;
-        images.push(this.img);
-        AffineTransform tx = g.getTransform();
-        tx.scale(this.scaleX, this.scaleY);
-        txs.push(tx);
     }
 
     /**
@@ -134,16 +88,6 @@ abstract class ScaleImageXYBase extends WorldImage {
      */
     public int hashCode() {
         return (int) (this.scaleX * 42 + this.scaleY * -57);
-    }
-
-    @Override
-    public double getWidth() {
-        return this.img.getWidth() * this.scaleX;
-    }
-
-    @Override
-    public double getHeight() {
-        return this.img.getHeight() * this.scaleY;
     }
 
     @Override

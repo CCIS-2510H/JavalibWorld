@@ -1,9 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.util.Stack;
 
 /**
  * Class representing the rotation of an image
@@ -13,16 +10,8 @@ import java.util.Stack;
  * @since April 4, 2015
  * 
  */
-public final class RotateImage extends WorldImage {
-
-    /** the image to rotate */
-    public WorldImage img;
-
-    /** the number of degrees to rotate the image by */
-    public double rotationDegrees;
-
-    private double width, height;
-
+public final class RotateImage extends TransformImageBase {
+    private double rotationDegrees;
     /**
      * Rotate the image
      * 
@@ -32,57 +21,10 @@ public final class RotateImage extends WorldImage {
      *            -- Degrees to rotate the image
      */
     public RotateImage(WorldImage img, double rotationDegrees) {
-        super();
-        this.img = img;
+        super(img, AffineTransform.getRotateInstance(Math.toRadians(rotationDegrees)));
         this.rotationDegrees = rotationDegrees;
-
-        // Rotate the pinhole
-        AffineTransform newT = new AffineTransform();
-        newT.rotate(Math.toRadians(this.rotationDegrees));
-        Point2D p = WorldImage.transformPosn(newT, img.pinhole);
-        this.pinhole = new DPosn(p.getX(), p.getY()).asPosn();
-
-        // Set width & height
-        this.width = getBB().getWidth();
-        this.height = getBB().getHeight();
-    }
-
-    @Override
-    protected BoundingBox getBB(AffineTransform t) {
-        AffineTransform newT = new AffineTransform(t);
-        newT.rotate(Math.toRadians(this.rotationDegrees));
-        return this.img.getBB(newT);
     }
     
-
-    @Override
-    public void draw(Graphics2D g) {
-        if (this.width <= 0)
-            return;
-        if (this.height <= 0)
-            return;
-
-        // draw the object
-        AffineTransform old = g.getTransform();
-        g.rotate(Math.toRadians(this.rotationDegrees));
-
-        // draw rotated shape/image
-        this.img.draw(g);
-
-        // Reset the transform to the old transform
-        g.setTransform(old);
-    }
-    @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        if (this.width <= 0)
-            return;
-        if (this.height <= 0)
-            return;
-        images.push(this.img);
-        AffineTransform tx = g.getTransform();
-        tx.rotate(Math.toRadians(this.rotationDegrees));
-        txs.push(tx);
-    }
 
     /**
      * Produce a <code>String</code> representation of this rotated image
@@ -97,7 +39,7 @@ public final class RotateImage extends WorldImage {
         indent = indent + "  ";
         return classNameString(indent, this) + "this.img = "
                 + this.img.toIndentedString(indent) + "\n" + indent
-                + "this.width = " + width + ", this.height = " + height + ")\n";
+                + "this.rotationDegrees = " + this.rotationDegrees + ")\n";
     }
 
     public boolean same(RotateImage that) {
@@ -116,17 +58,7 @@ public final class RotateImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return (int) this.width + (int) this.height;
-    }
-
-    @Override
-    public double getWidth() {
-        return width;
-    }
-
-    @Override
-    public double getHeight() {
-        return height;
+        return (int)(this.rotationDegrees * 1000);
     }
 
     @Override

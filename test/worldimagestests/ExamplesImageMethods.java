@@ -44,14 +44,14 @@ public class ExamplesImageMethods implements IExamples {
                 "\n   new CircleImage(this.radius = 4,"
                         + "\n   this.fill = solid,"
                         + "\n   this.color = [r=255,g=0,b=0])");
-        t.checkExpect(this.circle1, this.circle5);
+        t.checkExpect(this.circle1, this.circle5, "Should be the same");
         t.checkExpect(!this.circle1.equals(this.circle2), "fails in radius");
         t.checkExpect(!this.circle1.equals(this.circle3), "fails in fill state");
         t.checkExpect(!this.circle1.equals(this.circle4), "fails in color");
         t.checkExpect(this.circle1.hashCode(), this.circle5.hashCode());
 
-        t.checkExpect(this.circle1.getWidth(), 8);
-        t.checkExpect(this.circle1.getHeight(), 8);
+        t.checkInexact(this.circle1.getWidth(), 8.0, 0.001);
+        t.checkInexact(this.circle1.getHeight(), 8.0, 0.001);
     }
 
     // ------------ EllipseImage class
@@ -85,8 +85,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.circle1.equals(this.ellipse1), "fails - different classes");
         t.checkExpect(!this.ellipse1.equals(this.circle1), "fails - different classes");
 
-        t.checkExpect(this.ellipse6.getWidth(), 4);
-        t.checkExpect(this.ellipse6.getHeight(), 5);
+        t.checkInexact(this.ellipse6.getWidth(), 4.0, 0.001);
+        t.checkInexact(this.ellipse6.getHeight(), 5.0, 0.001);
     }
 
     // ------------ FrameImage class -----------------------------------------//
@@ -112,8 +112,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.rectangle1.equals(this.frame1), "fails - different classes");
         t.checkExpect(!this.frame1.equals(this.rectangle1), "fails - different classes");
 
-        t.checkExpect(this.frame1.getWidth(), 8);
-        t.checkExpect(this.frame1.getHeight(), 8);
+        t.checkInexact(this.frame1.getWidth(), 8.0, 0.001);
+        t.checkInexact(this.frame1.getHeight(), 8.0, 0.001);
     }
 
     // ------------ RectangleImage class
@@ -152,8 +152,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.frame1.equals(this.rectangle1), "fails - different classes");
         t.checkExpect(!this.rectangle1.equals(this.frame1), "fails - different classes");
 
-        t.checkExpect(this.rectangle1.getWidth(), 4);
-        t.checkExpect(this.rectangle1.getHeight(), 5);
+        t.checkInexact(this.rectangle1.getWidth(), 4.0, 0.001);
+        t.checkInexact(this.rectangle1.getHeight(), 5.0, 0.001);
     }
 
     // ------------ LineImage class
@@ -184,8 +184,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.frame1.equals(this.line1), "fails - different classes");
         t.checkExpect(!this.line1.equals(this.frame1), "fails - different classes");
 
-        t.checkExpect(this.line1.getWidth(), 4);
-        t.checkExpect(this.line1.getHeight(), 5);
+        t.checkInexact(this.line1.getWidth(), 4.0, 0.001);
+        t.checkInexact(this.line1.getHeight(), 5.0, 0.001);
     }
 
     // ------------ TriangleImage class
@@ -236,8 +236,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.line1.equals(this.triangle1), "fails - different classes");
         t.checkExpect(!this.triangle1.equals(this.line1), "fails - different classes");
 
-        t.checkExpect(this.triangle8.getWidth(), 4);
-        t.checkExpect(this.triangle8.getHeight(), 5);
+        t.checkInexact(this.triangle8.getWidth(), 4.0, 0.001);
+        t.checkInexact(this.triangle8.getHeight(), 5.0, 0.001);
     }
 
     // ------------ TextImage class
@@ -304,8 +304,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.overlay1.equals(this.rectangle1),
                 "fails - different classes");
 
-        t.checkExpect(this.overlay1.getWidth(), 8);
-        t.checkExpect(this.overlay1.getHeight(), 8);
+        t.checkInexact(this.overlay1.getWidth(), 8.0, 0.001);
+        t.checkInexact(this.overlay1.getHeight(), 8.0, 0.001);
     }
 
     // ------------ OverlayImage class
@@ -348,8 +348,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.overlayXY6.equals(this.ellipse1),
                 "fails - different classes");
 
-        t.checkExpect(this.overlayXY1.getWidth(), 11);
-        t.checkExpect(this.overlayXY1.getHeight(), 9);
+        t.checkInexact(this.overlayXY1.getWidth(), 11.0, 0.001);
+        t.checkInexact(this.overlayXY1.getHeight(), 9.5, 0.001);
     }
 
     // ------------ FromFileImage class
@@ -372,8 +372,8 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(!this.fromFile1.equals(this.text1), "fails - different classes");
         t.checkExpect(!this.line2.equals(this.fromFile1), "fails - different classes");
 
-        t.checkExpect(this.fromFile1.getWidth(), 134);
-        t.checkExpect(this.fromFile1.getHeight(), 134);
+        t.checkInexact(this.fromFile1.getWidth(), 134.0, 0.001);
+        t.checkInexact(this.fromFile1.getHeight(), 134.0, 0.001);
     }
 
     // Run all tests - comment out those you want to skip

@@ -29,6 +29,7 @@ final public class PhantomImage extends WorldImage {
      */
     public PhantomImage(WorldImage img, int width, int height) {
         this.img = img;
+        this.pinhole = img.pinhole;
         this.width = width;
         this.height = height;
     }
@@ -59,9 +60,7 @@ final public class PhantomImage extends WorldImage {
     
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        PhantomImage img = new PhantomImage(this.img, this.width, this.height);
-        img.pinhole = p;
-        return img;
+        return new PhantomImage(this.img.movePinholeTo(p), this.width, this.height);
     }
 
     @Override

@@ -1,9 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.util.Stack;
 
 /**
  * Class representing the shearing of an image
@@ -13,11 +10,7 @@ import java.util.Stack;
  * @since April 4, 2015
  * 
  */
-public final class ShearedImage extends WorldImage {
-
-    /** the image to shear */
-    public WorldImage img;
-
+public final class ShearedImage extends TransformImageBase {
     /** the shear amount along the x axis */
     public double sx;
 
@@ -35,48 +28,9 @@ public final class ShearedImage extends WorldImage {
      *            -- Shear along the Y axis
      */
     public ShearedImage(WorldImage img, double sx, double sy) {
-        super();
-        this.img = img;
+        super(img, AffineTransform.getShearInstance(sx, sy));
         this.sx = sx;
         this.sy = sy;
-
-        // Shear the pinhole
-        AffineTransform newT = new AffineTransform();
-        newT.shear(this.sx, this.sy);
-        Point2D p = WorldImage.transformPosn(newT, img.pinhole);
-        this.pinhole = new DPosn(p.getX(), p.getY()).asPosn();
-    }
-
-    @Override
-    protected BoundingBox getBB(AffineTransform t) {
-        AffineTransform newT = new AffineTransform(t);
-        newT.shear(this.sx, this.sy);
-        return this.img.getBB(newT);
-    }
-    
-    @Override
-    public void draw(Graphics2D g) {
-        AffineTransform old = g.getTransform();
-        g.shear(this.sx, this.sy);
-        this.img.draw(g);
-        g.setTransform(old);
-    }
-    @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        images.push(this.img);
-        AffineTransform tx = g.getTransform();
-        tx.shear(this.sx, this.sy);
-        txs.push(tx);
-    }
-
-    @Override
-    public double getWidth() {
-        return getBB().getWidth();
-    }
-
-    @Override
-    public double getHeight() {
-        return getBB().getHeight();
     }
 
     /**
