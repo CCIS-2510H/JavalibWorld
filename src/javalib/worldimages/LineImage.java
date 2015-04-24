@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Stack;
 
 /**
  * <p>Copyright 2015 Viera K. Proulx</p>
@@ -50,7 +51,7 @@ public final class LineImage extends WorldImage {
                 this.endPoint.y / 2.0);
         return new BoundingBox(end1, end2);
     }
-
+    
     @Override
     public void draw(Graphics2D g) {
         if (color == null)
@@ -67,6 +68,10 @@ public final class LineImage extends WorldImage {
                 midpoint.y));
         // reset the original paint
         g.setPaint(oldPaint);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
     }
 
     @Override

@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.Stack;
 
 /**
  * Class representing the scaling of an image in 2 directions
@@ -66,7 +67,7 @@ abstract class ScaleImageXYBase extends WorldImage {
         newT.scale(this.scaleX, this.scaleY);
         return this.img.getBB(newT);
     }
-
+    
     @Override
     public void draw(Graphics2D g) {
         if (this.getWidth() <= 0)
@@ -83,6 +84,17 @@ abstract class ScaleImageXYBase extends WorldImage {
 
         // reset the original paint/scale
         g.setTransform(old);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        if (this.getWidth() <= 0)
+            return;
+        if (this.getHeight() <= 0)
+            return;
+        images.push(this.img);
+        AffineTransform tx = g.getTransform();
+        tx.scale(this.scaleX, this.scaleY);
+        txs.push(tx);
     }
 
     /**

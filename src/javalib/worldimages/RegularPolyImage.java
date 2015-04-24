@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Stack;
 
 /**
  * <p>
@@ -169,7 +170,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         }
         return ans;
     }
-
+    
     @Override
     public void draw(Graphics2D g) {
         if (color == null)
@@ -188,6 +189,10 @@ abstract class RegularPolyImageBase extends WorldImage {
 
         // reset the original paint
         g.setPaint(oldPaint);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Stack;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -156,6 +157,10 @@ public final class TextImage extends WorldImage {
         g.setPaint(oldPaint);
         g.setFont(oldFont);
     }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+         this.draw(g);   
+    }
 
     /**
      * Compute and set the width and the height for this text in the given style
@@ -177,7 +182,7 @@ public final class TextImage extends WorldImage {
         return new BoundingBox(bounds.getMinX(), bounds.getMinY(),
                 bounds.getMaxX(), bounds.getMaxY());
     }
-
+    
     /**
      * Get the bounding box of the text. Note: This is distinct and separate
      * from getBB. getBoundingBox is for internal TextImage use, whereas getBB

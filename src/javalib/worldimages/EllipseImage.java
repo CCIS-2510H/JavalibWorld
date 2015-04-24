@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Stack;
 
 /**
  * <p>
@@ -116,6 +117,7 @@ abstract class EllipseImageBase extends WorldImage {
 
         return new BoundingBox(xMin, yMin, xMax, yMax);
     }
+    
 
     @Override
     public void draw(Graphics2D g) {
@@ -140,6 +142,10 @@ abstract class EllipseImageBase extends WorldImage {
         }
         // reset the original paint
         g.setPaint(oldPaint);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
     }
 
     @Override

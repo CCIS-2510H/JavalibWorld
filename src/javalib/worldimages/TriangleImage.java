@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Stack;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -108,7 +109,7 @@ public final class TriangleImage extends WorldImage {
                 this.poly.ypoints[2]);
         return new BoundingBox(p1, p2).add(p3);
     }
-
+    
     @Override
     public void draw(Graphics2D g) {
         if (color == null)
@@ -127,6 +128,10 @@ public final class TriangleImage extends WorldImage {
 
         // reset the original paint
         g.setPaint(oldPaint);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
     }
 
     @Override

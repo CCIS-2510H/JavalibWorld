@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Stack;
 
 /**
  * <p>
@@ -121,7 +122,7 @@ abstract class RectangleImageBase extends WorldImage {
                 this.height / 2.0);
         return new BoundingBox(tl, tr).add(bl).add(br);
     }
-
+    
     @Override
     public void draw(Graphics2D g) {
         if (this.width <= 0)
@@ -145,6 +146,10 @@ abstract class RectangleImageBase extends WorldImage {
         }
         // reset the original paint
         g.setPaint(oldPaint);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
     }
 
     @Override

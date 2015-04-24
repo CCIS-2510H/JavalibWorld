@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.Stack;
 
 /**
  * <p>
@@ -151,7 +152,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         BoundingBox topBox = this.top.getBB(temp);
         return botBox.combine(topBox);
     }
-
+    
     /**
      * How much should bottom image move in the Y direction relative to the top
      * image?
@@ -238,6 +239,18 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
         // Reset the transformation matrix
         g.setTransform(old);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        AffineTransform cur;
+        cur = g.getTransform();
+        cur.translate(this.deltaTop.x, this.deltaTop.y);
+        txs.push(cur);
+        images.push(this.top);
+        cur = g.getTransform();
+        cur.translate(this.deltaBot.x, this.deltaBot.y);
+        txs.push(cur);
+        images.push(this.bot);
     }
 
     @Override

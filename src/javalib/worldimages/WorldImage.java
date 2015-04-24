@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Stack;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -148,6 +149,23 @@ public abstract class WorldImage {
      *            -- the provided <code>Graphics2D</code> context
      */
     abstract public void draw(Graphics2D g);
+    
+    abstract protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs);
+    
+    public void drawStackless(Graphics2D g) {
+        Stack<WorldImage> images = new Stack<WorldImage>();
+        Stack<AffineTransform> txs = new Stack<AffineTransform>();
+        AffineTransform initTx = g.getTransform();
+        images.push(this);
+        txs.push(initTx);
+        while (!images.isEmpty()) {
+            WorldImage nextI = images.pop();
+            AffineTransform nextT = txs.pop();
+            g.setTransform(nextT);
+            nextI.drawStackless(g, images, txs);
+        }
+        g.setTransform(initTx);
+    }
 
     /**
      * <p>

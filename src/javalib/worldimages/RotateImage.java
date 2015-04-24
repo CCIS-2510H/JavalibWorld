@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Stack;
 
 /**
  * Class representing the rotation of an image
@@ -52,6 +53,7 @@ public final class RotateImage extends WorldImage {
         newT.rotate(Math.toRadians(this.rotationDegrees));
         return this.img.getBB(newT);
     }
+    
 
     @Override
     public void draw(Graphics2D g) {
@@ -69,6 +71,17 @@ public final class RotateImage extends WorldImage {
 
         // Reset the transform to the old transform
         g.setTransform(old);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        if (this.width <= 0)
+            return;
+        if (this.height <= 0)
+            return;
+        images.push(this.img);
+        AffineTransform tx = g.getTransform();
+        tx.rotate(Math.toRadians(this.rotationDegrees));
+        txs.push(tx);
     }
 
     /**

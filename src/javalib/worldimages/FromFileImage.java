@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Stack;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -57,6 +58,10 @@ public final class FromFileImage extends WorldImage {
         // Reset to original position
         g.translate((this.imread.width / 2.0), (this.imread.height / 2.0));
     }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
+    }
 
     /**
      * Is this <code>FromFileImage</code> the same as that
@@ -87,7 +92,7 @@ public final class FromFileImage extends WorldImage {
         Point2D br = t.transform(new Point.Double(w / 2, h / 2), null);
         return new BoundingBox(tl.getX(), tl.getY(), br.getX(), br.getY());
     }
-
+    
     /**
      * Produce a <code>String</code> representation of this from-file image
      */

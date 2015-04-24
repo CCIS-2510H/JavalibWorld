@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.Stack;
 
 /**
  * Class representing a cropped image
@@ -87,13 +88,17 @@ final public class CropImage extends WorldImage {
         Graphics2D g2d = cropped.createGraphics();
         g2d.translate(this.img.getWidth() / 2.0 - this.x, this.img.getHeight()
                 / 2.0 - this.y);
-        img.draw(g2d);
+        img.drawStackless(g2d);
         g2d.dispose();
 
         g.translate(-this.width / 2.0, -this.height / 2.0);
         g.drawImage(cropped, new AffineTransform(), null);
 
         g.setTransform(oldTransform);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        this.draw(g);
     }
 
     @Override

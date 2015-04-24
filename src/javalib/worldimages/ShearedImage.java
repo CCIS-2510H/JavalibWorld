@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Stack;
 
 /**
  * Class representing the shearing of an image
@@ -52,13 +53,20 @@ public final class ShearedImage extends WorldImage {
         newT.shear(this.sx, this.sy);
         return this.img.getBB(newT);
     }
-
+    
     @Override
     public void draw(Graphics2D g) {
         AffineTransform old = g.getTransform();
         g.shear(this.sx, this.sy);
         this.img.draw(g);
         g.setTransform(old);
+    }
+    @Override
+    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        images.push(this.img);
+        AffineTransform tx = g.getTransform();
+        tx.shear(this.sx, this.sy);
+        txs.push(tx);
     }
 
     @Override

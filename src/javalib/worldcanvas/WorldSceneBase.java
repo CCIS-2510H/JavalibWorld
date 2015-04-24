@@ -103,7 +103,7 @@ public abstract class WorldSceneBase {
         this.revImagesIfNeeded();
         for (PlaceImage i : revImgs) {
             g.translate(i.x, i.y);
-            i.img.draw(g);
+            i.img.drawStackless(g);
             g.translate(-i.x, -i.y);
         }
     }
