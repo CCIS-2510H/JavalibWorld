@@ -87,7 +87,7 @@ abstract class RectangleImageBase extends WorldImage {
      */
     public RectangleImageBase(int width, int height, OutlineMode fill,
             Color color) {
-        super();
+        super(1);
         this.width = width;
         this.height = height;
         this.fill = fill;
@@ -111,7 +111,20 @@ abstract class RectangleImageBase extends WorldImage {
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    
+    @Override
+    protected BoundingBox getBBHelp(AffineTransform t) {
         Point2D tl = WorldImage.transformPosn(t, -this.width / 2.0,
                 -this.height / 2.0);
         Point2D tr = WorldImage.transformPosn(t, this.width / 2.0,
@@ -120,9 +133,8 @@ abstract class RectangleImageBase extends WorldImage {
                 this.height / 2.0);
         Point2D br = WorldImage.transformPosn(t, this.width / 2.0,
                 this.height / 2.0);
-        return new BoundingBox(tl, tr).add(bl).add(br);
+        return BoundingBox.containing(tl, tr, bl, br);
     }
-    
     @Override
     public void draw(Graphics2D g) {
         if (this.width <= 0)
@@ -148,7 +160,7 @@ abstract class RectangleImageBase extends WorldImage {
         g.setPaint(oldPaint);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

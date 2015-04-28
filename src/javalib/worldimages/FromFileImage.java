@@ -38,7 +38,7 @@ public final class FromFileImage extends WorldImage {
      *            -- the file name for the image source
      */
     public FromFileImage(String fileName) {
-        super();
+        super(1);
 
         // determine how to read the file name
         // then read the image, or verify that it has been read already
@@ -46,6 +46,18 @@ public final class FromFileImage extends WorldImage {
 
         // set the filename
         this.fileName = fileName;
+    }
+    @Override
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
     }
 
     @Override
@@ -59,7 +71,7 @@ public final class FromFileImage extends WorldImage {
         g.translate((this.imread.width / 2.0), (this.imread.height / 2.0));
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 
@@ -85,7 +97,7 @@ public final class FromFileImage extends WorldImage {
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         double w = this.getWidth();
         double h = this.getHeight();
         Point2D tl = t.transform(new Point.Double(-w / 2, -h / 2), null);

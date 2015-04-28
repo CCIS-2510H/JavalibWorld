@@ -8,6 +8,7 @@ import java.util.Stack;
 public final class FrozenImage extends WorldImage {
     BufferedImage img;
     public FrozenImage(WorldImage img) {
+        super(1);
         this.img = new BufferedImage((int)img.getWidth(), (int)img.getHeight(), BufferedImage.TRANSLUCENT);
         Graphics2D g = this.img.createGraphics();
         g.translate(img.getWidth() / 2, img.getHeight() / 2);
@@ -16,11 +17,26 @@ public final class FrozenImage extends WorldImage {
         this.pinhole = img.pinhole;
     }
     private FrozenImage(BufferedImage img, Posn pinhole) {
+        super(pinhole, 1);
         this.img = img;
-        this.pinhole = pinhole;
     }
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    int numKids() {
+        return 0;
+    }
+
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+
+    @Override
+    protected BoundingBox getBBHelp(AffineTransform t) {
         return new BoundingBox(WorldImage.transformPosn(t, 0, 0),
             WorldImage.transformPosn(t, this.getWidth(), this.getHeight()));
     }
@@ -36,7 +52,7 @@ public final class FrozenImage extends WorldImage {
     }
 
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

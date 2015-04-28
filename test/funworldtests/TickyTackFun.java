@@ -218,7 +218,7 @@ public class TickyTackFun extends World {
     public WorldEnd worldEnds() {
         if (10 < sun.size && sun.size < 20)
             return new WorldEnd(true, this.makeScene().placeImageXY(
-                    new TextImage("Goodbye sun!", 15, 3, Color.RED), 150, 80));
+                    new TextImage("Goodbye sun!", 15, FontStyle.BOLD_ITALIC, Color.RED), 150, 80));
         else
             return new WorldEnd(false, this.makeScene());
     }
@@ -256,7 +256,7 @@ public class TickyTackFun extends World {
     @Override
     public WorldScene lastScene(String s) {
         return this.makeScene().placeImageXY(
-                new TextImage(s, 15, 3, Color.RED), 150, 80);
+                new TextImage(s, 15, FontStyle.BOLD_ITALIC, Color.RED), 150, 80);
     }
 
     // support for the regression tests

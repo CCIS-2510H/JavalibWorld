@@ -154,7 +154,7 @@ public class BlobWorldImp extends World {
         // time ends is the blob falls into the black hole in the middle
         if (this.blob.nearCenter(this.width, this.height)) {
             WorldScene scn = this.makeScene();
-            scn.placeImageXY(new TextImage("Black hole ate the blob", 13, 3,
+            scn.placeImageXY(new TextImage("Black hole ate the blob", 13, FontStyle.BOLD_ITALIC,
                     Color.red), 100, 40);
             return new WorldEnd(true, scn);
         } else {
@@ -387,7 +387,7 @@ class BlobExamples {
 
         this.reset();
         scn = this.bwInTheCenter.makeScene();
-        scn.placeImageXY(new TextImage("Black hole ate the blob", 13, 3,
+        scn.placeImageXY(new TextImage("Black hole ate the blob", 13, FontStyle.BOLD_ITALIC,
                 Color.red), 100, 40);
         t.checkExpect(this.bwInTheCenter.worldEnds(), new WorldEnd(true, scn));
 

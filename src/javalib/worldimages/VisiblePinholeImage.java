@@ -24,12 +24,30 @@ public final class VisiblePinholeImage extends WorldImage {
      *            -- The image to overlay the pinhole representation onto
      */
     public VisiblePinholeImage(WorldImage img) {
+        super(img.pinhole, 1 + img.depth);
         this.img = img;
-        this.pinhole = img.pinhole;
+    }
+    @Override
+    int numKids() {
+        return 3;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        if (i == 0) { return this.img; }
+        if (i == 1) { return line1; }
+        if (i == 2) { return line2; }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        if (i == 0) { return new AffineTransform(); }
+        if (i == 1) { return AffineTransform.getTranslateInstance(this.img.pinhole.x, this.img.pinhole.y); }
+        if (i == 2) { return AffineTransform.getTranslateInstance(this.img.pinhole.x, this.img.pinhole.y); }
+        throw new IllegalArgumentException("No such kid " + i);
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         return this.img.getBB(t);
     }
 
@@ -48,7 +66,7 @@ public final class VisiblePinholeImage extends WorldImage {
         g.setTransform(oldTransform);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         AffineTransform t = g.getTransform();
         t.translate(this.img.pinhole.x, this.img.pinhole.y);
         txs.push(t);

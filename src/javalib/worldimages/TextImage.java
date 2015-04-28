@@ -32,29 +32,21 @@ public final class TextImage extends WorldImage {
     public String text;
 
     /** the size of the font to use: the default here is 13 */
-    public float size;
+    public double size;
 
     /** the color of the text */
     public Color color;
 
     /**
-     * the style of the font: 0 = regular, 1 = bold, 2 = italic, 3 = italic bold
+     * the style of the font
      */
-    public int style = 0;
+    public FontStyle style = FontStyle.REGULAR;
 
     /** the width of the bounding box */
     public double width = 0;
 
     /** the height of the bounding box */
     public double height = 0;
-
-    /**
-     * <p>
-     * the desired alignment for this text: 0 = left, 1 = center, 2 = right
-     * </p>
-     * <em>not yet implemented - currently the text is centered</em>
-     */
-    public int alignment = 1;
 
     private double baselineDy = 0;
 
@@ -79,8 +71,8 @@ public final class TextImage extends WorldImage {
      * @param color
      *            -- the color for this image
      */
-    public TextImage(String text, float size, int style, Color color) {
-        super();
+    public TextImage(String text, double size, FontStyle style, Color color) {
+        super(1);
         // bad things happen if we want to display a null String
         // or a String of length 0
         if (text == null || text.equals(""))
@@ -98,12 +90,12 @@ public final class TextImage extends WorldImage {
      * @param text
      *            -- the text to be shown
      * @param size
-     *            -- the size of the font to use (the default is 13)
+     *            -- the size of the font to use
      * @param color
      *            -- the color for this image
      */
-    public TextImage(String text, float size, Color color) {
-        this(text, size, 0, color);
+    public TextImage(String text, double size, Color color) {
+        this(text, size, FontStyle.REGULAR, color);
     }
 
     /**
@@ -112,12 +104,12 @@ public final class TextImage extends WorldImage {
      * @param text
      *            -- the text to be shown
      * @param size
-     *            -- the size of the font to use (the default is 13)
+     *            -- the size of the font to use
      * @param color
      *            -- the color for this image
      */
     public TextImage(String text, int size, Color color) {
-        this(text, size, 0, color);
+        this(text, size, FontStyle.REGULAR, color);
     }
 
     /**
@@ -129,7 +121,19 @@ public final class TextImage extends WorldImage {
      *            -- the color for this image
      */
     public TextImage(String text, Color color) {
-        this(text, 13, 0, color);
+        this(text, 13, FontStyle.REGULAR, color);
+    }
+    @Override
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
     }
 
     @Override
@@ -144,21 +148,19 @@ public final class TextImage extends WorldImage {
         Font oldFont = g.getFont();
 
         // change the font style and size as given
-        g.setFont(oldFont.deriveFont(this.style, this.size));
+        g.setFont(oldFont.deriveFont(this.style.ordinal(), (float) this.size));
         // set the paint to the given color
         g.setPaint(this.color);
 
-        if (alignment == 1) {
-            g.drawString(this.text, (int) -Math.round(this.width / 2),
-                    (int) -this.baselineDy);
-        }
+        g.drawString(this.text, (int) -Math.round(this.width / 2),
+                (int) -this.baselineDy);
 
         // reset the original paint and font
         g.setPaint(oldPaint);
         g.setFont(oldFont);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
          this.draw(g);   
     }
 
@@ -174,7 +176,7 @@ public final class TextImage extends WorldImage {
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         AffineTransform old = g.getTransform();
         g.setTransform(t);
         Rectangle2D bounds = getBoundingBox();
@@ -191,7 +193,7 @@ public final class TextImage extends WorldImage {
      * @return
      */
     private Rectangle2D getBoundingBox() {
-        Font newFont = font.deriveFont(this.style, this.size);
+        Font newFont = font.deriveFont(this.style.ordinal(), (float)this.size);
 
         FontRenderContext frc = g.getFontRenderContext();
         TextLayout layout = new TextLayout(this.text, newFont, frc);
@@ -259,7 +261,6 @@ public final class TextImage extends WorldImage {
      */
     public boolean same(TextImage that) {
         return this.size == that.size && this.style == that.style
-                && this.alignment == that.alignment
                 && this.text.equals(that.text) && this.color.equals(that.color);
     }
 
@@ -274,8 +275,8 @@ public final class TextImage extends WorldImage {
      * The hashCode to match the equals method
      */
     public int hashCode() {
-        return this.color.hashCode() + (int) this.size + this.style
-                + this.alignment + this.text.hashCode();
+        return this.color.hashCode() + (int) this.size + this.style.hashCode()
+                + this.text.hashCode();
     }
 
     @Override

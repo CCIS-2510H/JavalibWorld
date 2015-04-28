@@ -28,8 +28,8 @@ final public class PhantomImage extends WorldImage {
      *            -- The width of the "phantom" image
      */
     public PhantomImage(WorldImage img, int width, int height) {
+        super(img.pinhole, 1 + img.depth);
         this.img = img;
-        this.pinhole = img.pinhole;
         this.width = width;
         this.height = height;
     }
@@ -44,9 +44,23 @@ final public class PhantomImage extends WorldImage {
     public PhantomImage(WorldImage img) {
         this(img, 0, 0);
     }
+    @Override
+    int numKids() {
+        return 1;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        if (i == 0) { return this.img; }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        if (i == 0) { return new AffineTransform(); }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         Point2D tl = WorldImage.transformPosn(t, -this.width / 2.0,
                 -this.height / 2.0);
         Point2D tr = WorldImage.transformPosn(t, this.width / 2.0,
@@ -55,7 +69,7 @@ final public class PhantomImage extends WorldImage {
                 this.height / 2.0);
         Point2D br = WorldImage.transformPosn(t, this.width / 2.0,
                 this.height / 2.0);
-        return new BoundingBox(tl, tr).add(bl).add(br);
+        return BoundingBox.containing(tl, tr, bl, br);
     }
     
     @Override
@@ -68,7 +82,7 @@ final public class PhantomImage extends WorldImage {
         this.img.draw(g);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         images.push(this.img);
         txs.push(g.getTransform());
     }

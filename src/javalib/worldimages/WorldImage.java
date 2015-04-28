@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Stack;
 import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -35,9 +36,15 @@ public abstract class WorldImage {
      * bounding box might affect the tester library deciding if two objects are the same or not
      */
     static WeakHashMap<WorldImage, BoundingBox> bbCache;
+    
+    /** this describes how deeply nested the image object is constructed */
+    int depth;
+    
+    /** How deeply nested are the image objects in this image? */
+    public int getImageNestingDepth() { return this.depth; }
 
-    public WorldImage() {
-        this(new Posn(0, 0));
+    protected WorldImage(int depth) {
+        this(new Posn(0, 0), depth);
     }
 
     /**
@@ -49,12 +56,16 @@ public abstract class WorldImage {
      *            image and the default pinhole location). By default it is the
      *            origin
      */
-    protected WorldImage(Posn pinhole) {
+    protected WorldImage(Posn pinhole, int depth) {
         this.pinhole = pinhole;
+        this.depth = depth;
         if (WorldImage.bbCache == null)
             WorldImage.bbCache = new WeakHashMap<WorldImage, BoundingBox>();
     }
 
+    abstract int numKids();
+    abstract WorldImage getKid(int i);
+    abstract AffineTransform getTransform(int i);
     /**
      * Get the Bounding Box of the image
      * 
@@ -66,6 +77,33 @@ public abstract class WorldImage {
         }
         return WorldImage.bbCache.get(this);
     }
+    protected BoundingBox getBB(final AffineTransform tx) {
+        try {
+            if (tx.isIdentity() && WorldImage.bbCache.containsKey(this)) { 
+                return this.getBB(); 
+            }
+            else { 
+                return this.getBBHelp(tx); 
+            }
+        } catch (StackOverflowError e) {
+            final WorldImage img = this;
+            return (new Callable<BoundingBox>() {
+                @Override
+                public BoundingBox call() {
+                    return img.getBB(tx);
+                }
+            }).call();
+        }
+//        WorldImageLeavesIterator iter = new WorldImageLeavesIterator(this, tx);
+//        BoundingBox acc = null;
+//        while (iter.hasNext()) {
+//            iter.next();
+//            BoundingBox newBB = iter.curImg.getBBHelp(iter.curTx);
+//            if (acc == null) { acc = new BoundingBox(newBB); }
+//            else { acc.combineWith(newBB); }
+//        }
+//        return acc;
+    }
 
     /**
      * Get the Bounding Box of the image, calculated by combining the operations
@@ -75,7 +113,7 @@ public abstract class WorldImage {
      *            -- Operations done to transform the image
      * @return The Bounding box of the image
      */
-    protected abstract BoundingBox getBB(AffineTransform t);
+    protected abstract BoundingBox getBBHelp(AffineTransform t);
 
     /**
      * Transform a Posn by the operations as given by the AffineTransform
@@ -157,21 +195,25 @@ public abstract class WorldImage {
      */
     abstract public void draw(Graphics2D g);
     
-    abstract protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs);
+    abstract protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs);
     
     public void drawStackless(Graphics2D g) {
-        Stack<WorldImage> images = new Stack<WorldImage>();
-        Stack<AffineTransform> txs = new Stack<AffineTransform>();
-        AffineTransform initTx = g.getTransform();
-        images.push(this);
-        txs.push(initTx);
-        while (!images.isEmpty()) {
-            WorldImage nextI = images.pop();
-            AffineTransform nextT = txs.pop();
-            g.setTransform(nextT);
-            nextI.drawStackless(g, images, txs);
+        if (this.depth < 6000) {
+            this.draw(g);
+        } else {
+            Stack<WorldImage> images = new Stack<WorldImage>();
+            Stack<AffineTransform> txs = new Stack<AffineTransform>();
+            AffineTransform initTx = g.getTransform();
+            images.push(this);
+            txs.push(initTx);
+            while (!images.isEmpty()) {
+                WorldImage nextI = images.pop();
+                AffineTransform nextT = txs.pop();
+                g.setTransform(nextT);
+                nextI.drawStacksafe(g, images, txs);
+            }
+            g.setTransform(initTx);
         }
-        g.setTransform(initTx);
     }
 
     /**

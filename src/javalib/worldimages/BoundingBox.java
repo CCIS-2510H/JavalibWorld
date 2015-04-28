@@ -10,8 +10,24 @@ import java.awt.geom.Point2D;
  * 
  */
 public final class BoundingBox {
-    double tlx, tly, brx, bry;
+    private double tlx, tly, brx, bry;
 
+    static BoundingBox containing(Point2D... p) {
+        if (p.length == 0) {
+            throw new IllegalArgumentException("Can't create a bounding box without at least one point");
+        } else {
+            BoundingBox b = new BoundingBox(p[0], p[0]);
+            for (int i = 1; i < p.length; i++) {
+                b.combineWith(p[i]);
+            }
+            return b;
+        }
+    }
+    
+    BoundingBox(BoundingBox bb) {
+        this(bb.tlx, bb.tly, bb.brx, bb.bry);
+    }
+    
     /**
      * Create a bounding box
      * 
@@ -55,6 +71,18 @@ public final class BoundingBox {
         this.bry = Math.max(tly, bry);
     }
 
+
+    boolean contains(Posn p) {
+        return this.contains(p.x, p.y);
+    }
+    boolean contains(Point2D p) {
+        return this.contains(p.getX(), p.getY());
+    }
+    boolean contains(double px, double py) {
+        return this.tlx <= px && px <= this.brx
+            && this.tly <= py && py <= this.bry;
+    }
+    
     /**
      * Create a new bounding box that encompasses the combination of itself and
      * another bounding box
@@ -64,11 +92,48 @@ public final class BoundingBox {
      * @return a new, extended bounding box
      */
     BoundingBox combine(BoundingBox other) {
-        return new BoundingBox(Math.min(this.tlx, other.tlx), Math.min(
-                this.tly, other.tly), Math.max(this.brx, other.brx), Math.max(
-                this.bry, other.bry));
+        if (this.tlx <= other.tlx && other.brx <= this.brx &&
+            this.tly <= other.tly && other.bry <= this.bry) {
+            return this;            
+        } else if (other.tlx <= this.tlx && this.brx <= other.brx &&
+            other.tly <= this.tly && this.bry <= other.bry) {
+            return other;
+        } else {
+            return new BoundingBox(
+                Math.min(this.tlx, other.tlx), 
+                Math.min(this.tly, other.tly), 
+                Math.max(this.brx, other.brx), 
+                Math.max(this.bry, other.bry));
+        }
+    }
+    /**
+     * Expands the current bounding box to encompass the given box
+     * @param other -- Bounding box to include in this bounding box
+     */
+    void combineWith(BoundingBox other) {
+        this.tlx = Math.min(this.tlx, other.tlx);
+        this.tly = Math.min(this.tly, other.tly);
+        this.brx = Math.max(this.brx, other.brx);
+        this.bry = Math.max(this.bry, other.bry);
+    }
+    void combineWith(Posn p) {
+        this.combineWith(p.x, p.y);
+    }
+    void combineWith(Point2D p) {
+        this.combineWith(p.getX(), p.getY());
+    }
+    void combineWith(double px, double py) {
+        this.tlx = Math.min(this.tlx, px);
+        this.tly = Math.min(this.tly, py);
+        this.brx = Math.max(this.brx, px);
+        this.bry = Math.max(this.bry, py);
+    }
+    
+    BoundingBox translated(double dx, double dy) {
+        return new BoundingBox(this.tlx + dx, this.tly + dy, this.brx + dx, this.bry + dy);
     }
 
+    
     /**
      * Extend the bounding box to encompass a new x and y coordinate. If the X
      * and Y coordinate are already within the box, return itself
@@ -104,17 +169,16 @@ public final class BoundingBox {
      * @return a new, extended Bounding Box
      */
     BoundingBox add(double px, double py) {
-        if (px >= this.tlx && px <= this.brx && py >= this.tly
-                && py <= this.bry) {
+        if (this.contains(px, py)) {
             return this;
         } else {
-            return new BoundingBox(Math.min(this.tlx, px), Math.min(this.tly,
-                    py), Math.max(this.brx, px), Math.max(this.bry, py));
+            BoundingBox ans = new BoundingBox(this);
+            ans.combineWith(px, py);
+            return ans;
         }
     }
 
     /**
-     * 
      * @return the width of the bounding box
      */
     double getWidth() {
@@ -122,12 +186,15 @@ public final class BoundingBox {
     }
 
     /**
-     * 
      * @return the height of the bounding box
      */
     double getHeight() {
         return this.bry - this.tly;
     }
+    double getTlx() { return this.tlx; }
+    double getTly() { return this.tly; }
+    double getBrx() { return this.brx; }
+    double getBry() { return this.bry; }
 
     @Override
     public String toString() {

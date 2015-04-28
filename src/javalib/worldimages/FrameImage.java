@@ -63,7 +63,7 @@ public final class FrameImage extends RectangleImageBase {
         g.setPaint(this.color);
         // Draw the frame
         BoundingBox bb = this.img.getBB();
-        g.draw(new Rectangle2D.Double(bb.tlx, bb.tly, bb.getWidth(), bb
+        g.draw(new Rectangle2D.Double(bb.getTlx(), bb.getTly(), bb.getWidth(), bb
                 .getHeight()));
         // reset the original paint
         g.setPaint(oldPaint);

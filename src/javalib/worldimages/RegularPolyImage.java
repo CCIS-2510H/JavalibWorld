@@ -94,7 +94,7 @@ abstract class RegularPolyImageBase extends WorldImage {
      */
     public RegularPolyImageBase(double sideLen, int numSides, OutlineMode fill,
             Color color) {
-        super();
+        super(1);
 
         if (numSides < 3) {
             throw new IllegalArgumentException(
@@ -157,7 +157,7 @@ abstract class RegularPolyImageBase extends WorldImage {
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0],
                 this.poly.ypoints[0]);
         Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1],
@@ -166,9 +166,21 @@ abstract class RegularPolyImageBase extends WorldImage {
         for (int i = 2; i < this.sides; i++) {
             Point2D p = WorldImage.transformPosn(t, this.poly.xpoints[i],
                     this.poly.ypoints[i]);
-            ans = ans.add(p);
+            ans.combineWith(p);
         }
         return ans;
+    }
+    @Override
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
     }
     
     @Override
@@ -191,7 +203,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         g.setPaint(oldPaint);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

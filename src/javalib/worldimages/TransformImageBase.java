@@ -14,6 +14,7 @@ abstract public class TransformImageBase extends WorldImage {
     public AffineTransform tx;
     
     TransformImageBase(WorldImage img, AffineTransform tx) {
+        super(1 + img.depth);
         this.img = img;
         this.tx = tx;
         Point2D p = WorldImage.transformPosn(tx, img.pinhole);
@@ -21,7 +22,22 @@ abstract public class TransformImageBase extends WorldImage {
     }
     
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    int numKids() {
+        return 1;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        if (i == 0) { return this.img; }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        if (i == 0) { return this.tx; }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+
+    @Override
+    protected BoundingBox getBBHelp(AffineTransform t) {
         AffineTransform temp = new AffineTransform(t);
         temp.concatenate(this.tx);
         return this.img.getBB(temp);
@@ -46,7 +62,7 @@ abstract public class TransformImageBase extends WorldImage {
     }
 
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         if (this.getWidth() <= 0)
             return;
         if (this.getHeight() <= 0)

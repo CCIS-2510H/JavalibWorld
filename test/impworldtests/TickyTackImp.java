@@ -237,7 +237,7 @@ public class TickyTackImp extends World {
 
     public WorldScene lastScene(String s) {
         WorldScene scn = this.makeScene();
-        scn.placeImageXY(new TextImage(s, 15, 3, Color.RED), 150, 80);
+        scn.placeImageXY(new TextImage(s, 15, FontStyle.BOLD_ITALIC, Color.RED), 150, 80);
         return scn;
     }
 

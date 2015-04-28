@@ -46,6 +46,7 @@ final public class CropImage extends WorldImage {
      *            -- Image to crop
      */
     public CropImage(int x, int y, int width, int height, WorldImage img) {
+        super(1 + img.depth);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -54,7 +55,7 @@ final public class CropImage extends WorldImage {
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         Point2D tl = WorldImage.transformPosn(t, -this.width / 2.0,
                 -this.height / 2.0);
         Point2D tr = WorldImage.transformPosn(t, this.width / 2.0,
@@ -63,7 +64,21 @@ final public class CropImage extends WorldImage {
                 this.height / 2.0);
         Point2D br = WorldImage.transformPosn(t, this.width / 2.0,
                 this.height / 2.0);
-        return new BoundingBox(tl, tr).add(bl).add(br);
+        return BoundingBox.containing(tl, tr, bl, br);
+    }
+    @Override
+    int numKids() {
+        return 1;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        if (i == 0) { return this.img; }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        if (i == 0) { return new AffineTransform(); }
+        throw new IllegalArgumentException("No such kid " + i);
     }
 
     @Override
@@ -97,7 +112,7 @@ final public class CropImage extends WorldImage {
         g.setTransform(oldTransform);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

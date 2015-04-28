@@ -243,13 +243,13 @@ public class ExamplesImageMethods implements IExamples {
     // ------------ TextImage class
     // --------------------------------------------//
 
-    WorldImage text1 = new TextImage("hello", 6, 2, Color.BLACK);
-    WorldImage text2 = new TextImage("hello", 6, 2, Color.BLACK);
-    WorldImage text3 = new TextImage("hell", 6, 2, Color.BLACK);
-    WorldImage text4 = new TextImage("hello", 7, 2, Color.BLACK);
-    WorldImage text5 = new TextImage("hello", 6, 1, Color.BLACK);
-    WorldImage text6 = new TextImage("hello", 6.0f, 2, Color.BLACK);
-    WorldImage text7 = new TextImage("hello", 6, 2, Color.BLUE);
+    WorldImage text1 = new TextImage("hello", 6, FontStyle.ITALIC, Color.BLACK);
+    WorldImage text2 = new TextImage("hello", 6, FontStyle.ITALIC, Color.BLACK);
+    WorldImage text3 = new TextImage("hell", 6, FontStyle.ITALIC, Color.BLACK);
+    WorldImage text4 = new TextImage("hello", 7, FontStyle.ITALIC, Color.BLACK);
+    WorldImage text5 = new TextImage("hello", 6, FontStyle.BOLD, Color.BLACK);
+    WorldImage text6 = new TextImage("hello", 6.0f, FontStyle.ITALIC, Color.BLACK);
+    WorldImage text7 = new TextImage("hello", 6, FontStyle.ITALIC, Color.BLUE);
 
     // Tests for the TextImage class
     void testTextImage(Tester t) {

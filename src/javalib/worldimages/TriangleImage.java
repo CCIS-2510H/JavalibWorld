@@ -57,7 +57,7 @@ public final class TriangleImage extends WorldImage {
      */
     public TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill,
             Color color) {
-        super();
+        super(1);
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -98,16 +98,28 @@ public final class TriangleImage extends WorldImage {
     public TriangleImage(Posn p1, Posn p2, Posn p3, String fill, Color color) {
         this(p1, p2, p3, OutlineMode.fromString(fill), color);
     }
+    @Override
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0],
                 this.poly.ypoints[0]);
         Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1],
                 this.poly.ypoints[1]);
         Point2D p3 = WorldImage.transformPosn(t, this.poly.xpoints[2],
                 this.poly.ypoints[2]);
-        return new BoundingBox(p1, p2).add(p3);
+        return BoundingBox.containing(p1, p2, p3);
     }
     
     @Override
@@ -130,7 +142,7 @@ public final class TriangleImage extends WorldImage {
         g.setPaint(oldPaint);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

@@ -74,7 +74,7 @@ abstract class EllipseImageBase extends WorldImage {
     public Color color;
 
     public EllipseImageBase(int width, int height, OutlineMode mode, Color color) {
-        super();
+        super(1);
         this.width = width;
         this.height = height;
         this.fill = mode;
@@ -85,9 +85,21 @@ abstract class EllipseImageBase extends WorldImage {
             Color color) {
         this(width, height, OutlineMode.fromString(outlineMode), color);
     }
+    @Override
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         // From
         // https://stackoverflow.com/questions/24746834/calculating-an-aabb-for-a-transformed-ellipse
         double rx = (double) this.width / 2.0;
@@ -144,7 +156,7 @@ abstract class EllipseImageBase extends WorldImage {
         g.setPaint(oldPaint);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

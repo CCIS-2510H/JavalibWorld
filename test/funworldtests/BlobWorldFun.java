@@ -158,7 +158,7 @@ public class BlobWorldFun extends World {
         // time ends is the blob falls into the black hole in the middle
         if (this.blob.nearCenter(this.width, this.height)) {
             return new WorldEnd(true, this.makeScene().placeImageXY(
-                    new TextImage("Black hole ate the blob", 13, 3, Color.red),
+                    new TextImage("Black hole ate the blob", 13, FontStyle.BOLD_ITALIC, Color.red),
                     100, 40));
         } else {
             return new WorldEnd(false, this.makeScene());
@@ -329,7 +329,7 @@ class BlobExamples {
                                 .placeImageXY(
                                         new TextImage(
                                                 "Black hole ate the blob", 13,
-                                                3, Color.red), 100, 40)));
+                                                FontStyle.BOLD_ITALIC, Color.red), 100, 40)));
     }
 
     /** test the method onTick in the BlobWorldFun class */
@@ -364,7 +364,7 @@ class BlobExamples {
                                 .placeImageXY(
                                         new TextImage(
                                                 "Black hole ate the blob", 13,
-                                                3, Color.red), 100, 40)))
+                                                FontStyle.BOLD_ITALIC, Color.red), 100, 40)))
                 &&
 
                 t.checkExpect(this.b1w.worldEnds(), new WorldEnd(false,

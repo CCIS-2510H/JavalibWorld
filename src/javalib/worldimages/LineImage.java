@@ -37,14 +37,26 @@ public final class LineImage extends WorldImage {
      *            -- the color for this line
      */
     public LineImage(Posn endPoint, Color color) {
-        super();
+        super(1);
         this.endPoint = endPoint;
         this.color = color;
 
     }
+    @Override
+    int numKids() {
+        return 0;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        throw new IllegalArgumentException("No such kid " + i);
+    }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         Point2D end1 = WorldImage.transformPosn(t, -this.endPoint.x / 2.0,
                 -this.endPoint.y / 2.0);
         Point2D end2 = WorldImage.transformPosn(t, this.endPoint.x / 2.0,
@@ -70,7 +82,7 @@ public final class LineImage extends WorldImage {
         g.setPaint(oldPaint);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         this.draw(g);
     }
 

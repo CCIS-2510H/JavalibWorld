@@ -24,7 +24,7 @@ public class ExamplesImp {
     public static WorldScene makeImage(WorldScene scene, Posn pos) {
         scene.placeImageXY(new RectangleImage(60, 20, OutlineMode.SOLID,
                 Color.RED), pos.x, pos.y);
-        scene.placeImageXY(new TextImage("hello", 12, 0, Color.BLUE), pos.x,
+        scene.placeImageXY(new TextImage("hello", 12, Color.BLUE), pos.x,
                 pos.y);
         scene.placeImageXY(new LineImage(new Posn(5, 5), Color.BLACK), pos.x,
                 pos.y + 5);

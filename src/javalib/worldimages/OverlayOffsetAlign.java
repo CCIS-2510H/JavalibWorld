@@ -89,11 +89,9 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     public AlignModeX alignX;
     public AlignModeY alignY;
 
-    private double width, height;
-
     public OverlayOffsetAlignBase(AlignModeX alignX, AlignModeY alignY,
             WorldImage top, double dx, double dy, WorldImage bot) {
-        super();
+        super(1 + Math.max(top.depth, bot.depth));
         this.bot = bot;
         this.top = top;
         this.alignX = alignX;
@@ -131,19 +129,20 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         this.deltaBot = new DPosn(botDeltaX, botDeltaY);
         this.deltaTop = new DPosn(topDeltaX, topDeltaY);
 
-        this.width = getBB().getWidth();
-        this.height = getBB().getHeight();
-
         if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
                 && dx == 0 && dy == 0) {
             // Set the pinhole
             this.pinhole = new Posn((int) -Math.round(centerX),
                     (int) -Math.round(centerY));
         }
+        
+        this.hashCode = this.bot.hashCode() + this.top.hashCode()
+            + this.alignX.hashCode() + this.alignY.hashCode()
+            + (int) this.dx * 37 + (int) this.dy * 16;
     }
 
     @Override
-    protected BoundingBox getBB(AffineTransform t) {
+    protected BoundingBox getBBHelp(AffineTransform t) {
         AffineTransform temp = new AffineTransform(t);
         temp.translate(this.deltaBot.x, this.deltaBot.y);
         BoundingBox botBox = this.bot.getBB(temp);
@@ -151,6 +150,22 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         temp.translate(this.deltaTop.x, this.deltaTop.y);
         BoundingBox topBox = this.top.getBB(temp);
         return botBox.combine(topBox);
+    }
+    @Override
+    int numKids() {
+        return 2;
+    }
+    @Override
+    WorldImage getKid(int i) {
+        if (i == 0) { return this.bot; }
+        if (i == 1) { return this.top; }
+        throw new IllegalArgumentException("No such kid " + i);
+    }
+    @Override
+    AffineTransform getTransform(int i) {
+        if (i == 0) { return AffineTransform.getTranslateInstance(this.deltaBot.x, this.deltaBot.y); }
+        if (i == 1) { return AffineTransform.getTranslateInstance(this.deltaTop.x, this.deltaTop.y); }
+        throw new IllegalArgumentException("No such kid " + i);
     }
     
     /**
@@ -241,7 +256,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         g.setTransform(old);
     }
     @Override
-    protected void drawStackless(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
         AffineTransform cur;
         cur = g.getTransform();
         cur.translate(this.deltaTop.x, this.deltaTop.y);
@@ -255,12 +270,12 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
     @Override
     public double getWidth() {
-        return width;
+        return this.getBB().getWidth();
     }
 
     @Override
     public double getHeight() {
-        return height;
+        return this.getBB().getHeight();
     }
 
     /**
@@ -313,10 +328,9 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
      */
     @Override
     public int hashCode() {
-        return this.bot.hashCode() + this.top.hashCode()
-                + this.alignX.hashCode() + this.alignY.hashCode()
-                + (int) this.dx * 37 + (int) this.dy * 16;
+        return this.hashCode;
     }
+    private int hashCode;
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
