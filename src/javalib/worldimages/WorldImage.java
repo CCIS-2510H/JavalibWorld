@@ -286,11 +286,4 @@ public abstract class WorldImage {
     protected static String className(WorldImage o) {
         return "new " + o.getClass().getSimpleName() + "(";
     }
-
-    public static void main(String[] argv) {
-        System.out.println(colorString("  ", new Color(255, 255, 0, 50)));
-        System.out.println(classNameString("  ", new CircleImage(5, "outline",
-                Color.RED)));
-    }
-
 }
