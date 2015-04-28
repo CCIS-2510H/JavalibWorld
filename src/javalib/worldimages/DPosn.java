@@ -37,6 +37,6 @@ class DPosn {
 
     @Override
     public String toString() {
-        return String.format("new DPosn(x = %d, y = %d)", this.x, this.y);
+        return String.format("new DPosn(x = %f, y = %f)", this.x, this.y);
     }
 }
