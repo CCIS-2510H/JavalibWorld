@@ -392,7 +392,7 @@ class BlobExamples {
 
         // run the tests - showing only the failed test results
         BlobExamples be = new BlobExamples();
-        Tester.runReport(be, false, false);
+        Tester.runReport(be, false, false, new tester.DefaultReporter(), 80);
 
         // run the game
         BlobWorldFun w = new BlobWorldFun(new Blob(new Posn(150, 100), 20,

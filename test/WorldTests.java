@@ -37,7 +37,7 @@ public class WorldTests {
                             + "\nPress return to start:\n");
             n = System.in.read();
 
-            Tester.runReport(obj, false, false);
+            Tester.runReport(obj, false, false, new tester.DefaultReporter(), 80);
         } catch (IOException e) {
             System.out.println("IO error when running tests for " + className
                     + "\n " + e.getMessage());

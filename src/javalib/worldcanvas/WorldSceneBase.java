@@ -2,7 +2,10 @@ package javalib.worldcanvas;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
 
@@ -106,6 +109,41 @@ public abstract class WorldSceneBase {
             i.img.drawStackless(g);
             g.translate(-i.x, -i.y);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof WorldSceneBase)) return false;
+        WorldSceneBase other = (WorldSceneBase)obj;
+
+        if (this.width != other.width || this.height != other.height) return false;
+
+        if (this.width == 0 || this.height == 0) return true;
+
+        BufferedImage image1 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D1 = image1.createGraphics();
+        this.draw(graphics2D1);
+        BufferedImage image2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics2D2 = image2.createGraphics();
+        other.draw(graphics2D2);
+
+
+        int[] pix1 = new int[width * height];
+        int[] pix2 = new int[width * height];
+        PixelGrabber pg1 = new PixelGrabber(image1, 0, 0, width, height, pix1, 0, width);
+        PixelGrabber pg2 = new PixelGrabber(image2, 0, 0, width, height, pix2, 0, width);
+
+        while (true) {
+            try {
+                pg1.grabPixels();
+                pg2.grabPixels();
+                return Arrays.equals(pix1, pix2);
+            }
+            catch (InterruptedException e) {
+                break;
+            }
+        }
+        return false;
     }
 
     private void revImagesIfNeeded() {

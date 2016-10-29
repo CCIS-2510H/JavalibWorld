@@ -125,7 +125,9 @@ abstract public class World {
         this.theCanvas.show();
 
         // draw the initial world
-        this.drawWorld(" ");
+        this.worldExists = true;
+        this.mytime = new MyTimer(this, speed);
+        this.drawWorld("");
 
         // pause again after the Canvas is shown to make sure
         // all listeners and the timer are installed for theCanvas
@@ -137,11 +139,8 @@ abstract public class World {
         }
 
         // and add the timer -- start it if speed is greater than 0
-        this.mytime = new MyTimer(this, speed);
         if (speed > 0.0)
             this.mytime.timer.start();
-
-        this.worldExists = true;
 
         // print a header that specifies the current version of the World
         System.out.println(Versions.CURRENT_VERSION);

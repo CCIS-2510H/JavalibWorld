@@ -335,7 +335,7 @@ class ExamplesTickyTack {
     public static void main(String[] argv) {
         ExamplesTickyTack ett = new ExamplesTickyTack();
 
-        Tester.runReport(ett, false, false);
+        Tester.runReport(ett, false, false, new tester.DefaultReporter(), 80);
 
         TickyTackFun tworld = new TickyTackFun(ett.cloud, ett.sun, 600, 300);
         tworld.bigBang(600, 300, 0.1);

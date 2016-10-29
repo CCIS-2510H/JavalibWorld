@@ -580,7 +580,7 @@ class ExamplesOceanWorldImp implements OceanWorldConstants {
 
     public static void main(String[] argv) {
         ExamplesOceanWorldImp e = new ExamplesOceanWorldImp();
-        Tester.runReport(e, false, false);
+        Tester.runReport(e, false, false, new tester.DefaultReporter(), 80);
         // you cannot invoke bigBang on the same object until the first one
         // stops
         // (we started it in the last test -- see above)

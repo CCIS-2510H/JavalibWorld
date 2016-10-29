@@ -45,9 +45,9 @@ public class ExamplesImageMethods implements IExamples {
                         + "\n   this.fill = solid,"
                         + "\n   this.color = [r=255,g=0,b=0])");
         t.checkExpect(this.circle1, this.circle5, "Should be the same");
-        t.checkExpect(!this.circle1.equals(this.circle2), "fails in radius");
-        t.checkExpect(!this.circle1.equals(this.circle3), "fails in fill state");
-        t.checkExpect(!this.circle1.equals(this.circle4), "fails in color");
+        t.checkExpect(this.circle1.equals(this.circle2), false, "fails in radius");
+        t.checkExpect(this.circle1.equals(this.circle3), false, "fails in fill state");
+        t.checkExpect(this.circle1.equals(this.circle4), false, "fails in color");
         t.checkExpect(this.circle1.hashCode(), this.circle5.hashCode());
 
         t.checkInexact(this.circle1.getWidth(), 8.0, 0.001);
@@ -76,14 +76,14 @@ public class ExamplesImageMethods implements IExamples {
                         + "\n   this.fill = solid,"
                         + "\n   this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.ellipse1, this.ellipse2);
-        t.checkExpect(!this.ellipse1.equals(this.ellipse3), "fails in height");
-        t.checkExpect(!this.ellipse1.equals(this.ellipse4), "fails in width");
-        t.checkExpect(!this.ellipse1.equals(this.ellipse5), "fails in fill");
-        t.checkExpect(!this.ellipse1.equals(this.ellipse6), "fails in color");
+        t.checkExpect(this.ellipse1.equals(this.ellipse3), false, "fails in height");
+        t.checkExpect(this.ellipse1.equals(this.ellipse4), false, "fails in width");
+        t.checkExpect(this.ellipse1.equals(this.ellipse5), false, "fails in fill");
+        t.checkExpect(this.ellipse1.equals(this.ellipse6), false, "fails in color");
         t.checkExpect(this.ellipse1.hashCode(), this.ellipse2.hashCode());
 
-        t.checkExpect(!this.circle1.equals(this.ellipse1), "fails - different classes");
-        t.checkExpect(!this.ellipse1.equals(this.circle1), "fails - different classes");
+        t.checkExpect(this.circle1.equals(this.ellipse1), false, "fails - different classes");
+        t.checkExpect(this.ellipse1.equals(this.circle1), false, "fails - different classes");
 
         t.checkInexact(this.ellipse6.getWidth(), 4.0, 0.001);
         t.checkInexact(this.ellipse6.getHeight(), 5.0, 0.001);
@@ -106,11 +106,11 @@ public class ExamplesImageMethods implements IExamples {
                         + this.circle1.toIndentedString("   ")
                         + ",\n   this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.frame1, this.frame2);
-        t.checkExpect(!this.frame1.equals(this.frame3), "fails in equals");
+        t.checkExpect(this.frame1.equals(this.frame3), false, "fails in equals");
         t.checkExpect(this.frame1.hashCode(), this.frame2.hashCode());
 
-        t.checkExpect(!this.rectangle1.equals(this.frame1), "fails - different classes");
-        t.checkExpect(!this.frame1.equals(this.rectangle1), "fails - different classes");
+        t.checkExpect(this.rectangle1.equals(this.frame1), false, "fails - different classes");
+        t.checkExpect(this.frame1.equals(this.rectangle1), false, "fails - different classes");
 
         t.checkInexact(this.frame1.getWidth(), 8.0, 0.001);
         t.checkInexact(this.frame1.getHeight(), 8.0, 0.001);
@@ -143,14 +143,14 @@ public class ExamplesImageMethods implements IExamples {
                         + "\n   this.fill = solid,"
                         + "\n   this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.rectangle1, this.rectangle2);
-        t.checkExpect(!this.rectangle1.equals(this.rectangle3), "fails in width");
-        t.checkExpect(!this.rectangle1.equals(this.rectangle4), "fails in height");
-        t.checkExpect(!this.rectangle1.equals(this.rectangle5), "fails in fill");
-        t.checkExpect(!this.rectangle1.equals(this.rectangle6), "fails in color");
+        t.checkExpect(this.rectangle1.equals(this.rectangle3), false, "fails in width");
+        t.checkExpect(this.rectangle1.equals(this.rectangle4), false, "fails in height");
+        t.checkExpect(this.rectangle1.equals(this.rectangle5), false, "fails in fill");
+        t.checkExpect(this.rectangle1.equals(this.rectangle6), false, "fails in color");
         t.checkExpect(this.rectangle1.hashCode(), this.rectangle2.hashCode());
 
-        t.checkExpect(!this.frame1.equals(this.rectangle1), "fails - different classes");
-        t.checkExpect(!this.rectangle1.equals(this.frame1), "fails - different classes");
+        t.checkExpect(this.frame1.equals(this.rectangle1), false, "fails - different classes");
+        t.checkExpect(this.rectangle1.equals(this.frame1), false, "fails - different classes");
 
         t.checkInexact(this.rectangle1.getWidth(), 4.0, 0.001);
         t.checkInexact(this.rectangle1.getHeight(), 5.0, 0.001);
@@ -176,13 +176,13 @@ public class ExamplesImageMethods implements IExamples {
                 "\n   new LineImage(this.endPoint = (4, 5),"
                         + "\n   this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.line1, this.line2);
-        t.checkExpect(!this.line1.equals(this.line3), "fails in endPoint.x");
-        t.checkExpect(!this.line1.equals(this.line4), "fails in endPoint.y");
-        t.checkExpect(!this.line1.equals(this.line5), "fails in color");
+        t.checkExpect(this.line1.equals(this.line3), false, "fails in endPoint.x");
+        t.checkExpect(this.line1.equals(this.line4), false, "fails in endPoint.y");
+        t.checkExpect(this.line1.equals(this.line5), false, "fails in color");
         t.checkExpect(this.line1.hashCode(), this.line2.hashCode());
 
-        t.checkExpect(!this.frame1.equals(this.line1), "fails - different classes");
-        t.checkExpect(!this.line1.equals(this.frame1), "fails - different classes");
+        t.checkExpect(this.frame1.equals(this.line1), false, "fails - different classes");
+        t.checkExpect(this.line1.equals(this.frame1), false, "fails - different classes");
 
         t.checkInexact(this.line1.getWidth(), 4.0, 0.001);
         t.checkInexact(this.line1.getHeight(), 5.0, 0.001);
@@ -224,17 +224,17 @@ public class ExamplesImageMethods implements IExamples {
                         + "\n   this.fill = solid,"
                         + "\n   this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.triangle1, this.triangle2);
-        t.checkExpect(!this.triangle1.equals(this.triangle3), "fails in p1.x");
-        t.checkExpect(!this.triangle1.equals(this.triangle4), "fails in p1.y");
-        t.checkExpect(!this.triangle1.equals(this.triangle5), "fails in p2.x");
-        t.checkExpect(!this.triangle1.equals(this.triangle6), "fails in p2.y");
-        t.checkExpect(!this.triangle1.equals(this.triangle7), "fails in p3.x");
-        t.checkExpect(!this.triangle1.equals(this.triangle8), "fails in p3.y");
-        t.checkExpect(!this.triangle1.equals(this.triangle9), "fails in color");
+        t.checkExpect(this.triangle1.equals(this.triangle3), false, "fails in p1.x");
+        t.checkExpect(this.triangle1.equals(this.triangle4), false, "fails in p1.y");
+        t.checkExpect(this.triangle1.equals(this.triangle5), false, "fails in p2.x");
+        t.checkExpect(this.triangle1.equals(this.triangle6), false, "fails in p2.y");
+        t.checkExpect(this.triangle1.equals(this.triangle7), false, "fails in p3.x");
+        t.checkExpect(this.triangle1.equals(this.triangle8), false, "fails in p3.y");
+        t.checkExpect(this.triangle1.equals(this.triangle9), false, "fails in color");
         t.checkExpect(this.triangle1.hashCode(), this.triangle2.hashCode());
 
-        t.checkExpect(!this.line1.equals(this.triangle1), "fails - different classes");
-        t.checkExpect(!this.triangle1.equals(this.line1), "fails - different classes");
+        t.checkExpect(this.line1.equals(this.triangle1), false, "fails - different classes");
+        t.checkExpect(this.triangle1.equals(this.line1), false, "fails - different classes");
 
         t.checkInexact(this.triangle8.getWidth(), 4.0, 0.001);
         t.checkInexact(this.triangle8.getHeight(), 5.0, 0.001);
@@ -255,26 +255,26 @@ public class ExamplesImageMethods implements IExamples {
     void testTextImage(Tester t) {
         char c = '"';
         t.checkExpect(this.text1.toString(), "new TextImage(this.text = " + c
-                + "hello" + c + "," + "\nthis.size = 6.0, this.style = 2,"
+                + "hello" + c + "," + "\nthis.size = 6.0, this.style = italic,"
                 + "\nthis.color = [r=0,g=0,b=0])");
         t.checkExpect(this.text1.toIndentedString(" "),
                 "\n   new TextImage(this.text = " + c + "hello" + c + ","
-                        + "\n   this.size = 6.0, this.style = 2,"
+                        + "\n   this.size = 6.0, this.style = italic,"
                         + "\n   this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.text1, this.text2);
         t.checkExpect(this.text1, this.text6);
-        t.checkExpect(!this.text1.equals(this.text3), "fails in text");
-        t.checkExpect(!this.text1.equals(this.text4), "fails in size");
-        t.checkExpect(!this.text1.equals(this.text5), "fails in style");
-        t.checkExpect(!this.text1.equals(this.text7), "fails in color");
+        t.checkExpect(this.text1.equals(this.text3), false, "fails in text");
+        t.checkExpect(this.text1.equals(this.text4), false, "fails in size");
+        t.checkExpect(this.text1.equals(this.text5), false, "fails in style");
+        t.checkExpect(this.text1.equals(this.text7), false, "fails in color");
         t.checkExpect(this.text1.hashCode(), this.text2.hashCode());
         t.checkExpect(this.text1.hashCode(), this.text6.hashCode());
 
-        t.checkExpect(!this.line1.equals(this.text1), "fails - different classes");
-        t.checkExpect(!this.text1.equals(this.line1), "fails - different classes");
+        t.checkExpect(this.line1.equals(this.text1), false, "fails - different classes");
+        t.checkExpect(this.text1.equals(this.line1), false, "fails - different classes");
 
-        t.checkExpect(this.text1.getWidth(), 14);
-        t.checkExpect(this.text1.getHeight(), 4);
+        t.checkExpect(this.text1.getWidth(), 16.0);
+        t.checkExpect(this.text1.getHeight(), 6.0);
     }
 
     // ------------ OverlayImage class
@@ -296,13 +296,12 @@ public class ExamplesImageMethods implements IExamples {
                         + ")");
 
         t.checkExpect(this.overlay1, this.overlay2);
-        t.checkExpect(!this.overlay1.equals(this.overlay3), "fails in bot");
-        t.checkExpect(!this.overlay1.equals(this.overlay4), "fails in top");
+        t.checkExpect(this.overlay1.equals(this.overlay3), false, "fails in bot");
+        t.checkExpect(this.overlay1.equals(this.overlay4), false, "fails in top");
         t.checkExpect(this.overlay1.hashCode(), this.overlay2.hashCode());
 
-        t.checkExpect(!this.line1.equals(this.overlay1), "fails - different classes");
-        t.checkExpect(!this.overlay1.equals(this.rectangle1),
-                "fails - different classes");
+        t.checkExpect(this.line1.equals(this.overlay1), false, "fails - different classes");
+        t.checkExpect(this.overlay1.equals(this.rectangle1), false, "fails - different classes");
 
         t.checkInexact(this.overlay1.getWidth(), 8.0, 0.001);
         t.checkInexact(this.overlay1.getHeight(), 8.0, 0.001);
@@ -338,15 +337,14 @@ public class ExamplesImageMethods implements IExamples {
                         + "\n   this.bot = " + this.rectangle1.toIndentedString("   ") + ")");
 
         t.checkExpect(this.overlayXY1, this.overlayXY2);
-        t.checkExpect(!this.overlayXY1.equals(this.overlayXY3), "fails in dx");
-        t.checkExpect(!this.overlayXY1.equals(this.overlayXY4), "fails in dy");
-        t.checkExpect(!this.overlayXY1.equals(this.overlayXY5), "fails in bot");
-        t.checkExpect(!this.overlayXY1.equals(this.overlayXY6), "fails in top");
+        t.checkExpect(this.overlayXY1.equals(this.overlayXY3), false, "fails in dx");
+        t.checkExpect(this.overlayXY1.equals(this.overlayXY4), false, "fails in dy");
+        t.checkExpect(this.overlayXY1.equals(this.overlayXY5), false, "fails in bot");
+        t.checkExpect(this.overlayXY1.equals(this.overlayXY6), false, "fails in top");
         t.checkExpect(this.overlayXY1.hashCode(), this.overlayXY2.hashCode());
 
-        t.checkExpect(!this.line1.equals(this.overlayXY1), "fails - different classes");
-        t.checkExpect(!this.overlayXY6.equals(this.ellipse1),
-                "fails - different classes");
+        t.checkExpect(this.line1.equals(this.overlayXY1), false, "fails - different classes");
+        t.checkExpect(this.overlayXY6.equals(this.ellipse1), false, "fails - different classes");
 
         t.checkInexact(this.overlayXY1.getWidth(), 11.0, 0.001);
         t.checkInexact(this.overlayXY1.getHeight(), 9.5, 0.001);
@@ -367,10 +365,10 @@ public class ExamplesImageMethods implements IExamples {
                 "\n   new FromFileImage(this.fileName = \"rubberduck.jpg\")");
 
         t.checkExpect(this.fromFile1, this.fromFile2);
-        t.checkExpect(!this.fromFile1.equals(this.fromFile3));
+        t.checkExpect(this.fromFile1.equals(this.fromFile3), false);
         
-        t.checkExpect(!this.fromFile1.equals(this.text1), "fails - different classes");
-        t.checkExpect(!this.line2.equals(this.fromFile1), "fails - different classes");
+        t.checkExpect(this.fromFile1.equals(this.text1), false, "fails - different classes");
+        t.checkExpect(this.line2.equals(this.fromFile1), false, "fails - different classes");
 
         t.checkInexact(this.fromFile1.getWidth(), 134.0, 0.001);
         t.checkInexact(this.fromFile1.getHeight(), 134.0, 0.001);
@@ -394,6 +392,6 @@ public class ExamplesImageMethods implements IExamples {
 
     public static void main(String[] argv) {
         ExamplesImageMethods e = new ExamplesImageMethods();
-        Tester.runReport(e, false, true);
+        Tester.runReport(e, false, true, new tester.DefaultReporter(), 80);
     }
 }

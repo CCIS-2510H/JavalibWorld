@@ -373,7 +373,7 @@ class BlobExamples {
             result = result && t.checkRange(this.b1w.blob.center.x, 95, 106)
                     && t.checkRange(this.b1w.blob.center.y, 95, 106);
         }
-        t.checkExpect(result);
+        t.checkExpect(result, true);
     }
 
     // test the method worldEnds for the class BlobWorld
@@ -410,7 +410,7 @@ class BlobExamples {
 
         // run the tests - showing only the failed test results
         BlobExamples be = new BlobExamples();
-        Tester.runReport(be, false, false);
+        Tester.runReport(be, false, false, new tester.DefaultReporter(), 80);
 
         // run the game
         BlobWorldImp w = new BlobWorldImp(new Blob(new Posn(150, 100), 20,

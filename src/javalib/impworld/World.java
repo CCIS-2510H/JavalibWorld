@@ -32,8 +32,12 @@ import javax.swing.WindowConstants;
  */
 abstract public class World {
 
-    /** the canvas that displays the current world */
-    public WorldCanvas theCanvas;
+    /**
+     * The canvas that displays the current world.
+     *
+     * (Note: not public, so that students can't directly manipulate it)
+     */
+    WorldCanvas theCanvas;
 
     /** true if 'bigBang' started the world and it did not end, did not stop */
     private transient boolean worldExists = false;
@@ -81,9 +85,9 @@ abstract public class World {
      * </p>
      * 
      * @param w
-     *            the width of the <code>{@link AppletCanvas Canvas}</code>
+     *            the width of the <code>{@link WorldCanvas Canvas}</code>
      * @param h
-     *            the height of the <code>{@link AppletCanvas Canvas}</code>
+     *            the height of the <code>{@link WorldCanvas Canvas}</code>
      * @param speed
      *            the speed at which the clock runs
      */
@@ -131,6 +135,8 @@ abstract public class World {
         this.theCanvas.show();
 
         // draw the initial world
+        this.worldExists = true;
+        this.mytime = new MyTimer(this, speed);
         this.drawWorld("");
 
         // pause again after the Canvas is shown to make sure
@@ -144,11 +150,8 @@ abstract public class World {
         }
 
         // and add the timer -- start it if speed is greater than 0
-        this.mytime = new MyTimer(this, speed);
         if (speed > 0.0)
             this.mytime.timer.start();
-
-        this.worldExists = true;
 
         this.drawWorld("");
 
@@ -168,9 +171,9 @@ abstract public class World {
      * </p>
      * 
      * @param w
-     *            the width of the <code>{@link AppletCanvas Canvas}</code>
+     *            the width of the <code>{@link WorldCanvas Canvas}</code>
      * @param h
-     *            the height of the <code>{@link AppletCanvas Canvas}</code>
+     *            the height of the <code>{@link WorldCanvas Canvas}</code>
      */
     public void bigBang(int w, int h) {
         this.bigBang(w, h, 0.0);

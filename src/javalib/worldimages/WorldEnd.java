@@ -46,4 +46,19 @@ public final class WorldEnd {
         this.worldEnds = worldEnds;
         this.lastScene = lastScene;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof WorldEnd)) return false;
+        WorldEnd end = (WorldEnd)obj;
+        return this.worldEnds == end.worldEnds && this.lastScene.equals(end.lastScene);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = this.lastScene.hashCode();
+        if (this.worldEnds)
+            hash = hash * 2;
+        return hash;
+    }
 }

@@ -72,10 +72,12 @@ public abstract class WorldImage {
      * @return The tight bounding box of the image
      */
     public BoundingBox getBB() {
-        if (!WorldImage.bbCache.containsKey(this)) {
-            WorldImage.bbCache.put(this, this.getBB(new AffineTransform()));
+        BoundingBox ret = WorldImage.bbCache.get(this);
+        if (ret == null) {
+            ret = this.getBB(new AffineTransform());
+            WorldImage.bbCache.put(this, ret);
         }
-        return WorldImage.bbCache.get(this);
+        return ret;
     }
     protected BoundingBox getBB(final AffineTransform tx) {
         try {
@@ -88,7 +90,6 @@ public abstract class WorldImage {
         } catch (StackOverflowError e) {
             final WorldImage img = this;
             return (new Callable<BoundingBox>() {
-                @Override
                 public BoundingBox call() {
                     return img.getBB(tx);
                 }
@@ -220,7 +221,7 @@ public abstract class WorldImage {
      * <p>
      * A convenience method that allows us to combine several images into one on
      * top of this image without the need to explicitly construct
-     * <code>{@link OverlayImages OverlayImages}</code>
+     * <code>{@link OverlayImage OverlayImages}</code>
      * </p>
      * <p>
      * The pinhole is placed in the middle of all overlayed images.
