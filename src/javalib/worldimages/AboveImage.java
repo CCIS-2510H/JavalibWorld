@@ -53,6 +53,8 @@ public final class AboveImage extends OverlayOffsetAlignBase {
      * Combine many images into a series of <code>AboveImages</code>
      */
     private static WorldImage multipleImageHandling(WorldImage[] ims) {
+        if (ims.length == 0)
+            throw new IllegalArgumentException("Cannot call AboveImage constructor with fewer than two images");
         if (ims.length <= 1) {
             return ims[0];
         } else {
