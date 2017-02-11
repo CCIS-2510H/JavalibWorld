@@ -62,7 +62,7 @@ public final class BesideAlignImage extends OverlayOffsetAlignBase {
     private static WorldImage multipleImageHandling(AlignModeY mode,
             WorldImage[] ims) {
         if (ims.length == 0)
-            throw new IllegalArgumentException("Cannot call BesideAlignImage constructor with fewer than two images");
+            return new EmptyImage();
         if (ims.length <= 1) {
             return ims[0];
         } else {
