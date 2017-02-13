@@ -252,6 +252,10 @@ abstract public class World {
                     this.stopWorld();
                 } else {
                     World bw = this.onTick();
+                    if (bw.lastWorld.worldEnds) {
+                        bw.stopWorld();
+                        return bw;
+                    }
                     return resetWorld(bw);
                 }
             } else

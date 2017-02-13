@@ -266,7 +266,11 @@ abstract public class World {
                     this.stopWorld();
                 } else {
                     this.onTick();
-                    this.drawWorld("");
+                    if (this.lastWorld.worldEnds) {
+                        this.stopWorld();
+                    } else {
+                        this.drawWorld("");
+                    }
                 }
             }
         } catch (RuntimeException re) {

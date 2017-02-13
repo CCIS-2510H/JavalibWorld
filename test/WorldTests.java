@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Array;
 
@@ -6,6 +7,42 @@ import funworldtests.*;
 import impworldtests.*;
 import worldimagestests.ExamplesImageDrawings;
 import worldimagestests.ExamplesImageMethods;
+
+class MyWorld extends javalib.funworld.World {
+    @Override
+    public javalib.funworld.World onTick() {
+        return this.endOfWorld("hello");
+    }
+
+    @Override
+    public javalib.funworld.WorldScene makeScene() {
+        return this.getEmptyScene();
+    }
+
+    @Override
+    public javalib.funworld.WorldScene lastScene(String s) {
+        return this.getEmptyScene().placeImageXY(new javalib.worldimages.TextImage(s, Color.RED), 250, 250);
+    }
+}
+
+class MyWorld2 extends javalib.impworld.World {
+    @Override
+    public void onTick() {
+        this.endOfWorld("hello");
+    }
+
+    @Override
+    public javalib.impworld.WorldScene makeScene() {
+        return this.getEmptyScene();
+    }
+
+    @Override
+    public javalib.impworld.WorldScene lastScene(String s) {
+        javalib.impworld.WorldScene scene = this.getEmptyScene();
+        scene.placeImageXY(new javalib.worldimages.TextImage(s, Color.RED), 250, 250);
+        return scene;
+    }
+}
 
 public class WorldTests {
 
@@ -46,11 +83,18 @@ public class WorldTests {
 
     /** main: an alternative way of starting the world and running the tests */
     public static void main(String[] argv) {
-
+/*
         for (int i = 0; i < Array.getLength(examples); i++) {
             runTests(examples[i]);
         }
+        */
+runTests(new WorldTests());
         // runTests(blobExamples);
         // runTests(tickyTackExamples);
+    }
+
+    boolean testWorldEnd(Tester t) {
+        new MyWorld().bigBang(500, 500, 0.5);
+        return true;
     }
 }
