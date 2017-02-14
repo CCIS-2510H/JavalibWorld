@@ -39,10 +39,10 @@ abstract public class World {
     private transient boolean worldExists = false;
 
     /** the timer for this world */
-    protected transient MyTimer mytime;
+    transient MyTimer mytime;
 
     /** timer events not processed when the mouse event is processed */
-    protected transient boolean stopTimer = false;
+    transient boolean stopTimer = false;
 
     /** the key adapter for this world */
     private transient MyKeyAdapter ka;
@@ -113,6 +113,7 @@ abstract public class World {
         // add the key listener to the frame for our canvas
         this.ka = new MyKeyAdapter(this);
         this.theCanvas.f.addKeyListener(this.ka);
+        this.theCanvas.f.setFocusTraversalKeysEnabled(false);
 
         // add the mouse listener to the frame for our canvas
         this.ma = new MyMouseAdapter(this);
@@ -170,7 +171,7 @@ abstract public class World {
      * Stop the world, close all listeners and the timer, draw the last
      * <code>Scene</code>.
      */
-    protected void stopWorld() {
+    void stopWorld() {
         if (worldExists) {
             // remove listeners and set worldExists to false
             this.mytime.timer.stop();
@@ -244,7 +245,7 @@ abstract public class World {
      * 
      * @return <code>{@link World World}</code> after the tick event
      */
-    protected synchronized World processTick() {
+    synchronized World processTick() {
         try {
             if (this.worldExists && !this.stopTimer) {
                 this.lastWorld = this.worldEnds();
@@ -292,7 +293,7 @@ abstract public class World {
      * 
      * @return <code>{@link World World}</code> after the key event
      */
-    protected synchronized World processKeyEvent(String ke) {
+    synchronized World processKeyEvent(String ke) {
         try {
             if (this.worldExists) {
                 World bw = this.onKeyEvent(ke);
@@ -329,6 +330,49 @@ abstract public class World {
     }
 
     /**
+     * The method invoked by the key adapter on key-released events. Delegates
+     * to the user to define a new state of the world, then resets the canvas
+     * and event handlers for the new world to those currently used.
+     *
+     * @return <code>{@link World World}</code> after the key event
+     */
+    synchronized World processKeyReleased(String key) {
+        try {
+            if (this.worldExists) {
+                World bw = this.onKeyReleased(key);
+                if (!this.lastWorld.worldEnds)
+                    return resetWorld(bw);
+                else
+                    return this;
+            } else
+                return this;
+
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+            this.drawWorld("");
+            // throw re;
+            Runtime.getRuntime().halt(1);
+        }
+        return this;
+    }
+
+    /**
+     * <P>
+     * User defined method to be invoked by the key adapter on key-released
+     * events. Produces a new <code>{@link World World}</code>.
+     * </P>
+     * <P>
+     * Override this method in the game world class
+     * </P>
+     *
+     * @return <code>{@link World World}</code> that needs to have the canvas
+     *         and the event handlers initialized
+     */
+    public World onKeyReleased(String key) {
+        return this;
+    }
+
+    /**
      * The method invoked by the mouse adapter on mouse clicked event. Delegates
      * to the user to define a new state of the world.
      * 
@@ -336,7 +380,7 @@ abstract public class World {
      *            the location of the mouse when clicked
      * @return <code>{@link World World}</code> after the mouse event
      */
-    protected World processMouseClicked(Posn mouse) {
+    World processMouseClicked(Posn mouse) {
         try {
             if (this.worldExists) {
                 World bw = this.onMouseClicked(mouse);
@@ -380,7 +424,7 @@ abstract public class World {
      *            the location of the mouse when entered
      * @return <code>{@link World World}</code> after the mouse event
      */
-    protected World processMouseEntered(Posn mouse) {
+    World processMouseEntered(Posn mouse) {
 
         try {
             if (this.worldExists) {
@@ -426,7 +470,7 @@ abstract public class World {
      *            the location of the mouse when exited
      * @return <code>{@link World World}</code> after the mouse event
      */
-    protected World processMouseExited(Posn mouse) {
+    World processMouseExited(Posn mouse) {
 
         try {
             if (this.worldExists) {
@@ -472,7 +516,7 @@ abstract public class World {
      *            the location of the mouse when pressed
      * @return <code>{@link World World}</code> after the mouse event
      */
-    protected World processMousePressed(Posn mouse) {
+    World processMousePressed(Posn mouse) {
 
         try {
             if (this.worldExists) {
@@ -518,7 +562,7 @@ abstract public class World {
      *            the location of the mouse when released
      * @return <code>{@link World World}</code> after the mouse event
      */
-    protected World processMouseReleased(Posn mouse) {
+    World processMouseReleased(Posn mouse) {
 
         try {
             if (this.worldExists) {
@@ -576,7 +620,7 @@ abstract public class World {
             bw.ka = this.ka;
             bw.ma = this.ma;
             bw.windowClosing = this.windowClosing;
-            bw.ka.currentWorld = bw;
+            bw.ka.resetWorld(bw);
             bw.ma.currentWorld = bw;
 
             // and the timer
@@ -602,7 +646,7 @@ abstract public class World {
      * 
      * @return <code>true</code>
      */
-    protected synchronized boolean drawWorld(String s) {
+    synchronized boolean drawWorld(String s) {
         if (this.worldExists) {
             this.theCanvas.clear();
             this.theCanvas.drawScene(this.makeScene());
@@ -674,21 +718,21 @@ class MyWindowClosingListener extends WindowAdapter {
  * @author Viera K. Proulx
  * @since August 2, 2007
  */
-class MyTimer {
+final class MyTimer {
 
     /**
      * the current <code>{@link World World}</code> that handles the timer
      * events
      */
-    protected World currentWorld;
+    World currentWorld;
 
     /** the <code>Timer</code> that generates the time events */
-    protected Timer timer;
+    Timer timer;
 
     public boolean running = true;
 
     /** the timer speed */
-    protected int speed;
+    final int speed;
 
     /**
      * Create the initial timer for the given <code>{@link World World}</code>
@@ -699,7 +743,7 @@ class MyTimer {
      * @param speed
      *            the given <code>speed</code>
      */
-    protected MyTimer(World currentWorld, double speed) {
+    MyTimer(World currentWorld, double speed) {
         this.currentWorld = currentWorld;
         this.timer = new Timer((new Double(speed * 1000)).intValue(),
                 this.timerTasks);
@@ -709,7 +753,7 @@ class MyTimer {
     /**
      * The callback for the timer events
      */
-    protected ActionListener timerTasks = new ActionListener() {
+    ActionListener timerTasks = new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
             if (running)
                 currentWorld.processTick();
@@ -720,11 +764,11 @@ class MyTimer {
      * A helper method to convert the <code>speed</code> given as a delay time
      * into milliseconds
      */
-    protected void setSpeed() {
+    void setSpeed() {
         this.timer.setDelay(this.speed);
     }
 
-    protected void stopTimer() {
+    void stopTimer() {
         this.running = false;
     }
 }
@@ -743,121 +787,31 @@ class MyTimer {
  * @author Viera K. Proulx
  * @since August 2, 2007
  */
-class MyKeyAdapter extends KeyAdapter {
-
-    /**
-     * the current <code>{@link World World}</code> that handles the key events
-     */
-    protected World currentWorld;
-
+final class MyKeyAdapter extends javalib.utils.AbstractKeyAdapter {
     /** the <code>KeyAdapter</code> that handles the key events */
-    protected MyKeyAdapter(World currentWorld) {
-        this.currentWorld = currentWorld;
+    MyKeyAdapter(World currentWorld) {
+        super(new OnKey(currentWorld), new OnReleased(currentWorld));
     }
-
-    /**
-     * The callback for the key events
-     */
-    protected void keyEventCallback(String keyString) {
-        this.currentWorld.processKeyEvent(keyString);
+    void resetWorld(final World currentWorld) {
+        this.onKey = new OnKey(currentWorld);
+        this.onReleased = new OnReleased(currentWorld);
     }
-
-    // --------------------------------------------------------------------//
-    // the key event handlers //
-    // --------------------------------------------------------------------//-
-
-    /**
-     * <p>
-     * Handle the key typed event from the canvas.
-     * </p>
-     * <p>
-     * This is where we get the letter keys.
-     * </p>
-     * 
-     * @param e
-     *            the <code>KeyEvent</code> that caused the callback
-     */
-    public void keyTyped(KeyEvent e) {
-        displayInfo(e, "KEY TYPED: ");
-    }
-
-    /**
-     * <p>
-     * Handle the key pressed event from the canvas.
-     * </p>
-     * <p>
-     * This is where we get the arrow keys.
-     * </p>
-     * 
-     * @param e
-     *            the <code>KeyEvent</code> that caused the callback
-     */
-    public void keyPressed(KeyEvent e) {
-        displayInfo(e, "KEY PRESSED: ");
-    }
-
-    /**
-     * <p>
-     * The key event major processor. The code is adopted from the code provided
-     * by the Java documentation for key event processing.
-     * </p>
-     * 
-     * <p>
-     * <em>We have to jump through some hoops to avoid
-     * trying to print non-printing characters 
-     * such as Shift.  (Not only do they not print, 
-     * but if you put them in a String, the characters
-     * afterward won't show up in the text area.)</em>
-     * </P>
-     * 
-     * <p>
-     * There may be unneeded code here. An earlier comment stated:
-     * <em>needs to add conversion table from code to 
-     * </em><code>String</code>. The code for converting a single character to
-     * <code>String</code> is included here.
-     * </p>
-     */
-    protected void displayInfo(KeyEvent e, String s) {
-        String keyString = "";
-
-        // You should only rely on the key char if the event
-        // is a key typed event.
-        int id = e.getID();
-        if (id == KeyEvent.KEY_TYPED) {
-            // regular letter has been pressed and released
-            char c = e.getKeyChar();
-            keyString = "" + c;
-
-            // process four arrow keys when pressed
-        } else if (id == KeyEvent.KEY_PRESSED) {
-            // check if pressed is one of the arrows
-            int keyCode = e.getKeyCode();
-            if (keyCode == 37)
-                keyString = "left";
-            else if (keyCode == 38)
-                keyString = "up";
-            else if (keyCode == 39)
-                keyString = "right";
-            else if (keyCode == 40)
-                keyString = "down";
-
-            else
-                ; // ignore other keys pressed
-
-            // record the KEY_RELEASED event
-        } else {
-            keyString = "released";
+    static class OnKey implements javalib.utils.AbstractKeyAdapter.Consumer<String> {
+        final World currentWorld;
+        OnKey(World w) { this.currentWorld = w; }
+        @Override
+        public void apply(String data) {
+            currentWorld.processKeyEvent(data);
         }
-
-        // ////////////////////////////////////////////////////////////////////////
-        // here is the actual callback //
-        if (!(keyString.length() == 0 || // ignore key pressed except arrows //
-        keyString.equals("released"))) // ignore key released //
-            keyEventCallback(keyString); //
-        // ////////////////////////////////////////////////////////////////////////
     }
-    // ---------------------------------------------------------------------
-    // end of the key event major processor
+    static class OnReleased implements javalib.utils.AbstractKeyAdapter.Consumer<String> {
+        final World currentWorld;
+        OnReleased(World w) { this.currentWorld = w; }
+        @Override
+        public void apply(String data) {
+            currentWorld.processKeyReleased(data);
+        }
+    }
 }
 
 /**
@@ -872,16 +826,16 @@ class MyKeyAdapter extends KeyAdapter {
  * @author Viera K. Proulx
  * @since August 2, 2007
  */
-class MyMouseAdapter extends MouseAdapter {
+final class MyMouseAdapter extends MouseAdapter {
 
     /**
      * the current <code>{@link World World}</code> that handles the mouse
      * events
      */
-    protected World currentWorld;
+    World currentWorld;
 
     /** the mouse position recorded by the mouse event handler */
-    protected Posn mousePosn;
+    Posn mousePosn;
 
     /**
      * Create the mouse listener for the given <code>{@link World World}</code>.
@@ -889,7 +843,7 @@ class MyMouseAdapter extends MouseAdapter {
      * @param currentWorld
      *            the given <code>{@link World World}</code>
      */
-    protected MyMouseAdapter(World currentWorld) {
+    MyMouseAdapter(World currentWorld) {
         this.currentWorld = currentWorld;
     }
 
