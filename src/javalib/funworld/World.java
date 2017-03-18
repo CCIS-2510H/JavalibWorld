@@ -799,7 +799,6 @@ final class MyKeyAdapter extends javalib.utils.AbstractKeyAdapter {
     static class OnKey implements javalib.utils.AbstractKeyAdapter.Consumer<String> {
         final World currentWorld;
         OnKey(World w) { this.currentWorld = w; }
-        @Override
         public void apply(String data) {
             currentWorld.processKeyEvent(data);
         }
@@ -807,7 +806,6 @@ final class MyKeyAdapter extends javalib.utils.AbstractKeyAdapter {
     static class OnReleased implements javalib.utils.AbstractKeyAdapter.Consumer<String> {
         final World currentWorld;
         OnReleased(World w) { this.currentWorld = w; }
-        @Override
         public void apply(String data) {
             currentWorld.processKeyReleased(data);
         }
