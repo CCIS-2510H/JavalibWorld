@@ -75,17 +75,6 @@ public final class FromFileImage extends WorldImage {
         this.draw(g);
     }
 
-    /**
-     * Is this <code>FromFileImage</code> the same as that
-     * <code>FromFileImage</code>?
-     * 
-     * @param that
-     *            -- Image to compare against
-     */
-    public boolean same(FromFileImage that) {
-        return this.fileName.equals(that.fileName);
-    }
-
     @Override
     public double getWidth() {
         return this.imread.width;
@@ -126,13 +115,14 @@ public final class FromFileImage extends WorldImage {
                 + this.fileName + "\")";
     }
 
-    /**
-     * Is this <code>FromFileImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof FromFileImage && this.same((FromFileImage) o);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof FromFileImage) {
+            FromFileImage that = (FromFileImage)other;
+            return this.fileName.equals(that.fileName);
+        }
+        return false;
     }
-
     /**
      * The hashCode to match the equals method
      */

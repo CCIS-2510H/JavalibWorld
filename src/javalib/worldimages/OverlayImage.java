@@ -62,13 +62,6 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
     }
 
     /**
-     * Is this <code>OverlayImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof OverlayImage && this.same((OverlayImage) o);
-    }
-
-    /**
      * The hashCode to match the equals method
      */
     public int hashCode() {

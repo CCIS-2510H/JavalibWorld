@@ -249,22 +249,14 @@ abstract class RegularPolyImageBase extends WorldImage {
                 + colorString(indent, this.color) + "))\n";
     }
 
-    /**
-     * Is this <code>RegularPolyImage</code> same as that
-     * <code>RegularPolyImage</code>?
-     */
-    public boolean same(RegularPolyImageBase that) {
-        return this.sideLen == that.sideLen && this.sides == that.sides
-                && this.fill == that.fill && this.color.equals(that.color);
-    }
-
-    /**
-     * Is this <code>RegularPolyImage</code> same as the given object?
-     */
     @Override
-    public boolean equals(Object o) {
-        return o instanceof RegularPolyImageBase
-                && this.same((RegularPolyImageBase) o);
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (this.getClass().equals(other.getClass())) {
+            RegularPolyImageBase that = (RegularPolyImageBase)other;
+            return this.sideLen == that.sideLen && this.sides == that.sides
+                    && this.fill == that.fill && this.color.equals(that.color);
+        }
+        return false;
     }
 
     /**

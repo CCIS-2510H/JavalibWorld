@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.*;
+import java.util.Stack;
 
 /**
  * <p>Copyright 2015 Ben Lerner</p>
@@ -67,13 +68,6 @@ public final class CircleImage extends EllipseImageBase {
         return classNameString(indent, this) + "this.radius = " + this.radius
                 + ",\n" + indent + "this.fill = " + this.fill + ","
                 + colorString(indent, this.color) + ")";
-    }
-
-    /**
-     * Is this <code>CircleImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof CircleImage && this.same((CircleImage) o);
     }
 
     /**

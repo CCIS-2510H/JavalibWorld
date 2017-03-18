@@ -117,6 +117,20 @@ final public class CropImage extends WorldImage {
     }
 
     @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof CropImage) {
+            CropImage that = (CropImage)other;
+            if (this.x == that.x && this.y == that.y
+                    && this.width == that.width && this.height == that.height) {
+                worklist.push(new ImagePair(this.img, that.img));
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    @Override
     public double getWidth() {
         return this.width;
     }

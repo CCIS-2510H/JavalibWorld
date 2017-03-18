@@ -74,12 +74,4 @@ public final class OverlayOffsetImage extends OverlayOffsetAlignBase {
         i.pinhole = p;
         return i;
     }
-
-    /**
-     * Is this <code>OverlayOffsetImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof OverlayOffsetImage
-                && this.same((OverlayOffsetImage) o);
-    }
 }

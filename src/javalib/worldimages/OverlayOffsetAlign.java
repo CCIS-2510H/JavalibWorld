@@ -301,26 +301,18 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
                 + ")\n";
     }
 
-    /**
-     * Is this <code>OverlayOffsetAlign</code> the same as that
-     * <code>OverlayOffsetAlign</code>?
-     * 
-     * @param that
-     * @return
-     */
-    public boolean same(OverlayOffsetAlignBase that) {
-        return this.bot.equals(that.bot) && this.top.equals(that.top)
-                && this.alignX == that.alignX && this.alignY == that.alignY
-                && this.dx == that.dx && this.dy == that.dy;
-    }
-
-    /**
-     * Is this <code>OverlayOffsetAlign</code> same as the given object?
-     */
     @Override
-    public boolean equals(Object o) {
-        return o instanceof OverlayOffsetAlignBase
-                && this.same((OverlayOffsetAlignBase) o);
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (this.getClass().equals(other.getClass())) {
+            OverlayOffsetAlignBase that = (OverlayOffsetAlignBase)other;
+            if (this.alignX == that.alignX && this.alignY == that.alignY
+                    && this.dx == that.dx && this.dy == that.dy) {
+                worklist.push(new ImagePair(this.bot, that.bot));
+                worklist.push(new ImagePair(this.top, that.top));
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

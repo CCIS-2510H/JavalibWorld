@@ -191,21 +191,16 @@ abstract class RectangleImageBase extends WorldImage {
                 + this.fill + "," + colorString(indent, this.color) + ")";
     }
 
-    /**
-     * Is this <code>RectangleImage</code> same as the given
-     * <code>RectangleImage</code>?
-     */
-    public boolean same(RectangleImageBase that) {
-        return this.width == that.width && this.height == that.height
-                && this.color.equals(that.color) && this.fill == that.fill;
-    }
 
-    /**
-     * Is this <code>RectangleImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof RectangleImageBase
-                && this.same((RectangleImageBase) o);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (this.getClass().equals(other.getClass())) {
+            // Check for exact class matching, and then casting to the base class is safe
+            RectangleImageBase that = (RectangleImageBase)other;
+            return this.width == that.width && this.height == that.height
+                    && this.color.equals(that.color) && this.fill == that.fill;
+        }
+        return false;
     }
 
     /**

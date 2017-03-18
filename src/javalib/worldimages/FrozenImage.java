@@ -71,4 +71,30 @@ public final class FrozenImage extends WorldImage {
         return "new BufferedImage()";
     }
 
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof FrozenImage) {
+            FrozenImage that = (FrozenImage)other;
+            BufferedImage imgA = this.img;
+            BufferedImage imgB = that.img;
+            // The images must be the same size.
+            if (imgA.getWidth() == imgB.getWidth() && imgA.getHeight() == imgB.getHeight()) {
+                int width = imgA.getWidth();
+                int height = imgA.getHeight();
+
+                // Loop over every pixel.
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        // Compare the pixels for equality.
+                        if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

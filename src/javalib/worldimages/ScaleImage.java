@@ -12,7 +12,7 @@ public final class ScaleImage extends ScaleImageXYBase {
 
     /**
      * Scale the image
-     * 
+     *
      * @param img
      *            -- Image to scale
      * @param scale
@@ -27,10 +27,5 @@ public final class ScaleImage extends ScaleImageXYBase {
         WorldImage i = new ScaleImage(this.img, this.scaleX);
         i.pinhole = p;
         return i;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof ScaleImage && this.same((ScaleImage) o);
     }
 }

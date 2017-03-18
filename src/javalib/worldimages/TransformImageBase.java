@@ -74,6 +74,18 @@ abstract public class TransformImageBase extends WorldImage {
     }
 
     @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (this.getClass().equals(other.getClass())) {
+            TransformImageBase that = (TransformImageBase) other;
+            if (this.tx.equals(that.tx)) {
+                worklist.push(new ImagePair(this.img, that.img));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public double getWidth() {
         return this.getBB().getWidth();
     }

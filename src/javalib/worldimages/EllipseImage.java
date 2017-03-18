@@ -188,17 +188,15 @@ abstract class EllipseImageBase extends WorldImage {
                 + colorString(indent, this.color) + ")";
     }
 
-    public boolean same(EllipseImageBase that) {
-        return this.width == that.width && this.height == that.height
-                && this.fill == that.fill && this.color.equals(that.color);
-    }
-
-    /**
-     * Is this <code>EllipseImage</code> same as the given object?
-     */
     @Override
-    public boolean equals(Object o) {
-        return o instanceof EllipseImageBase && this.same((EllipseImageBase) o);
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (this.getClass().equals(other.getClass())) {
+            // Check for exact class matching, and then casting to the base class is safe
+            EllipseImageBase that = (EllipseImageBase)other;
+            return this.width == that.width && this.height == that.height
+                    && this.fill == that.fill && this.color.equals(that.color);
+        }
+        return false;
     }
 
     /**

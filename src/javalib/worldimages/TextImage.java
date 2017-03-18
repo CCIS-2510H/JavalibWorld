@@ -256,19 +256,14 @@ public final class TextImage extends WorldImage {
                 + colorString(indent, this.color) + ")";
     }
 
-    /**
-     * Is this <code>TextImage</code> same as that <code>TextImage</code>?
-     */
-    public boolean same(TextImage that) {
-        return this.size == that.size && this.style == that.style
-                && this.text.equals(that.text) && this.color.equals(that.color);
-    }
-
-    /**
-     * Is this <code>TextImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof TextImage && this.same((TextImage) o);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof TextImage) {
+            TextImage that = (TextImage)other;
+            return this.size == that.size && this.style == that.style
+                    && this.text.equals(that.text) && this.color.equals(that.color);
+        }
+        return false;
     }
 
     /**

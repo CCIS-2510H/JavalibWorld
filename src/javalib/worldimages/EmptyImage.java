@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.Color;
+import java.util.Stack;
 
 /**
  * This class represents an empty image
@@ -29,7 +30,7 @@ public class EmptyImage extends RectangleImageBase {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return o instanceof EmptyImage;
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        return other instanceof EmptyImage;
     }
 }

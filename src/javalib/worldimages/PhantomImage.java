@@ -111,10 +111,15 @@ final public class PhantomImage extends WorldImage {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof PhantomImage)) return false;
-        PhantomImage other = (PhantomImage)obj;
-        return this.width == other.width && this.height == other.height && this.img.equals(other.img);
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+       if (other instanceof PhantomImage) {
+            PhantomImage that = (PhantomImage)other;
+            if (this.width == that.width && this.height == that.height) {
+                worklist.push(new ImagePair(this.img, that.img));
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

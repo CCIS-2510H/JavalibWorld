@@ -37,11 +37,6 @@ public final class HexagonImage extends RegularPolyImageBase {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return o instanceof HexagonImage && this.same((HexagonImage) o);
-    }
-
-    @Override
     public WorldImage movePinholeTo(Posn p) {
         WorldImage i = new HexagonImage(this.sideLen, this.fill, this.color);
         i.pinhole = p;

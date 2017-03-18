@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.geom.AffineTransform;
+import java.util.Stack;
 
 /**
  * Class representing the rotation of an image
@@ -42,17 +43,17 @@ public final class RotateImage extends TransformImageBase {
                 + "this.rotationDegrees = " + this.rotationDegrees + ")\n";
     }
 
-    public boolean same(RotateImage that) {
-        return this.rotationDegrees == that.rotationDegrees
-                && this.img.equals(that.img);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof RotateImage){
+            RotateImage that = (RotateImage)other;
+            if (Math.abs(this.rotationDegrees - that.rotationDegrees) < 0.00001) {
+                worklist.push(new ImagePair(this.img, that.img));
+            }
+        }
+        return false;
     }
 
-    /**
-     * Is this <code>RotateImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof RotateImage && this.same((RotateImage) o);
-    }
 
     /**
      * The hashCode to match the equals method

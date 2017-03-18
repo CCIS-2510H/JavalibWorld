@@ -50,10 +50,4 @@ public final class EquilateralTriangleImage extends RegularPolyImageBase {
         i.pinhole = p;
         return i;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof EquilateralTriangleImage
-                && this.same((EquilateralTriangleImage) o);
-    }
 }

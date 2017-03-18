@@ -91,14 +91,6 @@ public final class BesideAlignImage extends OverlayOffsetAlignBase {
                 + this.bot.toString() + ")\n";
     }
 
-    /**
-     * Is this <code>BesideAlignImage</code> same as the given object?
-     */
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof BesideAlignImage && this.same((BesideAlignImage) o);
-    }
-
     @Override
     public WorldImage movePinholeTo(Posn p) {
         WorldImage i = new BesideAlignImage(this.alignY, this.top, this.bot);

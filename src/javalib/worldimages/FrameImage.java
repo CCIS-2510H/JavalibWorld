@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.Stack;
 
 /**
  * Class representing a frame around an image
@@ -87,22 +88,13 @@ public final class FrameImage extends RectangleImageBase {
                 + colorString(indent, this.color) + ")";
     }
 
-    /**
-     * Is this <code>FrameImage</code> the same as the given
-     * <code>FrameImage</code>?
-     * 
-     * @param that
-     *            -- FrameImage to compare against
-     */
-    public boolean same(FrameImage that) {
-        return this.img.equals(that.img) && this.color.equals(that.color);
-    }
-
-    /**
-     * Is this <code>FrameImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof FrameImage && this.same((FrameImage) o);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof FrameImage) {
+            FrameImage that = (FrameImage)other;
+            return this.img.equals(that.img) && this.color.equals(that.color);
+        }
+        return false;
     }
 
     /**

@@ -89,12 +89,23 @@ public final class VisiblePinholeImage extends WorldImage {
 
     @Override
     public String toIndentedString(String indent) {
-        return indent + "  new VisiblePinholeImage()";
+        return indent + "  new VisiblePinholeImage(" + this.img.toIndentedString(indent + "  ") + ")";
     }
 
     @Override
     public String toString() {
-        return "new VisiblePinholeImage()";
+        return "new VisiblePinholeImage(" + this.img.toString() + ")";
+    }
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof VisiblePinholeImage) {
+            VisiblePinholeImage that = (VisiblePinholeImage)other;
+            if (this.img.pinhole.equals(that.img.pinhole)) {
+                worklist.push(new ImagePair(this.img, that.img));
+                return true;
+            }
+        }
+        return false;
     }
 
 }

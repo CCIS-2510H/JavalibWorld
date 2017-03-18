@@ -217,6 +217,63 @@ public abstract class WorldImage {
         }
     }
 
+    protected static class ImagePair {
+        WorldImage one, two;
+        ImagePair(WorldImage one, WorldImage two) {
+            this.one = one;
+            this.two = two;
+        }
+    }
+
+    /**
+     * A helper method for the equals method below, this method implements extensional equality
+     * via a worklist.  It collaborates with the abstract method
+     * {@link WorldImage#equalsStacksafe(WorldImage, Stack)} below, which each image
+     * class must implement.
+     *
+     * @param other   The image to be compared
+     * @return Whether the two images are extensionally equal
+     */
+    protected final boolean equalsStacksafe(WorldImage other) {
+        Stack<ImagePair> imagePairs = new Stack<ImagePair>();
+        imagePairs.push(new ImagePair(this, other));
+        while (!imagePairs.empty()) {
+            ImagePair p = imagePairs.pop();
+            if (p.one == p.two) continue; // fast success path
+            if (!(p.one.equalsStacksafe(p.two, imagePairs)))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * This helper method implements the recursive part of extensional equality checking.
+     * Each image class must check its local fields and push any contained images onto the worklist
+     * to be checked later.
+     *
+     * @param other The image to be compared
+     * @param worklist The worklist onto which child images are pushed for later comparison
+     * @return If the image types do not match, or the local fields are not equal, returns false.
+     *         Otherwise, returns true.  Any recursive checking of subimages will be done
+     *         by the {@link WorldImage#equalsStacksafe(WorldImage)} method.
+     */
+    protected abstract boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist);
+
+    /**
+     * Provides extensional equality on WorldImages.  Each image subclass must override hashcode
+     * to be compatible.
+     *
+     * This function is stack-safe: regardless of the depth of the image, it will not cause
+     * a StackOverflow.  It relies on {@link WorldImage#equalsStacksafe(WorldImage)} by default.
+     *
+     * @param obj The object to be compared
+     * @return Whether the object is extensionally equal to the current image
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof WorldImage) && this.equalsStacksafe((WorldImage)obj);
+    }
+
     /**
      * <p>
      * A convenience method that allows us to combine several images into one on

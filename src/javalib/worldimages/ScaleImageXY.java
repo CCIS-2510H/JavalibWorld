@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.geom.AffineTransform;
+import java.util.Stack;
 
 /**
  * Class representing the scaling of an image in 2 directions
@@ -68,20 +69,19 @@ abstract class ScaleImageXYBase extends TransformImageBase {
                 + "this.scaleY = " + this.scaleY + ")\n";
     }
 
-    /**
-     * Is this <code>ScaleImageXY</code> same as the given object?
-     */
-    public boolean same(ScaleImageXYBase that) {
-        return this.scaleX == that.scaleX && this.scaleY == that.scaleY
-                && this.img.equals(that.img);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (this.getClass().equals(other.getClass())){
+            // Check for exact class matching, and then casting to the base class is safe
+            ScaleImageXYBase that = (ScaleImageXYBase) other;
+            if (Math.abs(this.scaleX- that.scaleX) < 0.00001 &&
+                    Math.abs(this.scaleY - that.scaleY) < 0.00001) {
+                worklist.push(new ImagePair(this.img, that.img));
+            }
+        }
+        return false;
     }
 
-    /**
-     * Is this <code>ScaleImageXY</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof ScaleImageXY && this.same((ScaleImageXY) o);
-    }
 
     /**
      * The hashCode to match the equals method

@@ -180,22 +180,16 @@ public final class TriangleImage extends WorldImage {
                 + colorString(indent, this.color) + ")";
     }
 
-    /**
-     * Is this <code>TriangleImage</code> same as that
-     * <code>TriangleImage</code>?
-     */
-    public boolean same(TriangleImage that) {
-        return this.fill == that.fill && this.p1.x == that.p1.x
-                && this.p1.y == that.p1.y && this.p2.x == that.p2.x
-                && this.p2.y == that.p2.y && this.p3.x == that.p3.x
-                && this.p3.y == that.p3.y && this.color.equals(that.color);
-    }
-
-    /**
-     * Is this <code>TriangleImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof TriangleImage && this.same((TriangleImage) o);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof TriangleImage) {
+            TriangleImage that = (TriangleImage)other;
+            return this.fill == that.fill && this.p1.x == that.p1.x
+                    && this.p1.y == that.p1.y && this.p2.x == that.p2.x
+                    && this.p2.y == that.p2.y && this.p3.x == that.p3.x
+                    && this.p3.y == that.p3.y && this.color.equals(that.color);
+        }
+        return false;
     }
 
     /**

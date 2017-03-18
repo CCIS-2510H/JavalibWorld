@@ -112,20 +112,14 @@ public final class LineImage extends WorldImage {
                 + colorString(indent, this.color) + ")";
     }
 
-    /**
-     * Is this <code>LineImage</code> same as that <code>LineImage</code>?
-     */
-    public boolean same(LineImage that) {
-        return this.endPoint.x == that.endPoint.x
-                && this.endPoint.y == that.endPoint.y
-                && this.color.equals(that.color);
-    }
-
-    /**
-     * Is this <code>LineImage</code> same as the given object?
-     */
-    public boolean equals(Object o) {
-        return o instanceof LineImage && this.same((LineImage) o);
+    @Override
+    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+        if (other instanceof LineImage) {
+            LineImage that = (LineImage) other;
+            return this.endPoint.x == that.endPoint.x && this.endPoint.y == that.endPoint.y
+                    && this.color.equals(that.color);
+        }
+        return false;
     }
 
     /**
