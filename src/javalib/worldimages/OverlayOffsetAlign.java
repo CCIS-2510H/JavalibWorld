@@ -278,28 +278,19 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return this.getBB().getHeight();
     }
 
-    /**
-     * Produce a <code>String</code> representation of this overlay of images
-     */
     @Override
-    public String toString() {
-        return className(this) + "this.alignX = " + this.alignX
-                + ",\nthis.alignY = " + this.alignY + ",\nthis.top = "
-                + this.top.toString() + ",\nthis.dx = " + this.dx
-                + ", this.dy = " + this.dy + "\nthis.bot = "
-                + this.bot.toString() + "\nthis.top = " + ")\n";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.alignX = ").append(this.alignX).append(", ")
+               .append("this.alignY = ").append(this.alignY).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("top", this.top),
+                        new ImageField("dx", this.dx), new ImageField("dy", this.dy, true),
+                        new ImageField("bot", this.bot)));
+        return sb;
     }
 
-    @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.alignX = " + this.alignX
-                + ",\n" + indent + "this.alignY = " + this.alignY + ",\n"
-                + indent + "this.top = " + this.top.toString() + ",\n" + indent
-                + ",\nthis.dx = " + this.dx + ", this.dy = " + this.dy + ",\n"
-                + indent + "this.bot = " + this.bot.toString() + ",\n" + indent
-                + ")\n";
-    }
 
     @Override
     protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {

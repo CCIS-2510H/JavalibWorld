@@ -28,4 +28,6 @@ public class Posn {
     public String toString() {
         return String.format("new Posn(x = %d, y = %d)", this.x, this.y);
     }
+
+    String coords() { return String.format("(%d, %d)", this.x, this.y); }
 }

@@ -158,27 +158,19 @@ public final class TriangleImage extends WorldImage {
                 - Math.min(p1.y, Math.min(p2.y, p3.y));
     }
 
-    /**
-     * Produce a <code>String</code> representation of this triangle image
-     */
-    public String toString() {
-        return className(this) + "this.p1 = (" + this.p1.x + ", " + this.p1.y
-                + "),\nthis.p2 = (" + this.p2.x + ", " + this.p2.y
-                + "),\nthis.p3 = (" + this.p3.x + ", " + this.p3.y
-                + "),\nthis.fill = " + this.fill + ",\n"
-                + colorString(this.color) + ")";
+    @Override
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("p1", this.p1),
+                        new ImageField("p2", this.p2),
+                        new ImageField("p3", this.p3),
+                        new ImageField("fill", this.fill),
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
-    @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.p1 = (" + this.p1.x + ", "
-                + this.p1.y + "),\n" + indent + "this.p2 = (" + this.p2.x
-                + ", " + this.p2.y + "),\n" + indent + "this.p3 = ("
-                + this.p3.x + ", " + this.p3.y + "),\n" + indent
-                + "this.fill = " + this.fill + ","
-                + colorString(indent, this.color) + ")";
-    }
 
     @Override
     protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {

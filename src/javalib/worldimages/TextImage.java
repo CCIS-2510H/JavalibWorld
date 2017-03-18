@@ -236,24 +236,18 @@ public final class TextImage extends WorldImage {
         return this.height;
     }
 
-    /**
-     * Produce a <code>String</code> representation of this text image
-     */
-    public String toString() {
-        char c = '"';
-        return className(this) + "this.text = " + c + this.text + c
-                + ",\nthis.size = " + this.size + ", this.style = "
-                + this.style + ",\n" + colorString(this.color) + ")";
-    }
-
     @Override
-    public String toIndentedString(String indent) {
-        char c = '"';
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.text = " + c + this.text
-                + c + ",\n" + indent + "this.size = " + this.size
-                + ", this.style = " + this.style + ","
-                + colorString(indent, this.color) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.text = \"")
+               .append(this.text.replace("\\", "\\\\").replace("\"", "\\\""))
+               .append("\",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("size", this.size),
+                        new ImageField("style", this.style, true),
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
     @Override

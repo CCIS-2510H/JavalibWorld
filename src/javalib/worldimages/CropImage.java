@@ -141,12 +141,13 @@ final public class CropImage extends WorldImage {
     }
 
     @Override
-    public String toIndentedString(String indent) {
-        return indent + "  " + "new CropImage()";
-    }
-
-    @Override
-    public String toString() {
-        return "new CropImage()";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.width = ").append(this.width).append(", ")
+               .append("this.height = ").append(this.height).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("img", this.img)));
+        return sb;
     }
 }

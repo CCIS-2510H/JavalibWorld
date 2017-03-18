@@ -229,24 +229,16 @@ abstract class RegularPolyImageBase extends WorldImage {
         return maxY - minY;
     }
 
-    /**
-     * Produce a <code>String</code> representation of this Polygon image
-     */
-    public String toString() {
-        return className(this) + "this.sideLen = "
-                + Double.toString(this.sideLen) + ",\nthis.sides = "
-                + Integer.toString(this.sides) + ",\nthis.fill = " + this.fill
-                + ",\n" + colorString(this.color) + ")\n";
-    }
-
     @Override
-    public String toIndentedString(String indent) {
-        indent = indent + " ";
-        return classNameString(indent, this) + indent + "this.sideLen = "
-                + Double.toString(this.sideLen) + ",\n" + indent
-                + "this.sides = " + Integer.toString(this.sides) + ",\n"
-                + indent + "this.fill = " + this.fill + ",\n"
-                + colorString(indent, this.color) + "))\n";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+                .append("this.sidelen = ").append(this.sideLen).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("sides", this.sides),
+                        new ImageField("fill", this.fill),
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
     @Override

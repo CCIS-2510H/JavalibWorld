@@ -170,22 +170,16 @@ abstract class EllipseImageBase extends WorldImage {
         return this.height;
     }
 
-    /**
-     * Produce a <code>String</code> representation of this ellipse image
-     */
-    public String toString() {
-        return className(this) + "this.width = " + this.width
-                + ", this.height = " + this.height + "," + "\nthis.fill = "
-                + this.fill + ",\n" + colorString(this.color) + ")";
-    }
-
     @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.width = " + this.width
-                + ", this.height = " + this.height + "," + "\n" + indent
-                + "this.fill = " + this.fill + ","
-                + colorString(indent, this.color) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.width = ").append(this.width).append(", ")
+               .append("this.height = ").append(this.height).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("fill", this.fill),
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
     @Override

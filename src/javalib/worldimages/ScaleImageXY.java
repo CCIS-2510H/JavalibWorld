@@ -52,22 +52,17 @@ abstract class ScaleImageXYBase extends TransformImageBase {
         this.scaleY = scaleY;
     }
 
-    /**
-     * Produce a <code>String</code> representation of this scaled image
-     */
-    public String toString() {
-        return className(this) + "this.scaleX = " + this.scaleX
-                + ", this.scaleY = " + this.scaleY + ")\n";
+    @Override
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.scaleX = ").append(this.scaleX).append(", ")
+               .append("this.scaleY = ").append(this.scaleY).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("img", this.img)));
+        return sb;
     }
 
-    @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.img = "
-                + this.img.toIndentedString(indent) + ",\n" + indent
-                + "this.scaleX = " + this.scaleX + ",\n" + indent
-                + "this.scaleY = " + this.scaleY + ")\n";
-    }
 
     @Override
     protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {

@@ -6,6 +6,8 @@ package javalib.worldimages;
  * GNU Lesser General Public License (LGPL)</p>
  */
 
+import java.util.Stack;
+
 /**
  * <p>
  * The class to represent an overlay of the top image on the bottom one combined
@@ -38,27 +40,14 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
         super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, 0, 0, bot);
     }
 
-    /**
-     * Produce a <code>String</code> representation of this overlay of images
-     */
-    public String toString() {
-        return className(this) + "this.top = " + this.top.toString()
-                + "\nthis.bot = " + this.bot.toString() + ")";
-    }
-
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            -- the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.top = "
-                + this.top.toIndentedString(indent) + ",\n" + indent
-                + "this.bot = " + this.bot.toIndentedString(indent) + ")";
+    @Override
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("top", this.top),
+                        new ImageField("bot", this.bot)));
+        return sb;
     }
 
     /**

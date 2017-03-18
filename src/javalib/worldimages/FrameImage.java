@@ -71,21 +71,14 @@ public final class FrameImage extends RectangleImageBase {
         g.setStroke(oldStroke);
     }
 
-    /**
-     * Produce a <code>String</code> representation of this Framed image
-     */
     @Override
-    public String toString() {
-        return className(this) + "this.img = " + this.img.toString() + ",\n"
-                + colorString(this.color) + ")";
-    }
-
-    @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.img = "
-                + this.img.toIndentedString(indent) + ","
-                + colorString(indent, this.color) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("color", this.color),
+                        new ImageField("img", this.img)));
+        return sb;
     }
 
     @Override

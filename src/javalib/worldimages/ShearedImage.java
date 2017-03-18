@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.geom.AffineTransform;
+import java.util.Stack;
 
 /**
  * Class representing the shearing of an image
@@ -33,21 +34,16 @@ public final class ShearedImage extends TransformImageBase {
         this.sy = sy;
     }
 
-    /**
-     * Produce a <code>String</code> representation of this sheared image
-     */
-    @Override
-    public String toString() {
-        return className(this) + this.img.toString() + ",\n" + "this.sx = "
-                + this.sx + ",\n" + "this.sy = " + this.sy + ")\n";
-    }
 
     @Override
-    public String toIndentedString(String indent) {
-        return classNameString(indent, this)
-                + this.img.toIndentedString(indent) + ",\n" + indent
-                + "this.sx = " + this.sx + ",\n" + indent + "this.sy = "
-                + this.sy + ")\n";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.sx = ").append(this.sx).append(", ")
+               .append("this.sy = ").append(this.sy).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("img", this.img)));
+        return sb;
     }
 
     @Override

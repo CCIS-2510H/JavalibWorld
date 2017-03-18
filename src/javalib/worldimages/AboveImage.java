@@ -10,6 +10,8 @@ package javalib.worldimages;
  * </p>
  */
 
+import java.util.Stack;
+
 /**
  * A class representing positioning images on top of one another
  * 
@@ -65,20 +67,13 @@ public final class AboveImage extends OverlayOffsetAlignBase {
     }
 
     @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.im1 = "
-                + this.top.toIndentedString(indent) + ",\n" + indent
-                + "this.im2 = " + this.bot.toIndentedString(indent) + ")\n";
-    }
-
-    /**
-     * Produce a <code>String</code> representation of this overlaid image
-     */
-    @Override
-    public String toString() {
-        return className(this) + "\nthis.im1 = " + this.top.toString()
-                + ",\nthis.im2 = " + this.bot.toString() + ")\n";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("im1", this.top),
+                        new ImageField("im2", this.bot)));
+        return sb;
     }
 
     @Override

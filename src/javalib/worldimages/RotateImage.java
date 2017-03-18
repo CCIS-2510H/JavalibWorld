@@ -25,23 +25,17 @@ public final class RotateImage extends TransformImageBase {
         super(img, AffineTransform.getRotateInstance(Math.toRadians(rotationDegrees)));
         this.rotationDegrees = rotationDegrees;
     }
-    
-
-    /**
-     * Produce a <code>String</code> representation of this rotated image
-     */
-    public String toString() {
-        return className(this) + "this.img = " + this.img.toString()
-                + ", this.rotationDegrees = " + this.rotationDegrees + ")\n";
-    }
 
     @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.img = "
-                + this.img.toIndentedString(indent) + "\n" + indent
-                + "this.rotationDegrees = " + this.rotationDegrees + ")\n";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.rotationDegrees = ").append(this.rotationDegrees).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("img", this.img)));
+        return sb;
     }
+
 
     @Override
     protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {

@@ -38,11 +38,11 @@ public class ExamplesImageMethods implements IExamples {
     // Tests for the CircleImage class
     void testCircleImage(Tester t) {
         t.checkExpect(this.circle1.toString(),
-                "new CircleImage(this.radius = 4,\nthis.fill = solid,"
+                "new CircleImage(this.radius = 4,\nthis.fill = OutlineMode.SOLID,"
                         + "\nthis.color = [r=255,g=0,b=0])");
-        t.checkExpect(this.circle1.toIndentedString(" "),
-                "\n   new CircleImage(this.radius = 4,"
-                        + "\n   this.fill = solid,"
+        t.checkExpect(this.circle1.toIndentedString(new StringBuilder(), "  ", 1).toString(),
+                "new CircleImage(this.radius = 4,"
+                        + "\n   this.fill = OutlineMode.SOLID,"
                         + "\n   this.color = [r=255,g=0,b=0])");
         t.checkExpect(this.circle1, this.circle5, "Should be the same");
         t.checkExpect(this.circle1.equals(this.circle2), false, "fails in radius");
@@ -69,11 +69,11 @@ public class ExamplesImageMethods implements IExamples {
     void testEllipseImage(Tester t) {
         t.checkExpect(this.ellipse1.toString(),
                 "new EllipseImage(this.width = 4, this.height = 5,"
-                        + "\nthis.fill = solid,"
+                        + "\nthis.fill = OutlineMode.SOLID,"
                         + "\nthis.color = [r=0,g=255,b=0])");
-        t.checkExpect(this.ellipse1.toIndentedString(" "),
-                "\n   new EllipseImage(this.width = 4, this.height = 5,"
-                        + "\n   this.fill = solid,"
+        t.checkExpect(this.ellipse1.toIndentedString(new StringBuilder(), "  ", 1).toString(),
+                "new EllipseImage(this.width = 4, this.height = 5,"
+                        + "\n   this.fill = OutlineMode.SOLID,"
                         + "\n   this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.ellipse1, this.ellipse2);
         t.checkExpect(this.ellipse1.equals(this.ellipse3), false, "fails in height");
@@ -97,14 +97,16 @@ public class ExamplesImageMethods implements IExamples {
 
     // Tests for the FrameImage class
     void testFrameImage(Tester t) {
-        t.checkExpect(this.frame1.toString(), "new FrameImage(this.img = "
-                + this.circle1.toString()
-                + ",\nthis.color = [r=0,g=0,b=0])");
+        t.checkExpect(this.frame1.toString(),
+                "new FrameImage(\n"
+                + "this.color = [r=0,g=0,b=0],\n"
+                + "this.img = "+ this.circle1.toString() + ")");
         t.checkExpect(
-                this.frame1.toIndentedString(" "),
-                "\n   new FrameImage(this.img = "
-                        + this.circle1.toIndentedString("   ")
-                        + ",\n   this.color = [r=0,g=0,b=0])");
+                this.frame1.toIndentedString(new StringBuilder("\n"), "", 2).toString(),
+                "\nnew FrameImage(\n"
+                + "  this.color = [r=0,g=0,b=0],\n"
+                + "  this.img = "
+                        + this.circle1.toIndentedString(new StringBuilder(), "  ", 2).toString() + ")");
         t.checkExpect(this.frame1, this.frame2);
         t.checkExpect(this.frame1.equals(this.frame3), false, "fails in equals");
         t.checkExpect(this.frame1.hashCode(), this.frame2.hashCode());
@@ -136,11 +138,11 @@ public class ExamplesImageMethods implements IExamples {
     void testRectangleImage(Tester t) {
         t.checkExpect(this.rectangle1.toString(),
                 "new RectangleImage(this.width = 4, this.height = 5,"
-                        + "\nthis.fill = solid,"
+                        + "\nthis.fill = OutlineMode.SOLID,"
                         + "\nthis.color = [r=0,g=255,b=0])");
-        t.checkExpect(this.rectangle1.toIndentedString(" "),
-                "\n   new RectangleImage(this.width = 4, this.height = 5,"
-                        + "\n   this.fill = solid,"
+        t.checkExpect(this.rectangle1.toIndentedString(new StringBuilder(), "", 3).toString(),
+                "new RectangleImage(this.width = 4, this.height = 5,"
+                        + "\n   this.fill = OutlineMode.SOLID,"
                         + "\n   this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.rectangle1, this.rectangle2);
         t.checkExpect(this.rectangle1.equals(this.rectangle3), false, "fails in width");
@@ -172,8 +174,8 @@ public class ExamplesImageMethods implements IExamples {
                 "new LineImage(this.endPoint = (4, 5),"
                         + "\nthis.color = [r=0,g=255,b=0])");
         t.checkExpect(
-                this.line1.toIndentedString(" "),
-                "\n   new LineImage(this.endPoint = (4, 5),"
+                this.line1.toIndentedString(new StringBuilder(), "", 3).toString(),
+                "new LineImage(this.endPoint = (4, 5),"
                         + "\n   this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.line1, this.line2);
         t.checkExpect(this.line1.equals(this.line3), false, "fails in endPoint.x");
@@ -215,13 +217,15 @@ public class ExamplesImageMethods implements IExamples {
     // Tests for the TriangleImage class
     void testTriangleImage(Tester t) {
         t.checkExpect(this.triangle1.toString(),
-                "new TriangleImage(this.p1 = (2, 3),\nthis.p2 = (4, 5),\nthis.p3 = (6, 7),"
-                        + "\nthis.fill = solid,"
+                "new TriangleImage(\nthis.p1 = (2, 3),\nthis.p2 = (4, 5),\nthis.p3 = (6, 7),"
+                        + "\nthis.fill = OutlineMode.SOLID,"
                         + "\nthis.color = [r=0,g=0,b=0])");
-        t.checkExpect(this.triangle1.toIndentedString(" "),
-                "\n   new TriangleImage(this.p1 = (2, 3),\n   this.p2 = (4, 5),"
+        t.checkExpect(this.triangle1.toIndentedString(new StringBuilder(), "", 3).toString(),
+                "new TriangleImage("
+                        + "\n   this.p1 = (2, 3),"
+                        + "\n   this.p2 = (4, 5),"
                         + "\n   this.p3 = (6, 7),"
-                        + "\n   this.fill = solid,"
+                        + "\n   this.fill = OutlineMode.SOLID,"
                         + "\n   this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.triangle1, this.triangle2);
         t.checkExpect(this.triangle1.equals(this.triangle3), false, "fails in p1.x");
@@ -255,11 +259,11 @@ public class ExamplesImageMethods implements IExamples {
     void testTextImage(Tester t) {
         char c = '"';
         t.checkExpect(this.text1.toString(), "new TextImage(this.text = " + c
-                + "hello" + c + "," + "\nthis.size = 6.0, this.style = italic,"
+                + "hello" + c + "," + "\nthis.size = 6.0, this.style = FontStyle.ITALIC,"
                 + "\nthis.color = [r=0,g=0,b=0])");
-        t.checkExpect(this.text1.toIndentedString(" "),
-                "\n   new TextImage(this.text = " + c + "hello" + c + ","
-                        + "\n   this.size = 6.0, this.style = italic,"
+        t.checkExpect(this.text1.toIndentedString(new StringBuilder(), "", 3).toString(),
+                "new TextImage(this.text = " + c + "hello" + c + ","
+                        + "\n   this.size = 6.0, this.style = FontStyle.ITALIC,"
                         + "\n   this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.text1, this.text2);
         t.checkExpect(this.text1, this.text6);
@@ -287,12 +291,12 @@ public class ExamplesImageMethods implements IExamples {
 
     // Tests for the OverlayImage class
     void testOverlayImage(Tester t) {
-        t.checkExpect(this.overlay1.toString(), "new OverlayImage(this.top = "
-                + this.overlay1.top.toString() + "\nthis.bot = "
+        t.checkExpect(this.overlay1.toString(), "new OverlayImage(\nthis.top = "
+                + this.overlay1.top.toString() + ",\nthis.bot = "
                 + this.overlay1.bot.toString() + ")");
-        t.checkExpect(this.overlay1.toIndentedString(" "),
-                "\n   new OverlayImage(this.top = " + this.overlay1.top.toIndentedString("   ")
-                        + ",\n   this.bot = " + this.overlay1.bot.toIndentedString("   ")
+        t.checkExpect(this.overlay1.toIndentedString(new StringBuilder(), "", 1).toString(),
+                "new OverlayImage(\n this.top = " + this.overlay1.top.toIndentedString(new StringBuilder(), " ", 1).toString()
+                        + ",\n this.bot = " + this.overlay1.bot.toIndentedString(new StringBuilder(), " ", 1).toString()
                         + ")");
 
         t.checkExpect(this.overlay1, this.overlay2);
@@ -327,14 +331,14 @@ public class ExamplesImageMethods implements IExamples {
     void testOverlayOffsetImage(Tester t) {
         t.checkExpect(
                 this.overlayXY1.toString(),
-                "new OverlayOffsetImage(this.top = " + this.circle1.toString() + ","
+                "new OverlayOffsetImage(\nthis.top = " + this.circle1.toString() + ","
                         + "\nthis.dx = 5.0, this.dy = 3.0,"
                         + "\nthis.bot = " + this.rectangle1.toString() + ")");
         t.checkExpect(
-                this.overlayXY1.toIndentedString(" "),
-                "\n   new OverlayOffsetImage(this.top = " + this.circle1.toIndentedString("   ") + ","
+                this.overlayXY1.toIndentedString(new StringBuilder(), "", 3).toString(),
+                "new OverlayOffsetImage(\n   this.top = " + this.circle1.toIndentedString(new StringBuilder(), "   ", 3).toString() + ","
                         + "\n   this.dx = 5.0, this.dy = 3.0,"
-                        + "\n   this.bot = " + this.rectangle1.toIndentedString("   ") + ")");
+                        + "\n   this.bot = " + this.rectangle1.toIndentedString(new StringBuilder(), "   ", 3).toString() + ")");
 
         t.checkExpect(this.overlayXY1, this.overlayXY2);
         t.checkExpect(this.overlayXY1.equals(this.overlayXY3), false, "fails in dx");
@@ -361,8 +365,8 @@ public class ExamplesImageMethods implements IExamples {
     void testFromFileImage(Tester t) {
         t.checkExpect(this.fromFile1.toString(),
                 "new FromFileImage(this.fileName = \"rubberduck.jpg\")");
-        t.checkExpect(this.fromFile1.toIndentedString(" "),
-                "\n   new FromFileImage(this.fileName = \"rubberduck.jpg\")");
+        t.checkExpect(this.fromFile1.toIndentedString(new StringBuilder(), "", 1).toString(),
+                "new FromFileImage(this.fileName = \"rubberduck.jpg\")");
 
         t.checkExpect(this.fromFile1, this.fromFile2);
         t.checkExpect(this.fromFile1.equals(this.fromFile3), false);

@@ -98,16 +98,14 @@ final public class PhantomImage extends WorldImage {
     }
 
     @Override
-    public String toIndentedString(String indent) {
-        return indent + "  new PhantomImage(\n" +
-               indent + "    width = " + this.width + "\n" +
-               indent + "    height = " + this.height + "\n" +
-               indent + "    img = " + this.img.toIndentedString(indent + "  ") + ")";
-    }
-
-    @Override
-    public String toString() {
-        return "new PhantomImage(" + this.img.toString() + ", " + this.width + ", " + this.height + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.width = ").append(this.width).append(", ")
+               .append("this.height = ").append(this.height).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("img", this.img)));
+        return sb;
     }
 
     @Override

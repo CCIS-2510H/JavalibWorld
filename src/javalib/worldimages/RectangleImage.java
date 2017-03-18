@@ -174,21 +174,16 @@ abstract class RectangleImageBase extends WorldImage {
         return this.height;
     }
 
-    /**
-     * Produce a <code>String</code> representation of this rectangle image
-     */
-    public String toString() {
-        return className(this) + "this.width = " + width + ", this.height = "
-                + height + ",\nthis.fill = " + this.fill + ",\n"
-                + colorString(this.color) + ")";
-    }
-
     @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.width = " + width
-                + ", this.height = " + height + ",\n" + indent + "this.fill = "
-                + this.fill + "," + colorString(indent, this.color) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.width = ").append(this.width).append(", ")
+               .append("this.height = ").append(this.height).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("fill", this.fill),
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
 

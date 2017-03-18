@@ -319,16 +319,62 @@ public abstract class WorldImage {
      */
     abstract public double getHeight();
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            -- the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
-    abstract public String toIndentedString(String indent);
+    @Override
+    public String toString() {
+        return this.toIndentedString(new StringBuilder(), "", 0).toString();
+    }
 
+    /**
+     * Builds up a textual rendering of this image, with every line (except the first)
+     * prefixed by the given {@code linePrefix}, and all indentations nest by {@code indent} spaces.
+     * (The first line is not prefixed, since the client of this method might want to include the
+     * results on an existing, partial line.)
+     *
+     * This method is stack-safe: it will use a constant amount of stack, unless a nested
+     * object has a custom {@link Object#toString()} override that itself overflows the stack.
+     *
+     * @param sb The StringBuilder into which the results should be built
+     * @param linePrefix A string to be prepended at the start of every new line of text
+     * @param indent How many spaces each nested indentation should be
+     * @return the given {@link StringBuilder}, with the rendering of this image appended to
+     *          its original contents
+     */
+    public StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
+        return ImagePrinter.makeString(this, sb, linePrefix, indent);
+    }
+
+    /**
+     * A template helper method for {@link WorldImage#toIndentedString(StringBuilder, String, int)}
+     * and {@link ImagePrinter#makeString(Object, StringBuilder, String, int)}.
+     * Subclasses of {@link WorldImage} must implement this method, to produce output of the form
+     *
+     * <pre>
+     *   new MyImageClass(this.easyField1 = value1, this.easyField2 = value2,
+     *     this.recursiveField = recursiveValue2
+     *   )
+     * </pre>
+     *
+     * The "easy fields" above are primitive values, and can be rendered easily in constant stack
+     * space; those values should be appended to the given {@link StringBuilder} by the subclass
+     * directly.  The "recursive" fields above are objects that may contain arbitrary values, and
+     * so cannot be rendered in constant stack space.  Instead, the subclass should push its
+     * nested objects onto the supplied stack, as a {@link FieldsWLItem} containing
+     * however many {@link ImageField} items are needed.  If the subclass needs to render fields on
+     * multiple lines, then it should push them and any fields after them, even if they're "easy".
+     * If no fields are needed, the subclass should append the closing ")" of the rendering;
+     * otherwise, the {@link ImagePrinter#makeString(Object, StringBuilder, String, int)} method
+     * will supply it once all nested values have been rendered.
+     *
+     * All implementations of this method <b>must</b> use constant stack space.
+     *
+     * @param sb The {@link StringBuilder} into which the rendered text should be appended
+     * @param stack The {@link Stack} into which any recursive fields should be pushed,
+     *              as {@link FieldsWLItem} collections
+     * @return The given {@link StringBuilder}
+     */
+    protected abstract StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack);
+
+    protected String simpleName() { return this.getClass().getSimpleName(); }
     /**
      * Produce the <code>String</code> that represents the color without the
      * extra narrative.
@@ -356,34 +402,5 @@ public abstract class WorldImage {
         int start = result.indexOf('[');
         result = result.substring(start, result.length());
         return "this.color = " + result;
-    }
-
-    /**
-     * Produce the <code>String</code> that represents the class name.
-     * 
-     * <p>
-     * Helper method for {@link #toIndentedString(String)}.
-     * </p>
-     * 
-     * @param indent
-     *            -- the indent amount of the string
-     * @param o
-     *            -- the object that needs its class printed out
-     * @return the string representation of the class indented by the proper
-     *         amount
-     */
-    protected static String classNameString(String indent, WorldImage o) {
-        return "\n" + indent + className(o);
-    }
-
-    /**
-     * Produce the <code>String</code> that represents the class name.
-     * 
-     * @param o
-     *            -- the object that needs its class printed out
-     * @return the string representation of the class name
-     */
-    protected static String className(WorldImage o) {
-        return "new " + o.getClass().getSimpleName() + "(";
     }
 }

@@ -96,20 +96,14 @@ public final class LineImage extends WorldImage {
         return Math.abs(this.endPoint.y);
     }
 
-    /**
-     * Produce a <code>String</code> representation of this Line image
-     */
-    public String toString() {
-        return className(this) + "this.endPoint = (" + this.endPoint.x + ", "
-                + this.endPoint.y + "),\n" + colorString(this.color) + ")";
-    }
-
     @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.endPoint = ("
-                + this.endPoint.x + ", " + this.endPoint.y + "),"
-                + colorString(indent, this.color) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.endPoint = ").append(this.endPoint.coords()).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
     @Override

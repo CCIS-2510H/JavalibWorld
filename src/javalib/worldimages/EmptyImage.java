@@ -19,14 +19,9 @@ public class EmptyImage extends RectangleImageBase {
     }
 
     @Override
-    public String toIndentedString(String indent) {
-        indent += "  ";
-        return classNameString(indent, this) + ")";
-    }
-
-    @Override
-    public String toString() {
-        return className(this) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new EmptyImage()");
+        return sb;
     }
 
     @Override

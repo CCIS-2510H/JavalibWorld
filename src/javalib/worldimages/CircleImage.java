@@ -52,22 +52,15 @@ public final class CircleImage extends EllipseImageBase {
         this(radius, OutlineMode.fromString(fill), color);
     }
 
-    /**
-     * Produce a <code>String</code> representation of this circle image
-     */
     @Override
-    public String toString() {
-        return className(this) + "this.radius = " + this.radius
-                + ",\nthis.fill = " + this.fill + ",\n"
-                + colorString(this.color) + ")";
-    }
-
-    @Override
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.radius = " + this.radius
-                + ",\n" + indent + "this.fill = " + this.fill + ","
-                + colorString(indent, this.color) + ")";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.radius = ").append(this.radius).append(",");
+        stack.push(
+                new FieldsWLItem(
+                        new ImageField("fill", this.fill),
+                        new ImageField("color", this.color)));
+        return sb;
     }
 
     /**

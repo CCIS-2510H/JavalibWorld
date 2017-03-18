@@ -85,9 +85,9 @@ public class WorldTests {
 
     static Object[] examples = new Object[] {
 
-    BlobWorldFun.examplesInstance, TickyTackFun.examplesInstance,
-            BlobWorldImp.examplesInstance, TickyTackImp.examplesInstance,
-            ExamplesImageDrawings.examplesInstance,
+    //BlobWorldFun.examplesInstance, TickyTackFun.examplesInstance,
+    //        BlobWorldImp.examplesInstance, TickyTackImp.examplesInstance,
+    //        ExamplesImageDrawings.examplesInstance,
             ExamplesImageMethods.examplesInstance };
 
     /**
@@ -115,12 +115,12 @@ public class WorldTests {
 
     /** main: an alternative way of starting the world and running the tests */
     public static void main(String[] argv) {
-/*
+
         for (int i = 0; i < Array.getLength(examples); i++) {
             runTests(examples[i]);
         }
-        */
-runTests(new WorldTests());
+//        */
+//runTests(new WorldTests());
         // runTests(blobExamples);
         // runTests(tickyTackExamples);
     }

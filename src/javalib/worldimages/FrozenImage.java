@@ -67,8 +67,8 @@ public final class FrozenImage extends WorldImage {
     }
 
     @Override
-    public String toIndentedString(String indent) {
-        return "new BufferedImage()";
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        return sb.append("new FrozenImage()");
     }
 
     @Override

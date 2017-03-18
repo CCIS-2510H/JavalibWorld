@@ -93,26 +93,14 @@ public final class FromFileImage extends WorldImage {
         Point2D br = t.transform(new Point.Double(w / 2, h / 2), null);
         return new BoundingBox(tl.getX(), tl.getY(), br.getX(), br.getY());
     }
-    
-    /**
-     * Produce a <code>String</code> representation of this from-file image
-     */
-    public String toString() {
-        return className(this) + "this.fileName = \"" + this.fileName + "\")";
-    }
 
-    /**
-     * Produce a <code>String</code> that represents this image, indented by the
-     * given <code>indent</code>
-     * 
-     * @param indent
-     *            the given prefix representing the desired indentation
-     * @return the <code>String</code> representation of this image
-     */
-    public String toIndentedString(String indent) {
-        indent = indent + "  ";
-        return classNameString(indent, this) + "this.fileName = \""
-                + this.fileName + "\")";
+    @Override
+    protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
+        sb = sb.append("new ").append(this.simpleName()).append("(")
+               .append("this.fileName = \"")
+               .append(this.fileName.replace("\\", "\\\\").replace("\"", "\\\""))
+               .append("\")");
+        return sb;
     }
 
     @Override
