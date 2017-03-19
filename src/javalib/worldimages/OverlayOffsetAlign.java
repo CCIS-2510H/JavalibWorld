@@ -241,16 +241,16 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         // Save the old transform state
         AffineTransform old = g.getTransform();
 
         // draw the two objects
         g.translate(this.deltaBot.x, this.deltaBot.y);
-        this.bot.draw(g);
+        this.bot.drawStackUnsafe(g);
         g.setTransform(old);
         g.translate(this.deltaTop.x, this.deltaTop.y);
-        this.top.draw(g);
+        this.top.drawStackUnsafe(g);
 
         // Reset the transformation matrix
         g.setTransform(old);

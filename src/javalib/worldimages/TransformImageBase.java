@@ -44,7 +44,7 @@ abstract public class TransformImageBase extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         if (this.getWidth() <= 0)
             return;
         if (this.getHeight() <= 0)
@@ -55,7 +55,7 @@ abstract public class TransformImageBase extends WorldImage {
         g.transform(this.tx);
 
         // draw rotated shape/image
-        this.img.draw(g);
+        this.img.drawStackUnsafe(g);
 
         // Reset the transform to the old transform
         g.setTransform(old);

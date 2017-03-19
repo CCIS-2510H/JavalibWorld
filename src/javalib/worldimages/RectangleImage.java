@@ -136,7 +136,7 @@ abstract class RectangleImageBase extends WorldImage {
         return BoundingBox.containing(tl, tr, bl, br);
     }
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -161,7 +161,7 @@ abstract class RectangleImageBase extends WorldImage {
     }
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        this.draw(g);
+        this.drawStackUnsafe(g);
     }
 
     @Override

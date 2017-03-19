@@ -65,7 +65,7 @@ public final class LineImage extends WorldImage {
     }
     
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         if (color == null)
             color = new Color(0, 0, 0);
 
@@ -83,7 +83,7 @@ public final class LineImage extends WorldImage {
     }
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        this.draw(g);
+        this.drawStackUnsafe(g);
     }
 
     @Override

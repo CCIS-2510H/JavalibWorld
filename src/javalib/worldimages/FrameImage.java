@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.Stack;
 
@@ -47,7 +48,7 @@ public final class FrameImage extends RectangleImageBase {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -59,7 +60,7 @@ public final class FrameImage extends RectangleImageBase {
         Paint oldPaint = g.getPaint();
         Stroke oldStroke = g.getStroke();
         // draw the object
-        this.img.draw(g);
+        this.img.drawStackUnsafe(g);
         // set the paint to the given color
         g.setPaint(this.color);
         // Draw the frame
@@ -69,6 +70,22 @@ public final class FrameImage extends RectangleImageBase {
         // reset the original paint
         g.setPaint(oldPaint);
         g.setStroke(oldStroke);
+    }
+
+    @Override
+    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
+        if (this.width <= 0)
+            return;
+        if (this.height <= 0)
+            return;
+        if (this.color == null)
+            this.color = new Color(0, 0, 0);
+
+        BoundingBox bb = this.img.getBB();
+        images.push(new RectangleImage((int)Math.ceil(bb.getWidth()),
+                (int)Math.ceil(bb.getHeight()), OutlineMode.OUTLINE, color));
+        txs.push(g.getTransform());
+        this.img.drawStacksafe(g, images, txs);
     }
 
     @Override

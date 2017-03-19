@@ -25,4 +25,9 @@ class WorldImageLeavesIterator extends WorldImageIterator {
             }
         }
     }
+
+    @Override
+    public void remove() {
+
+    }
 }

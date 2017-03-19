@@ -194,13 +194,13 @@ public abstract class WorldImage {
      * @param g
      *            -- the provided <code>Graphics2D</code> context
      */
-    abstract public void draw(Graphics2D g);
+    abstract protected void drawStackUnsafe(Graphics2D g);
     
     abstract protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs);
     
-    public void drawStackless(Graphics2D g) {
-        if (this.depth < 6000) {
-            this.draw(g);
+    public final void draw(Graphics2D g) {
+        if (this.depth < 1000) {
+            this.drawStackUnsafe(g);
         } else {
             Stack<WorldImage> images = new Stack<WorldImage>();
             Stack<AffineTransform> txs = new Stack<AffineTransform>();

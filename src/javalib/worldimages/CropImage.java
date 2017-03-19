@@ -90,7 +90,7 @@ final public class CropImage extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         if (this.width <= 0)
             return;
         if (this.height <= 0)
@@ -103,7 +103,7 @@ final public class CropImage extends WorldImage {
         Graphics2D g2d = cropped.createGraphics();
         g2d.translate(this.img.getWidth() / 2.0 - this.x, this.img.getHeight()
                 / 2.0 - this.y);
-        img.drawStackless(g2d);
+        img.draw(g2d);
         g2d.dispose();
 
         g.translate(-this.width / 2.0, -this.height / 2.0);
@@ -113,7 +113,7 @@ final public class CropImage extends WorldImage {
     }
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        this.draw(g);
+        this.drawStackUnsafe(g);
     }
 
     @Override

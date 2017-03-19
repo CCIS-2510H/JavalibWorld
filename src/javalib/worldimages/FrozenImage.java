@@ -12,7 +12,7 @@ public final class FrozenImage extends WorldImage {
         this.img = new BufferedImage((int)img.getWidth(), (int)img.getHeight(), BufferedImage.TRANSLUCENT);
         Graphics2D g = this.img.createGraphics();
         g.translate(img.getWidth() / 2, img.getHeight() / 2);
-        img.drawStackless(g);
+        img.draw(g);
         g.dispose();
         this.pinhole = img.pinhole;
     }
@@ -47,13 +47,13 @@ public final class FrozenImage extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         g.drawImage(this.img, AffineTransform.getTranslateInstance(- this.getWidth() / 2, - this.getHeight() / 2), null);
     }
 
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        this.draw(g);
+        this.drawStackUnsafe(g);
     }
 
     @Override

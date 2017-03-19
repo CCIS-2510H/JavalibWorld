@@ -61,7 +61,7 @@ public final class FromFileImage extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         // Adjust the position of the frame
         g.translate(-(this.imread.width / 2.0), -(this.imread.height / 2.0));
 
@@ -72,7 +72,7 @@ public final class FromFileImage extends WorldImage {
     }
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        this.draw(g);
+        this.drawStackUnsafe(g);
     }
 
     @Override

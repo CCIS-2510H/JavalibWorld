@@ -94,6 +94,20 @@ public class ExamplesOverlay {
             "new OverlayOffsetAlign(\"pinhole\", \"pinhole\", rect1, 10, 5, rect2)",
             Color.BLACK);
 
+    WorldScene squares = makeSquares();
+
+    static WorldScene makeSquares() {
+        WorldImage img = new RectangleImage(640, 640, OutlineMode.SOLID, Color.GREEN);
+        for (int x = 0; x < 64; x++) {
+            for (int y = 0; y < 64; y++) {
+                img = new OverlayOffsetAlign(AlignModeX.LEFT, AlignModeY.TOP, new RectangleImage(10, 10, OutlineMode.SOLID, new Color(255, x * 3 + 63, y * 3 + 63)), -10 * x, -10 * y, img);
+            }
+        }
+        WorldScene s = new WorldScene(640, 640);
+        s.placeImageXY(img, 320, 320);
+        return s;
+    }
+
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
@@ -137,5 +151,19 @@ public class ExamplesOverlay {
 
         // show several images in the canvas
         boolean makeDrawing = c.show() && c.drawScene(scn);
+
+        c = new WorldCanvas(640, 640);
+        c.show();
+        scn = makeSquares();
+        c.drawScene(scn);
+        c = new WorldCanvas(640, 640);
+        c.show();
+        scn = new WorldScene(640, 640);
+        for (int x = 0; x < 64; x++) {
+            for (int y = 0; y < 64; y++) {
+                scn.placeImageXY(new RectangleImage(10, 10, OutlineMode.SOLID, new Color(x * 3 + 63, 255, y * 3 + 63)), 5 + 10 * x, 5 + 10 * y);
+            }
+        }
+        c.drawScene(scn);
     }
 }

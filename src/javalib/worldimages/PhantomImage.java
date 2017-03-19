@@ -78,8 +78,8 @@ final public class PhantomImage extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
-        this.img.draw(g);
+    protected void drawStackUnsafe(Graphics2D g) {
+        this.img.drawStackUnsafe(g);
     }
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {

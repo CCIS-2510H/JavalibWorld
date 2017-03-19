@@ -57,12 +57,12 @@ public final class VisiblePinholeImage extends WorldImage {
     }
 
     @Override
-    public void draw(Graphics2D g) {
+    protected void drawStackUnsafe(Graphics2D g) {
         AffineTransform oldTransform = g.getTransform();
-        this.img.draw(g);
+        this.img.drawStackUnsafe(g);
         g.translate(this.img.pinhole.x, this.img.pinhole.y);
-        new LineImage(new Posn(10, 0), Color.BLACK).draw(g);
-        new LineImage(new Posn(0, 10), Color.BLACK).draw(g);
+        g.drawLine(-5, 0, 5, 0);
+        g.drawLine(0, -5, 0, 5);
         g.setTransform(oldTransform);
     }
     @Override
