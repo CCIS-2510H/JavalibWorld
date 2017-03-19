@@ -167,7 +167,7 @@ public abstract class WorldSceneBase {
             sb.append(")");
             count++;
         }
-        sb.append("\n").append(linePrefix).append(")}");
+        sb.append("\n").append(linePrefix).append("}");
         return sb;
     }
     protected class PlaceImage {
