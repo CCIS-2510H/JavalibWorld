@@ -155,6 +155,21 @@ public abstract class WorldSceneBase {
         }
     }
 
+    public StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
+        revImagesIfNeeded();
+        sb.append("new ").append(this.getClass().getSimpleName()).append("(){")
+          .append("this.width = ").append(this.width).append(", ")
+          .append("this.height = ").append(this.height);
+        int count = 0;
+        for (PlaceImage i : this.revImgs) {
+            sb.append(",\n").append(linePrefix + "  ").append("[").append(count).append("] = PlaceImage(");
+            i.toIndentedString(sb, linePrefix + "    ", indent);
+            sb.append(")");
+            count++;
+        }
+        sb.append("\n").append(linePrefix).append(")}");
+        return sb;
+    }
     protected class PlaceImage {
         WorldImage img;
         int x, y;
@@ -163,6 +178,12 @@ public abstract class WorldSceneBase {
             this.img = i;
             this.x = x;
             this.y = y;
+        }
+        StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
+            sb.append("this.x = ").append(this.x).append(", ");
+            sb.append("this.y = ").append(this.x).append(",\n");
+            sb.append(linePrefix);
+            return this.img.toIndentedString(sb, linePrefix + "  ", indent);
         }
     }
 }

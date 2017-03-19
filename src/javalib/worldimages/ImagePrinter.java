@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
-import javalib.worldimages.WorldImage;
-
 class ImageField {
   String name;
   Object value;
@@ -41,6 +39,8 @@ class FieldsWLItem implements Iterator<ImageField> {
   public void remove() {
 
   }
+
+  void skipToEnd() { this.cur = fields.length; }
 }
 
 
@@ -100,10 +100,53 @@ class ImagePrinter {
 
     int INDENT = 0;
     Stack<Object> worklist = new Stack<Object>();
+    int valueCount = 0;
 
     worklist.push(obj);
     while (!worklist.empty()) {
+      valueCount++;
       obj = worklist.peek();
+      if (worklist.size() > 100 || valueCount > 1000) {
+        if (obj instanceof FieldsWLItem) {
+          ((FieldsWLItem)obj).skipToEnd();
+        } else {
+          Class<?> objClass = obj.getClass();
+          // For the constant-size cases, show them anyway
+          if (obj == null) {
+            sb = sb.append("null");
+          }
+          else if (obj instanceof java.lang.String) {
+            sb = sb.append("\"").append(((String) obj).replace("\\", "\\\\").replace("\"", "\\\""))
+                   .append("\"");
+          }
+          else if (obj instanceof java.util.Random) {
+            sb = sb.append("new Random()");
+          }
+          else if (obj instanceof java.awt.Color) {
+            String result = obj.toString();
+            int start = result.indexOf('[');
+            result = result.substring(start, result.length());
+            sb = sb.append(result);
+          }
+          else if (obj instanceof java.lang.Enum) {
+            Enum<?> e = (Enum<?>) obj;
+            sb = sb.append(e.getDeclaringClass().getName().replace('$', '.')).append(".")
+                   .append(e.name());
+          }
+          else if (objClass.isPrimitive() || isWrapperClass(objClass.getName())) {
+            sb = sb.append(makePrimitiveStrings(objClass.getName(), obj));
+          }
+          else {
+            if (valueCount > 1000) {
+              sb = sb.append("<truncated; too many objects to print>");
+            } else {
+              sb = sb.append("<truncated; objects are too deeply nested to print>");
+            }
+          }
+          worklist.pop();
+          continue;
+        }
+      }
       if (obj == null) {
         sb = sb.append("null");
         worklist.pop();
