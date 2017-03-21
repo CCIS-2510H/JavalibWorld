@@ -102,7 +102,10 @@ public final class FrameImage extends RectangleImageBase {
     protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
         if (other instanceof FrameImage) {
             FrameImage that = (FrameImage)other;
-            return this.img.equals(that.img) && this.color.equals(that.color);
+            if (this.color.equals(that.color)) {
+                worklist.push(new ImagePair(this.img, that.img));
+                return true;
+            }
         }
         return false;
     }

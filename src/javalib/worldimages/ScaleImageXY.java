@@ -72,6 +72,7 @@ abstract class ScaleImageXYBase extends TransformImageBase {
             if (Math.abs(this.scaleX- that.scaleX) < 0.00001 &&
                     Math.abs(this.scaleY - that.scaleY) < 0.00001) {
                 worklist.push(new ImagePair(this.img, that.img));
+                return true;
             }
         }
         return false;

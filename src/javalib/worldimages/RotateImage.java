@@ -43,6 +43,7 @@ public final class RotateImage extends TransformImageBase {
             RotateImage that = (RotateImage)other;
             if (Math.abs(this.rotationDegrees - that.rotationDegrees) < 0.00001) {
                 worklist.push(new ImagePair(this.img, that.img));
+                return true;
             }
         }
         return false;
