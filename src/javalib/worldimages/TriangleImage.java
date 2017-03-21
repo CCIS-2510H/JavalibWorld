@@ -173,7 +173,8 @@ public final class TriangleImage extends WorldImage {
 
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof TriangleImage) {
             TriangleImage that = (TriangleImage)other;
             return this.fill == that.fill && this.p1.x == that.p1.x

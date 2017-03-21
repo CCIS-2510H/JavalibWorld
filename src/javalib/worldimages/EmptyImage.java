@@ -25,7 +25,8 @@ public class EmptyImage extends RectangleImageBase {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         return other instanceof EmptyImage;
     }
 }

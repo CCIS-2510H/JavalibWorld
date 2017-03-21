@@ -217,30 +217,25 @@ public abstract class WorldImage {
         }
     }
 
-    protected static class ImagePair {
-        WorldImage one, two;
-        ImagePair(WorldImage one, WorldImage two) {
-            this.one = one;
-            this.two = two;
-        }
-    }
-
     /**
      * A helper method for the equals method below, this method implements extensional equality
-     * via a worklist.  It collaborates with the abstract method
-     * {@link WorldImage#equalsStacksafe(WorldImage, Stack)} below, which each image
+     * via a worklist algorithm.  It collaborates with the abstract method
+     * {@link WorldImage#equalsStacksafe(WorldImage, Stack, Stack)} below, which each image
      * class must implement.
      *
-     * @param other   The image to be compared
+     * @param that   The image to be compared
      * @return Whether the two images are extensionally equal
      */
-    protected final boolean equalsStacksafe(WorldImage other) {
-        Stack<ImagePair> imagePairs = new Stack<ImagePair>();
-        imagePairs.push(new ImagePair(this, other));
-        while (!imagePairs.empty()) {
-            ImagePair p = imagePairs.pop();
-            if (p.one == p.two) continue; // fast success path
-            if (!(p.one.equalsStacksafe(p.two, imagePairs)))
+    protected final boolean equalsStacksafe(WorldImage that) {
+        Stack<WorldImage> worklistThis = new Stack<WorldImage>();
+        Stack<WorldImage> worklistThat = new Stack<WorldImage>();
+        worklistThis.push(this);
+        worklistThat.push(that);
+        while (!worklistThis.empty()) {
+            WorldImage one = worklistThis.pop();
+            WorldImage two = worklistThat.pop();
+            if (one == two) continue; // fast success path
+            if (!(one.equalsStacksafe(two, worklistThis, worklistThat)))
                 return false;
         }
         return true;
@@ -248,16 +243,20 @@ public abstract class WorldImage {
 
     /**
      * This helper method implements the recursive part of extensional equality checking.
-     * Each image class must check its local fields and push any contained images onto the worklist
-     * to be checked later.
+     * Each image class must check its local fields and push any contained images onto the worklists
+     * to be checked later.  The two stacks must be manipulated in lockstep: it is cheaper to have
+     * two stacks whose structures must be parallel than to have one stack where we allocate an
+     * "ImagePair" object to keep the items in tandem, since there may be many such allocations.
      *
      * @param other The image to be compared
-     * @param worklist The worklist onto which child images are pushed for later comparison
+     * @param worklistThis The worklist onto which child images of {@code this} are pushed for later comparison
+     * @param worklistThat The worklist onto which child images of {@code other} are pushed for later comparison
      * @return If the image types do not match, or the local fields are not equal, returns false.
      *         Otherwise, returns true.  Any recursive checking of subimages will be done
      *         by the {@link WorldImage#equalsStacksafe(WorldImage)} method.
      */
-    protected abstract boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist);
+    protected abstract boolean equalsStacksafe(WorldImage other, Stack<WorldImage> worklistThis,
+                                               Stack<WorldImage> worklistThat);
 
     /**
      * Provides extensional equality on WorldImages.  Each image subclass must override hashcode

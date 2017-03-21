@@ -242,7 +242,8 @@ abstract class RegularPolyImageBase extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (this.getClass().equals(other.getClass())) {
             RegularPolyImageBase that = (RegularPolyImageBase)other;
             return this.sideLen == that.sideLen && this.sides == that.sides

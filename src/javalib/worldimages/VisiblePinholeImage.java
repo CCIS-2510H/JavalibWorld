@@ -97,11 +97,13 @@ public final class VisiblePinholeImage extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof VisiblePinholeImage) {
             VisiblePinholeImage that = (VisiblePinholeImage)other;
             if (this.img.pinhole.equals(that.img.pinhole)) {
-                worklist.push(new ImagePair(this.img, that.img));
+                worklistThis.push(this.img);
+                worklistThat.push(that.img);
                 return true;
             }
         }

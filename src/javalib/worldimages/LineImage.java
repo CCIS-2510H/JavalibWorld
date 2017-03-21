@@ -107,7 +107,8 @@ public final class LineImage extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof LineImage) {
             LineImage that = (LineImage) other;
             return this.endPoint.x == that.endPoint.x && this.endPoint.y == that.endPoint.y

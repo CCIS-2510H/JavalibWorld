@@ -183,7 +183,8 @@ abstract class EllipseImageBase extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (this.getClass().equals(other.getClass())) {
             // Check for exact class matching, and then casting to the base class is safe
             EllipseImageBase that = (EllipseImageBase)other;

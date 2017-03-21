@@ -72,7 +72,8 @@ public final class FrozenImage extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof FrozenImage) {
             FrozenImage that = (FrozenImage)other;
             BufferedImage imgA = this.img;

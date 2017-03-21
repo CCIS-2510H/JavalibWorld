@@ -293,13 +293,16 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
 
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (this.getClass().equals(other.getClass())) {
             OverlayOffsetAlignBase that = (OverlayOffsetAlignBase)other;
             if (this.alignX == that.alignX && this.alignY == that.alignY
                     && this.dx == that.dx && this.dy == that.dy) {
-                worklist.push(new ImagePair(this.bot, that.bot));
-                worklist.push(new ImagePair(this.top, that.top));
+                worklistThis.push(this.bot);
+                worklistThat.push(that.bot);
+                worklistThis.push(this.top);
+                worklistThat.push(that.top);
                 return true;
             }
         }

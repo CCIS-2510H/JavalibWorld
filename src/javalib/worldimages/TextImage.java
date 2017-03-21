@@ -251,7 +251,8 @@ public final class TextImage extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof TextImage) {
             TextImage that = (TextImage)other;
             return this.size == that.size && this.style == that.style

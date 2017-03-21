@@ -104,7 +104,8 @@ public final class FromFileImage extends WorldImage {
     }
 
     @Override
-    protected boolean equalsStacksafe(WorldImage other, Stack<ImagePair> worklist) {
+    protected boolean equalsStacksafe(WorldImage other,
+                                      Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof FromFileImage) {
             FromFileImage that = (FromFileImage)other;
             return this.fileName.equals(that.fileName);
