@@ -181,7 +181,7 @@ public abstract class WorldSceneBase {
         }
         StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
             sb.append("this.x = ").append(this.x).append(", ");
-            sb.append("this.y = ").append(this.x).append(",\n");
+            sb.append("this.y = ").append(this.y).append(",\n");
             sb.append(linePrefix);
             return this.img.toIndentedString(sb, linePrefix + "  ", indent);
         }
