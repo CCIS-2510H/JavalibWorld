@@ -156,12 +156,12 @@ public class ExamplesOverlay {
         c.show();
         scn = makeSquares();
         c.drawScene(scn);
-        c = new WorldCanvas(640, 640);
+        c = new WorldCanvas(1280, 1280);
         c.show();
-        scn = new WorldScene(640, 640);
+        scn = new WorldScene(1280, 1280);
         for (int x = 0; x < 64; x++) {
             for (int y = 0; y < 64; y++) {
-                scn.placeImageXY(new RectangleImage(10, 10, OutlineMode.SOLID, new Color(x * 3 + 63, 255, y * 3 + 63)), 5 + 10 * x, 5 + 10 * y);
+                scn.placeImageXY(new RectangleImage(20, 20, OutlineMode.SOLID, new Color(x * 3 + 63, 255, y * 3 + 63)).movePinhole(-10, -10), 20 * x, 20 * y);
             }
         }
         c.drawScene(scn);

@@ -1,7 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Stack;
 
@@ -14,6 +13,7 @@ import java.util.Stack;
  */
 public final class VisiblePinholeImage extends WorldImage {
     WorldImage img;
+    Color color;
     static final LineImage line1 = new LineImage(new Posn(10, 0), Color.BLACK);
     static final LineImage line2 = new LineImage(new Posn(0, 10), Color.BLACK);
 
@@ -24,8 +24,12 @@ public final class VisiblePinholeImage extends WorldImage {
      *            -- The image to overlay the pinhole representation onto
      */
     public VisiblePinholeImage(WorldImage img) {
+        this(img, Color.BLACK);
+    }
+    public VisiblePinholeImage(WorldImage img, Color c) {
         super(img.pinhole, 1 + img.depth);
         this.img = img;
+        this.color = c;
     }
     @Override
     int numKids() {
@@ -61,8 +65,11 @@ public final class VisiblePinholeImage extends WorldImage {
         AffineTransform oldTransform = g.getTransform();
         this.img.drawStackUnsafe(g);
         g.translate(this.img.pinhole.x, this.img.pinhole.y);
+        Paint oldPaint = g.getPaint();
+        g.setColor(this.color);
         g.drawLine(-5, 0, 5, 0);
         g.drawLine(0, -5, 0, 5);
+        g.setPaint(oldPaint);
         g.setTransform(oldTransform);
     }
     @Override
@@ -70,9 +77,9 @@ public final class VisiblePinholeImage extends WorldImage {
         AffineTransform t = g.getTransform();
         t.translate(this.img.pinhole.x, this.img.pinhole.y);
         txs.push(t);
-        images.push(new LineImage(new Posn(10, 0), Color.BLACK));
+        images.push(new LineImage(new Posn(10, 0), this.color));
         txs.push(t);
-        images.push(new LineImage(new Posn(0, 10), Color.BLACK));
+        images.push(new LineImage(new Posn(0, 10), this.color));
         txs.push(g.getTransform());
         images.push(this.img);
     }

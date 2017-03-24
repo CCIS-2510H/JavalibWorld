@@ -105,9 +105,9 @@ public abstract class WorldSceneBase {
     protected void draw(Graphics2D g) {
         this.revImagesIfNeeded();
         for (PlaceImage i : revImgs) {
-            g.translate(i.x, i.y);
+            g.translate(i.x - i.img.pinhole.x, i.y - i.img.pinhole.y);
             i.img.draw(g);
-            g.translate(-i.x, -i.y);
+            g.translate(-i.x + i.img.pinhole.x, -i.y + i.img.pinhole.y);
         }
     }
 
