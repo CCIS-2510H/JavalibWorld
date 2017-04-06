@@ -25,6 +25,11 @@ public class Posn {
     }
 
     @Override
+    public int hashCode() {
+        return 10000 * this.x + this.y;
+    }
+
+    @Override
     public String toString() {
         return String.format("new Posn(x = %d, y = %d)", this.x, this.y);
     }
