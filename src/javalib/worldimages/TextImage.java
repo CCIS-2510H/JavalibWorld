@@ -243,7 +243,7 @@ public final class TextImage extends WorldImage {
                .append(this.text.replace("\\", "\\\\").replace("\"", "\\\""))
                .append("\",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("size", this.size),
                         new ImageField("style", this.style, true),
                         new ImageField("color", this.color)));
@@ -256,7 +256,8 @@ public final class TextImage extends WorldImage {
         if (other instanceof TextImage) {
             TextImage that = (TextImage)other;
             return this.size == that.size && this.style == that.style
-                    && this.text.equals(that.text) && this.color.equals(that.color);
+                    && this.text.equals(that.text) && this.color.equals(that.color)
+                    && this.pinhole.equals(that.pinhole);
         }
         return false;
     }

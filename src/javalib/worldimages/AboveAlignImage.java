@@ -79,7 +79,7 @@ public final class AboveAlignImage extends OverlayOffsetAlignBase {
         sb = sb.append("new ").append(this.simpleName()).append("(")
                .append("this.mode = ").append(this.alignX).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("im1", this.top),
                         new ImageField("im2", this.bot)));
         return sb;

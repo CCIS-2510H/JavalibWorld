@@ -16,10 +16,12 @@ class ImageField {
   }
 }
 class FieldsWLItem implements Iterator<ImageField> {
-  ImageField[] fields;
+  final Posn pinhole;
+  final ImageField[] fields;
   int cur;
 
-  FieldsWLItem(ImageField... fields) {
+  FieldsWLItem(Posn pinhole, ImageField... fields) {
+    this.pinhole = pinhole;
     this.fields = fields;
   }
 
@@ -27,12 +29,17 @@ class FieldsWLItem implements Iterator<ImageField> {
 
   @Override
   public boolean hasNext() {
-    return cur < fields.length;
+    return cur <= fields.length;
   }
 
   @Override
   public ImageField next() {
-    return fields[cur++];
+    if (this.cur == 0) {
+      cur++;
+      if (this.pinhole != null && (this.pinhole.x != 0 || this.pinhole.y != 0))
+        return new ImageField("pinhole", this.pinhole);
+    }
+    return fields[cur++ - 1];
   }
 
   @Override

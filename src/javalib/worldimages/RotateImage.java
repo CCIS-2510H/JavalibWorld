@@ -31,7 +31,7 @@ public final class RotateImage extends TransformImageBase {
         sb = sb.append("new ").append(this.simpleName()).append("(")
                .append("this.rotationDegrees = ").append(this.rotationDegrees).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("img", this.img)));
         return sb;
     }
@@ -40,7 +40,7 @@ public final class RotateImage extends TransformImageBase {
     @Override
     protected boolean equalsStacksafe(WorldImage other,
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
-        if (other instanceof RotateImage){
+        if (other instanceof RotateImage && this.pinhole.equals(other.pinhole)){
             RotateImage that = (RotateImage)other;
             if (Math.abs(this.rotationDegrees - that.rotationDegrees) < 0.00001) {
                 worklistThis.push(this.img);

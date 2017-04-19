@@ -101,7 +101,7 @@ public final class LineImage extends WorldImage {
         sb = sb.append("new ").append(this.simpleName()).append("(")
                .append("this.endPoint = ").append(this.endPoint.coords()).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("color", this.color)));
         return sb;
     }
@@ -112,7 +112,8 @@ public final class LineImage extends WorldImage {
         if (other instanceof LineImage) {
             LineImage that = (LineImage) other;
             return this.endPoint.x == that.endPoint.x && this.endPoint.y == that.endPoint.y
-                    && this.color.equals(that.color);
+                    && this.color.equals(that.color)
+                    && this.pinhole.equals(that.pinhole);
         }
         return false;
     }

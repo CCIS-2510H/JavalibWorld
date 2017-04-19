@@ -176,7 +176,7 @@ abstract class EllipseImageBase extends WorldImage {
                .append("this.width = ").append(this.width).append(", ")
                .append("this.height = ").append(this.height).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("fill", this.fill),
                         new ImageField("color", this.color)));
         return sb;
@@ -189,7 +189,8 @@ abstract class EllipseImageBase extends WorldImage {
             // Check for exact class matching, and then casting to the base class is safe
             EllipseImageBase that = (EllipseImageBase)other;
             return this.width == that.width && this.height == that.height
-                    && this.fill == that.fill && this.color.equals(that.color);
+                    && this.fill == that.fill && this.color.equals(that.color)
+                    && this.pinhole.equals(that.pinhole);
         }
         return false;
     }

@@ -78,7 +78,7 @@ abstract public class TransformImageBase extends WorldImage {
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (this.getClass().equals(other.getClass())) {
             TransformImageBase that = (TransformImageBase) other;
-            if (this.tx.equals(that.tx)) {
+            if (this.tx.equals(that.tx) && this.pinhole.equals(that.pinhole)) {
                 worklistThis.push(this.img);
                 worklistThat.push(that.img);
                 return true;

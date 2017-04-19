@@ -122,7 +122,8 @@ final public class CropImage extends WorldImage {
         if (other instanceof CropImage) {
             CropImage that = (CropImage)other;
             if (this.x == that.x && this.y == that.y
-                    && this.width == that.width && this.height == that.height) {
+                    && this.width == that.width && this.height == that.height
+                    && this.pinhole.equals(that.pinhole)) {
                 worklistThis.push(this.img);
                 worklistThat.push(that.img);
                 return true;
@@ -148,7 +149,7 @@ final public class CropImage extends WorldImage {
                .append("this.width = ").append(this.width).append(", ")
                .append("this.height = ").append(this.height).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("img", this.img)));
         return sb;
     }

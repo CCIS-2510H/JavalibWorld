@@ -41,7 +41,7 @@ public final class ShearedImage extends TransformImageBase {
                .append("this.sx = ").append(this.sx).append(", ")
                .append("this.sy = ").append(this.sy).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("img", this.img)));
         return sb;
     }

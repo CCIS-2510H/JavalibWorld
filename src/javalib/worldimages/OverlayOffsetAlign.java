@@ -284,7 +284,7 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
                .append("this.alignX = ").append(this.alignX).append(", ")
                .append("this.alignY = ").append(this.alignY).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("top", this.top),
                         new ImageField("dx", this.dx), new ImageField("dy", this.dy, true),
                         new ImageField("bot", this.bot)));
@@ -298,7 +298,8 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         if (this.getClass().equals(other.getClass())) {
             OverlayOffsetAlignBase that = (OverlayOffsetAlignBase)other;
             if (this.alignX == that.alignX && this.alignY == that.alignY
-                    && this.dx == that.dx && this.dy == that.dy) {
+                    && this.dx == that.dx && this.dy == that.dy
+                    && this.pinhole.equals(that.pinhole)) {
                 worklistThis.push(this.bot);
                 worklistThat.push(that.bot);
                 worklistThis.push(this.top);

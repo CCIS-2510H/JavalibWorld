@@ -162,7 +162,7 @@ public final class TriangleImage extends WorldImage {
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
         sb = sb.append("new ").append(this.simpleName()).append("(");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("p1", this.p1),
                         new ImageField("p2", this.p2),
                         new ImageField("p3", this.p3),
@@ -180,7 +180,8 @@ public final class TriangleImage extends WorldImage {
             return this.fill == that.fill && this.p1.x == that.p1.x
                     && this.p1.y == that.p1.y && this.p2.x == that.p2.x
                     && this.p2.y == that.p2.y && this.p3.x == that.p3.x
-                    && this.p3.y == that.p3.y && this.color.equals(that.color);
+                    && this.p3.y == that.p3.y && this.color.equals(that.color)
+                    && this.pinhole.equals(that.pinhole);
         }
         return false;
     }

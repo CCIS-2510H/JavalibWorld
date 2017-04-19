@@ -70,7 +70,7 @@ public final class AboveImage extends OverlayOffsetAlignBase {
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
         sb = sb.append("new ").append(this.simpleName()).append("(");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("im1", this.top),
                         new ImageField("im2", this.bot)));
         return sb;

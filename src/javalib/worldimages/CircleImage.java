@@ -57,7 +57,7 @@ public final class CircleImage extends EllipseImageBase {
         sb = sb.append("new ").append(this.simpleName()).append("(")
                .append("this.radius = ").append(this.radius).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("fill", this.fill),
                         new ImageField("color", this.color)));
         return sb;

@@ -103,7 +103,7 @@ final public class PhantomImage extends WorldImage {
                .append("this.width = ").append(this.width).append(", ")
                .append("this.height = ").append(this.height).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("img", this.img)));
         return sb;
     }
@@ -113,7 +113,8 @@ final public class PhantomImage extends WorldImage {
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
        if (other instanceof PhantomImage) {
             PhantomImage that = (PhantomImage)other;
-            if (this.width == that.width && this.height == that.height) {
+            if (this.width == that.width && this.height == that.height
+                    && this.pinhole.equals(that.pinhole)) {
                 worklistThis.push(this.img);
                 worklistThat.push(that.img);
                 return true;

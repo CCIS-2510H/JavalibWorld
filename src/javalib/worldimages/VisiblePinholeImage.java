@@ -98,7 +98,7 @@ public final class VisiblePinholeImage extends WorldImage {
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
         sb = sb.append("new ").append(this.simpleName()).append("(");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(null,
                         new ImageField("img", this.img)));
         return sb;
     }

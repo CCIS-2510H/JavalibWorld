@@ -92,7 +92,7 @@ public final class FrameImage extends RectangleImageBase {
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
         sb = sb.append("new ").append(this.simpleName()).append("(");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("color", this.color),
                         new ImageField("img", this.img)));
         return sb;
@@ -103,7 +103,7 @@ public final class FrameImage extends RectangleImageBase {
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof FrameImage) {
             FrameImage that = (FrameImage)other;
-            if (this.color.equals(that.color)) {
+            if (this.color.equals(that.color) && this.pinhole.equals(that.pinhole)) {
                 worklistThis.push(this.img);
                 worklistThat.push(that.img);
                 return true;

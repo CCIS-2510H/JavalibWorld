@@ -234,7 +234,7 @@ abstract class RegularPolyImageBase extends WorldImage {
         sb = sb.append("new ").append(this.simpleName()).append("(")
                 .append("this.sidelen = ").append(this.sideLen).append(",");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("sides", this.sides),
                         new ImageField("fill", this.fill),
                         new ImageField("color", this.color)));
@@ -247,7 +247,8 @@ abstract class RegularPolyImageBase extends WorldImage {
         if (this.getClass().equals(other.getClass())) {
             RegularPolyImageBase that = (RegularPolyImageBase)other;
             return this.sideLen == that.sideLen && this.sides == that.sides
-                    && this.fill == that.fill && this.color.equals(that.color);
+                    && this.fill == that.fill && this.color.equals(that.color)
+                    && this.pinhole.equals(that.pinhole);
         }
         return false;
     }

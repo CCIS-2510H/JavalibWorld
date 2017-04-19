@@ -68,13 +68,17 @@ public final class FrozenImage extends WorldImage {
 
     @Override
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
-        return sb.append("new FrozenImage()");
+        if (this.pinhole.x != 0 || this.pinhole.y != 0)
+            sb = sb.append("new FrozenImage(pinhole = ").append(this.pinhole.toString()).append(")");
+        else
+            sb = sb.append("new FrozenImage()");
+        return sb;
     }
 
     @Override
     protected boolean equalsStacksafe(WorldImage other,
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
-        if (other instanceof FrozenImage) {
+        if (other instanceof FrozenImage && this.pinhole.equals(other.pinhole)) {
             FrozenImage that = (FrozenImage)other;
             BufferedImage imgA = this.img;
             BufferedImage imgB = that.img;

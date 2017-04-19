@@ -47,7 +47,7 @@ public final class OverlayOffsetImage extends OverlayOffsetAlignBase {
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
         sb = sb.append("new ").append(this.simpleName()).append("(");
         stack.push(
-                new FieldsWLItem(
+                new FieldsWLItem(this.pinhole,
                         new ImageField("top", this.top),
                         new ImageField("dx", this.dx), new ImageField("dy", this.dy, true),
                         new ImageField("bot", this.bot)));

@@ -98,8 +98,11 @@ public final class FromFileImage extends WorldImage {
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
         sb = sb.append("new ").append(this.simpleName()).append("(")
                .append("this.fileName = \"")
-               .append(this.fileName.replace("\\", "\\\\").replace("\"", "\\\""))
-               .append("\")");
+               .append(this.fileName.replace("\\", "\\\\").replace("\"", "\\\"")).append("\"");
+        if (this.pinhole.x != 0 || this.pinhole.y != 0)
+            stack.push(new FieldsWLItem(this.pinhole));
+        else
+            sb = sb.append(")");
         return sb;
     }
 
@@ -108,7 +111,7 @@ public final class FromFileImage extends WorldImage {
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof FromFileImage) {
             FromFileImage that = (FromFileImage)other;
-            return this.fileName.equals(that.fileName);
+            return this.fileName.equals(that.fileName) && this.pinhole.equals(that.pinhole);
         }
         return false;
     }
