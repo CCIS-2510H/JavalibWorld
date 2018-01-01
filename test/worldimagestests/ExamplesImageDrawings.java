@@ -276,6 +276,21 @@ public class ExamplesImageDrawings {
                 new RectangleImage(300, 300, "solid", Color.GRAY), 150, 150)
                 .placeImageXY(new FrameImage(daisyImg.movePinhole(100, 100)),
                         150, 150);
-        boolean d = c.show() && c.drawScene(daisy);
+        //boolean d = c.show() && c.drawScene(daisy);
+
+        c = new WorldCanvas(800, 800);
+        WorldScene s = new WorldScene(800, 800);
+        s = s.placeImageXY(new RectangleImage(800, 800, OutlineMode.SOLID, Color.GRAY), 400, 400);
+        s = s.placeImageXY(new VisiblePinholeImage(new FrameImage(new StarImage(50, OutlineMode.OUTLINE, Color.BLUE))), 100, 100);
+        s = s.placeImageXY(new StarImage(50, OutlineMode.SOLID, Color.BLUE), 200, 100);
+        s = s.placeImageXY(new FrameImage(new StarImage(50, 7, 3, OutlineMode.OUTLINE, Color.green)), 100, 200);
+        s = s.placeImageXY(new StarImage(50, 7, 3, OutlineMode.SOLID, Color.green), 200, 200);
+        s = s.placeImageXY(new FrameImage(new StarImage(50, 8, 3, OutlineMode.OUTLINE, Color.red)), 100, 300);
+        s = s.placeImageXY(new StarImage(50, 8, 3, OutlineMode.SOLID, Color.red), 200, 300);
+        s = s.placeImageXY(new FrameImage(new StarImage(50, 8, 2, OutlineMode.OUTLINE, Color.yellow)), 100, 400);
+        s = s.placeImageXY(new StarImage(50, 8, 2, OutlineMode.SOLID, Color.yellow), 200, 400);
+        s = s.placeImageXY(new FrameImage(new RadialStarImage(20, 30, 50, OutlineMode.OUTLINE, Color.orange)), 100, 500);
+        s = s.placeImageXY(new RadialStarImage(20, 30, 50, OutlineMode.SOLID, Color.orange), 200, 500);
+        boolean f = c.show() && c.drawScene(s);
     }
 }
