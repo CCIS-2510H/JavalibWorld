@@ -372,6 +372,16 @@ abstract public class World {
         return this;
     }
 
+
+    private String buttonNameFor(int button) {
+        switch (button) {
+            case MouseEvent.BUTTON1: return "LeftButton";
+            case MouseEvent.BUTTON2: return "MiddleButton";
+            case MouseEvent.BUTTON3: return "RightButton";
+            default: return "UnknownButton";
+        }
+    }
+
     /**
      * The method invoked by the mouse adapter on mouse clicked event. Delegates
      * to the user to define a new state of the world.
@@ -380,10 +390,10 @@ abstract public class World {
      *            the location of the mouse when clicked
      * @return <code>{@link World World}</code> after the mouse event
      */
-    World processMouseClicked(Posn mouse) {
+    World processMouseClicked(Posn mouse, int button) {
         try {
             if (this.worldExists) {
-                World bw = this.onMouseClicked(mouse);
+                World bw = this.onMouseClicked(mouse, buttonNameFor(button));
                 if (!this.lastWorld.worldEnds)
                     return resetWorld(bw);
                 else
@@ -414,6 +424,23 @@ abstract public class World {
      */
     public World onMouseClicked(Posn mouse) {
         return this;
+    }
+    /**
+     * <P>
+     * User defined method to be invoked by the mouse adapter when a mouse is
+     * clicked. Update the <code>{@link World World}</code>.
+     * </P>
+     * <P>
+     * Override this method in the game world class
+     * </P>
+     *
+     * @param mouse
+     *            the location of the mouse when clicked
+     * @param buttonName which button was clicked
+     * @return <code>{@link World World}</code> after the mouse event
+     */
+    public World onMouseClicked(Posn mouse, String buttonName) {
+        return this.onMouseClicked(mouse);
     }
 
     /**
@@ -516,11 +543,11 @@ abstract public class World {
      *            the location of the mouse when pressed
      * @return <code>{@link World World}</code> after the mouse event
      */
-    World processMousePressed(Posn mouse) {
+    World processMousePressed(Posn mouse, int button) {
 
         try {
             if (this.worldExists) {
-                World bw = this.onMousePressed(mouse);
+                World bw = this.onMousePressed(mouse, buttonNameFor(button));
                 if (!this.lastWorld.worldEnds)
                     return resetWorld(bw);
                 else
@@ -553,6 +580,23 @@ abstract public class World {
     public World onMousePressed(Posn mouse) {
         return this;
     }
+    /**
+     * <P>
+     * User defined method to be invoked by the mouse adapter when a mouse is
+     * pressed. Update the <code>{@link World World}</code>.
+     * </P>
+     * <P>
+     * Override this method in the game world class
+     * </P>
+     *
+     * @param mouse
+     *            the location of the mouse when pressed
+     * @param buttonName which button was pressed
+     * @return <code>{@link World World}</code> after the mouse event
+     */
+    public World onMousePressed(Posn mouse, String buttonName) {
+        return this.onMousePressed(mouse);
+    }
 
     /**
      * The method invoked by the mouse adapter on mouse released event.
@@ -562,11 +606,11 @@ abstract public class World {
      *            the location of the mouse when released
      * @return <code>{@link World World}</code> after the mouse event
      */
-    World processMouseReleased(Posn mouse) {
+    World processMouseReleased(Posn mouse, int button) {
 
         try {
             if (this.worldExists) {
-                World bw = this.onMouseReleased(mouse);
+                World bw = this.onMouseReleased(mouse, buttonNameFor(button));
                 if (!this.lastWorld.worldEnds)
                     return resetWorld(bw);
                 else
@@ -598,6 +642,23 @@ abstract public class World {
      */
     public World onMouseReleased(Posn mouse) {
         return this;
+    }
+    /**
+     * <P>
+     * User defined method to be invoked by the mouse adapter when a mouse is
+     * released. Update the <code>{@link World World}</code>.
+     * </P>
+     * <P>
+     * Override this method in the game world class
+     * </P>
+     *
+     * @param mouse
+     *            the location of the mouse when released
+     * @param buttonName which button was released
+     * @return <code>{@link World World}</code> after the mouse event
+     */
+    public World onMouseReleased(Posn mouse, String buttonName) {
+        return this.onMousePressed(mouse);
     }
 
     /**
@@ -872,7 +933,7 @@ final class MyMouseAdapter extends MouseAdapter {
         this.currentWorld.stopTimer = true;
         this.mousePosn = new Posn(e.getX(), e.getY());
         this.currentWorld = this.currentWorld
-                .processMouseClicked(adjustMousePosn(this.mousePosn));
+                .processMouseClicked(adjustMousePosn(this.mousePosn), e.getButton());
         this.currentWorld.stopTimer = false;
     }
 
@@ -914,7 +975,7 @@ final class MyMouseAdapter extends MouseAdapter {
         this.currentWorld.stopTimer = true;
         this.mousePosn = new Posn(e.getX(), e.getY());
         this.currentWorld = this.currentWorld
-                .processMousePressed(adjustMousePosn(this.mousePosn));
+                .processMousePressed(adjustMousePosn(this.mousePosn), e.getButton());
         this.currentWorld.stopTimer = false;
     }
 
@@ -928,7 +989,7 @@ final class MyMouseAdapter extends MouseAdapter {
         this.currentWorld.stopTimer = true;
         this.mousePosn = new Posn(e.getX(), e.getY());
         this.currentWorld = this.currentWorld
-                .processMouseReleased(adjustMousePosn(this.mousePosn));
+                .processMouseReleased(adjustMousePosn(this.mousePosn), e.getButton());
         this.currentWorld.stopTimer = false;
     }
 }
