@@ -648,7 +648,68 @@ abstract public class World {
    * @return <code>{@link World World}</code> after the mouse event
    */
   public World onMouseReleased(Posn mouse, String buttonName) {
-    return this.onMousePressed(mouse);
+    return this.onMouseReleased(mouse);
+  }
+
+  /**
+   * The method invoked by the mouse adapter on mouse moved event.
+   * Delegates to the user to define a new state of the world.
+   *
+   * @param mouse the location of the mouse when moved
+   * @return <code>{@link World World}</code> after the mouse event
+   */
+  World processMouseMoved(Posn mouse, String button) {
+
+    try {
+      if (this.worldExists) {
+        World bw = this.onMouseMoved(mouse, button);
+        if (!this.lastWorld.worldEnds)
+          return resetWorld(bw);
+        else
+          return this;
+      } else
+        return this;
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      this.drawWorld("");
+      // throw re;
+      Runtime.getRuntime().halt(1);
+    }
+
+    return this;
+  }
+
+  /**
+   * <p>
+   * User defined method to be invoked by the mouse adapter when a mouse is
+   * moved. Update the <code>{@link World World}</code>.
+   * </P>
+   * <p>
+   * Override this method in the game world class
+   * </P>
+   *
+   * @param mouse the location of the mouse when moved
+   * @return <code>{@link World World}</code> after the mouse event
+   */
+  public World onMouseMoved(Posn mouse) {
+    return this;
+  }
+
+  /**
+   * <p>
+   * User defined method to be invoked by the mouse adapter when a mouse is
+   * moved. Update the <code>{@link World World}</code>.
+   * </P>
+   * <p>
+   * Override this method in the game world class
+   * </P>
+   *
+   * @param mouse      the location of the mouse when moved
+   * @param buttonName which button was moved
+   * @return <code>{@link World World}</code> after the mouse event
+   */
+  public World onMouseMoved(Posn mouse, String buttonName) {
+    return this.onMouseMoved(mouse);
   }
 
   /**
@@ -996,6 +1057,13 @@ final class MyMouseAdapter extends MouseAdapter {
     this.mousePosn = new Posn(e.getX(), e.getY());
     this.currentWorld = this.currentWorld
             .processMouseReleased(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.currentWorld.stopTimer = false;
+  }
+
+  public void mouseMoved(MouseEvent e) {
+    this.currentWorld.stopTimer = true;
+    this.mousePosn = new Posn(e.getX(), e.getY());
+    this.currentWorld.processMouseMoved(adjustMousePosn(this.mousePosn), buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 }

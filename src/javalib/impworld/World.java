@@ -659,6 +659,72 @@ abstract public class World {
   /**
    * EFFECT:
    * <p>
+   * The method invoked by the mouse adapter on mouse moved event.
+   * Delegates to the user to define a new state of the world.
+   * </p>
+   *
+   * @param mouse
+   *            the location of the mouse when moved
+   */
+  void processMouseMoved(Posn mouse, String button) {
+
+    try {
+      if (this.worldExists) {
+        this.onMouseMoved(mouse, button);
+        if (!this.lastWorld.worldEnds)
+          this.drawWorld("");
+        else {
+          // draw the last world
+          this.theCanvas.drawScene(lastWorld.lastScene);
+        }
+      }
+    } catch (RuntimeException re) {
+      re.printStackTrace();
+      this.drawWorld("");
+      // throw re;
+      Runtime.getRuntime().halt(1);
+    }
+  }
+
+  /**
+   * EFFECT:
+   * <p>
+   * User defined method to be invoked by the mouse adapter when a mouse is
+   * moved. Update the <code>{@link World World}</code>.
+   * </P>
+   * <P>
+   * Override this method in the game world class
+   * </P>
+   *
+   * @param mouse
+   *            the location of the mouse when moved
+   */
+  public void onMouseMoved(Posn mouse) {
+  }
+
+  /**
+   * EFFECT:
+   * <p>
+   * User defined method to be invoked by the mouse adapter when a mouse is
+   * moved. Update the <code>{@link World World}</code>.
+   * </P>
+   * <P>
+   * Override this method in the game world class
+   * </P>
+   *
+   * @param mouse
+   *            the location of the mouse when moved
+   * @param buttonName which button was pressed
+   */
+
+  public void onMouseMoved(Posn mouse, String buttonName) {
+    this.onMouseMoved(mouse);
+  }
+
+
+  /**
+   * EFFECT:
+   * <p>
    * Invoke the user defined <code>makeImage</code> method, if this
    * <code>{@link World World}</code> has been initialized via
    * <code>bigBang</code> and did not stop or end, otherwise invoke the user
@@ -953,6 +1019,17 @@ final class MyMouseAdapter extends MouseAdapter {
     this.currentWorld.stopTimer = true;
     this.mousePosn = new Posn(e.getX(), e.getY());
     this.currentWorld.processMouseReleased(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.currentWorld.stopTimer = false;
+  }
+
+  /**
+   * Invoked when the mouse is moved
+   * @param e the mouse event that invoked this callback
+   */
+  public void mouseMoved(MouseEvent e) {
+    this.currentWorld.stopTimer = true;
+    this.mousePosn = new Posn(e.getX(), e.getY());
+    this.currentWorld.processMouseMoved(adjustMousePosn(this.mousePosn), buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 }
