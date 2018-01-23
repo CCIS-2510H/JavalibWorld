@@ -12,8 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.Timer;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 /**
  * Copyright 2007, 2008 2009, 2012 Viera K. Proulx
@@ -397,10 +396,10 @@ abstract public class World {
    * @param mouse
    *            the location of the mouse when clicked
    */
-  void processMouseClicked(Posn mouse, int button) {
+  void processMouseClicked(Posn mouse, String button) {
     try {
       if (this.worldExists) {
-        this.onMouseClicked(mouse, buttonNameFor(button));
+        this.onMouseClicked(mouse, button);
         if (!this.lastWorld.worldEnds)
           this.drawWorld("");
         else {
@@ -552,11 +551,11 @@ abstract public class World {
    * @param mouse
    *            the location of the mouse when pressed
    */
-  void processMousePressed(Posn mouse, int button) {
+  void processMousePressed(Posn mouse, String button) {
 
     try {
       if (this.worldExists) {
-        this.onMousePressed(mouse, buttonNameFor(button));
+        this.onMousePressed(mouse, button);
         if (!this.lastWorld.worldEnds)
           this.drawWorld("");
         else {
@@ -602,11 +601,11 @@ abstract public class World {
    * @param mouse
    *            the location of the mouse when released
    */
-  void processMouseReleased(Posn mouse, int button) {
+  void processMouseReleased(Posn mouse, String button) {
 
     try {
       if (this.worldExists) {
-        this.onMouseReleased(mouse, buttonNameFor(button));
+        this.onMouseReleased(mouse, button);
         if (!this.lastWorld.worldEnds)
           this.drawWorld("");
         else {
@@ -849,6 +848,13 @@ final class MyKeyAdapter extends javalib.utils.AbstractKeyAdapter {
  */
 final class MyMouseAdapter extends MouseAdapter {
 
+  private String buttonNameFor(MouseEvent evt) {
+    if (SwingUtilities.isLeftMouseButton(evt)) return "LeftButton";
+    if (SwingUtilities.isMiddleMouseButton(evt)) return "MiddleButton";
+    if (SwingUtilities.isRightMouseButton(evt)) return "RightButton";
+    return "UnknownButton";
+  }
+
   /**
    * the current <code>{@link World World}</code> that handles the mouse
    * events
@@ -894,7 +900,7 @@ final class MyMouseAdapter extends MouseAdapter {
   public void mouseClicked(MouseEvent e) {
     this.currentWorld.stopTimer = true;
     this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseClicked(adjustMousePosn(this.mousePosn), e.getButton());
+    this.currentWorld.processMouseClicked(adjustMousePosn(this.mousePosn), buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -933,7 +939,7 @@ final class MyMouseAdapter extends MouseAdapter {
   public void mousePressed(MouseEvent e) {
     this.currentWorld.stopTimer = true;
     this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMousePressed(adjustMousePosn(this.mousePosn), e.getButton());
+    this.currentWorld.processMousePressed(adjustMousePosn(this.mousePosn), buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -946,7 +952,7 @@ final class MyMouseAdapter extends MouseAdapter {
   public void mouseReleased(MouseEvent e) {
     this.currentWorld.stopTimer = true;
     this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseReleased(adjustMousePosn(this.mousePosn), e.getButton());
+    this.currentWorld.processMouseReleased(adjustMousePosn(this.mousePosn), buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 }
