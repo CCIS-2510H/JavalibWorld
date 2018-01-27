@@ -122,11 +122,14 @@ public final class StarImage extends WorldImage {
       }
       this.poly.closePath();
     }
+    Rectangle2D bb = this.poly.getBounds2D();
+    this.poly.transform(AffineTransform.getTranslateInstance(-bb.getCenterX(), -bb.getCenterY()));
+    this.pinhole = new Posn((int)-bb.getCenterX(), (int)-bb.getCenterY());
   }
 
   @Override
   protected BoundingBox getBBHelp(AffineTransform t) {
-    Rectangle2D ans = this.poly.getBounds2D();
+    Rectangle2D ans = this.poly.createTransformedShape(t).getBounds2D();
     return new BoundingBox(ans.getMinX(), ans.getMinY(), ans.getMaxX(), ans.getMaxY());
   }
   @Override

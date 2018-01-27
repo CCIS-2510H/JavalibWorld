@@ -152,6 +152,7 @@ abstract class RegularPolyImageBase extends WorldImage {
             xCoord[i] -= xAvg;
             yCoord[i] -= yAvg;
         }
+        this.pinhole = new Posn((int)-xAvg, (int)-yAvg);
 
         this.poly = new Polygon(xCoord, yCoord, this.sides);
     }
