@@ -291,6 +291,25 @@ public class ExamplesImageDrawings {
         s = s.placeImageXY(new StarImage(50, 8, 2, OutlineMode.SOLID, Color.yellow), 200, 400);
         s = s.placeImageXY(new FrameImage(new RadialStarImage(20, 30, 50, OutlineMode.OUTLINE, Color.orange)), 100, 500);
         s = s.placeImageXY(new RadialStarImage(20, 30, 50, OutlineMode.SOLID, Color.orange), 200, 500);
+        s = s.placeImageXY(new VisiblePinholeImage(new RegularPolyImage(50, 7, OutlineMode.OUTLINE, Color.RED)), 300, 100);
+        s = s.placeImageXY(new FrameImage(new OverlayOffsetAlign(AlignModeX.CENTER, AlignModeY.MIDDLE,
+                new RegularPolyImage(40, 3, OutlineMode.OUTLINE, Color.YELLOW),
+                0.0, 0.0,
+                new RotateImage(new RegularPolyImage(40, 3, OutlineMode.OUTLINE, Color.ORANGE), 180))), 300, 200);
+        s = s.placeImageXY(
+                new FrameImage(new OverlayOffsetAlign(AlignModeX.PINHOLE, AlignModeY.PINHOLE,
+                new RegularPolyImage(40, 3, OutlineMode.OUTLINE, Color.YELLOW),
+                0.0, 0.0,
+                new RotateImage(new RegularPolyImage(40, 3, OutlineMode.OUTLINE, Color.ORANGE), 180))), 300, 300);
+        s = s.placeImageXY(
+                new OverlayOffsetAlign(AlignModeX.PINHOLE, AlignModeY.PINHOLE,
+                new FrameImage(new StarImage(40, 3, OutlineMode.OUTLINE, Color.YELLOW)),
+                0.0, 0.0,
+                new FrameImage(new VisiblePinholeImage(new RotateImage(new StarImage(40, 3, OutlineMode.OUTLINE, Color.ORANGE), 180)), Color.BLUE)), 300, 400);
+        s = s.placeImageXY(new FrameImage(new OverlayOffsetAlign(AlignModeX.CENTER, AlignModeY.MIDDLE,
+                new StarImage(40, 3, OutlineMode.OUTLINE, Color.YELLOW),
+                0.0, 0.0,
+                new RotateImage(new StarImage(40, 3, OutlineMode.OUTLINE, Color.ORANGE), 180))), 300, 500);
         boolean f = c.show() && c.drawScene(s);
     }
 }
