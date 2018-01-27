@@ -66,15 +66,15 @@ public final class LineImage extends WorldImage {
     
     @Override
     protected void drawStackUnsafe(Graphics2D g) {
-        if (color == null)
-            color = new Color(0, 0, 0);
-
         DPosn midpoint = new DPosn(this.endPoint.x / 2.0, this.endPoint.y / 2.0);
 
         // save the current paint
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
-        g.setPaint(color);
+        if (color != null)
+            g.setPaint(color);
+        else
+            g.setPaint(Color.BLACK);
         // draw the object
         g.draw(new Line2D.Double(-midpoint.x, -midpoint.y, midpoint.x,
                 midpoint.y));
