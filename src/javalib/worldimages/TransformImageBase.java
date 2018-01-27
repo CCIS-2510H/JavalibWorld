@@ -45,11 +45,6 @@ abstract public class TransformImageBase extends WorldImage {
 
     @Override
     protected void drawStackUnsafe(Graphics2D g) {
-        if (this.getWidth() <= 0)
-            return;
-        if (this.getHeight() <= 0)
-            return;
-
         // draw the object
         AffineTransform old = g.getTransform();
         g.transform(this.tx);
