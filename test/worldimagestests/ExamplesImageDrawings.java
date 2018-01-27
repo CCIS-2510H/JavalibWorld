@@ -310,6 +310,27 @@ public class ExamplesImageDrawings {
                 new StarImage(40, 3, OutlineMode.OUTLINE, Color.YELLOW),
                 0.0, 0.0,
                 new RotateImage(new StarImage(40, 3, OutlineMode.OUTLINE, Color.ORANGE), 180))), 300, 500);
+        s = s.placeImageXY(new FrameImage(new VisiblePinholeImage(new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED), Color.BLUE)),
+                400, 100);
+        s = s.placeImageXY(new FrameImage(new VisiblePinholeImage(new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED).movePinholeTo(new Posn(0, 0)), Color.BLUE)),
+                400, 200);
+        s = s.placeImageXY(
+                new OverlayOffsetAlign(AlignModeX.CENTER, AlignModeY.MIDDLE,
+                    new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED),
+                    0, 0,
+                    new RotateImage(new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED), 180)),
+                400, 300);
+        s = s.placeImageXY(
+                new OverlayOffsetAlign(AlignModeX.PINHOLE, AlignModeY.PINHOLE,
+                    new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED),
+                    0, 0,
+                    new RotateImage(new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED), 180)),
+                400, 400);
+        s = s.placeImageXY(
+                new OverlayImage(
+                        new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED),
+                        new RotateImage(new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED), 180)),
+                400, 500);
         boolean f = c.show() && c.drawScene(s);
     }
 }
