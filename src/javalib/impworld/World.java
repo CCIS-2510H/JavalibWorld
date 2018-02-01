@@ -126,6 +126,7 @@ abstract public class World {
     // add the mouse listener to the frame for our canvas
     this.ma = new MyMouseAdapter(this);
     this.theCanvas.f.addMouseListener(this.ma);
+    this.theCanvas.f.addMouseMotionListener(this.ma);
 
     // make sure the canvas responds to events
     this.theCanvas.f.setFocusable(true);
