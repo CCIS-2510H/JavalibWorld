@@ -331,6 +331,19 @@ public class ExamplesImageDrawings {
                         new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED),
                         new RotateImage(new EquilateralTriangleImage(30, OutlineMode.OUTLINE, Color.RED), 180)),
                 400, 500);
+
+        s = new WorldScene(800, 800);
+        WorldImage line1 =
+                new VisiblePinholeImage(
+                        new LineImage(new Posn(40, -40), Color.BLUE).movePinhole(20, -20),
+                        Color.BLUE);
+        WorldImage line2 =
+                new VisiblePinholeImage(
+                        new LineImage(new Posn(40, 40), Color.RED).movePinhole(20, 20),
+                        Color.RED);
+        WorldImage combo =
+                new VisiblePinholeImage(new OverlayImage(line1, line2), Color.green);
+        s = s.placeImageXY(combo, 300, 300);
         boolean f = c.show() && c.drawScene(s);
     }
 }
