@@ -157,8 +157,8 @@ public abstract class WorldSceneBase {
 
     public StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
         revImagesIfNeeded();
-        sb.append("new ").append(this.getClass().getSimpleName()).append("(){")
-          .append("this.width = ").append(this.width).append(", ")
+        sb.append("new ").append(this.getClass().getSimpleName()).append("(){\n")
+          .append(linePrefix + "  ").append("this.width = ").append(this.width).append(", ")
           .append("this.height = ").append(this.height);
         int count = 0;
         for (PlaceImage i : this.revImgs) {

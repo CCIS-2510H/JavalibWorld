@@ -61,4 +61,15 @@ public final class WorldEnd {
             hash = hash * 2;
         return hash;
     }
+
+    public StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
+        sb.append("new WorldEnd(this.worldEnds = ").append(this.worldEnds).append(",\n");
+        sb.append(linePrefix + "  this.lastScene = ");
+        if (this.worldEnds)
+          this.lastScene.toIndentedString(sb, linePrefix + "  ", indent);
+        else
+          sb.append("<irrelevant>");
+        sb.append(")");
+        return sb;
+    }
 }
