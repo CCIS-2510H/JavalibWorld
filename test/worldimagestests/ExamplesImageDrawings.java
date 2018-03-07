@@ -344,6 +344,13 @@ public class ExamplesImageDrawings {
         WorldImage combo =
                 new VisiblePinholeImage(new OverlayImage(line1, line2), Color.green);
         s = s.placeImageXY(combo, 300, 300);
+
+
+        ComputedPixelImage img = new ComputedPixelImage(100, 80);
+        img.setPixels(0, 0, 100, 80, Color.BLACK);
+        img.setPixels(10, 10, 20, 30, Color.BLUE);
+        img.setPixel(15, 15, Color.RED);
+        s = s.placeImageXY(img, 100, 100);
         boolean f = c.show() && c.drawScene(s);
     }
 }
