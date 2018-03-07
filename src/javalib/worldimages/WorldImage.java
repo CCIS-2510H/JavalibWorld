@@ -1,8 +1,11 @@
 package javalib.worldimages;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Stack;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
@@ -214,6 +217,26 @@ public abstract class WorldImage {
                 nextI.drawStacksafe(g, images, txs);
             }
             g.setTransform(initTx);
+        }
+    }
+
+    /**
+     * Saves the current scene to a PNG file of the specified name
+     * @param filename -- where to save the image
+     * @return The filename, if the image was successfully saved, or an error message
+     */
+    public final String saveImage(String filename) {
+        try {
+            BufferedImage img = new BufferedImage((int)this.getWidth(), (int)this.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = img.createGraphics();
+            g.setTransform(AffineTransform.getTranslateInstance(this.getWidth() / 2, this.getHeight() / 2));
+            this.draw(g);
+            if (ImageIO.write(img, "png", new File(filename))){
+                return filename;
+            }
+            return "Could not save file";
+        } catch (Exception e) {
+            return "Error saving file: " + e.getMessage();
         }
     }
 

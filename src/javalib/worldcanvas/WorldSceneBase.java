@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
+import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -12,6 +13,8 @@ import java.util.Iterator;
 import javalib.worldimages.OutlineMode;
 import javalib.worldimages.RectangleImage;
 import javalib.worldimages.WorldImage;
+
+import javax.imageio.ImageIO;
 
 /**
  * Class representing the common functionality (drawing, width, height) of the
@@ -110,6 +113,26 @@ public abstract class WorldSceneBase {
             g.translate(-i.x + i.img.pinhole.x, -i.y + i.img.pinhole.y);
         }
     }
+
+    /**
+     * Saves the current scene to a PNG file of the specified name
+     * @param filename -- where to save the image
+     * @return The filename, if the image was successfully saved, or an error message
+     */
+    public final String saveImage(String filename) {
+        try {
+            BufferedImage img = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+            this.draw(img.createGraphics());
+            if (ImageIO.write(img, "png", new File(filename))){
+                return filename;
+            }
+            return "Could not save file";
+        } catch (Exception e) {
+            return "Error saving file: " + e.getMessage();
+        }
+    }
+
+
 
     @Override
     public boolean equals(Object obj) {
