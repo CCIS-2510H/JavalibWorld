@@ -85,6 +85,10 @@ public final class FromFileImage extends WorldImage {
         return this.imread.height;
     }
 
+    public Color getColorAt(int x, int y) {
+        return this.imread.getColorPixel(x, y);
+    }
+
     @Override
     protected BoundingBox getBBHelp(AffineTransform t) {
         double w = this.getWidth();

@@ -134,6 +134,10 @@ public class WorldCanvas {
         return panel.getBufferGraphics();
     }
 
+    public Color getColorAt(int x, int y) {
+        return new Color(((CanvasPanel)panel).getBuffer().getRGB(x, y));
+    }
+
     // ///////////////////////////////////////////////////////////////////////
     // Methods for drawing and erasing shapes and text //
     // ///////////////////////////////////////////////////////////////////////
