@@ -168,10 +168,13 @@ class ImagePrinter {
         worklist.pop();
       }
       else if (obj instanceof java.awt.Color) {
-        String result = obj.toString();
-        int start = result.indexOf('[');
-        result = result.substring(start, result.length());
-        sb = sb.append(result);
+        java.awt.Color c = (java.awt.Color)obj;
+        sb = sb.append("[r=").append(c.getRed())
+                .append(",g=").append(c.getGreen())
+                .append(",b=").append(c.getBlue());
+        if (c.getAlpha() < 255)
+          sb = sb.append(",a=").append(c.getAlpha());
+        sb = sb.append("]");
         worklist.pop();
       }
       else if (obj instanceof Posn) {
