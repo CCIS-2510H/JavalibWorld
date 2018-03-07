@@ -44,17 +44,73 @@ public final class ComputedPixelImage extends WorldImage {
     this.raster = this.image.getRaster();
   }
 
-  public void setPixel(int x, int y, Color c) {
+  /**
+   * Modifies the requested pixel of this image to be the given color
+   *
+   * @param x - the column of the desired pixel
+   * @param y - the row of the desired pixel
+   * @param c - the color to set the desired pixel
+   * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   */
+  public void setPixel(int x, int y, Color c) throws IndexOutOfBoundsException {
+    if (x < 0 || x >= this.width)
+      throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
+              x, this.width));
+    if (y < 0 || y >= this.height)
+      throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
+              x, this.height));
     this.raster.setPixel(x, y, new int[]{c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()});
   }
 
-  public Color getPixel(int x, int y) {
+  /**
+   * Retrieves the color of the requested  pixels of this image
+   *
+   * @param x - the column of the desired pixel
+   * @param y - the row of the desired pixel
+   * @return the {@link Color} of the desired pixel
+   * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   */
+  public Color getPixel(int x, int y) throws IndexOutOfBoundsException {
+    if (x < 0 || x >= this.width)
+      throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
+              x, this.width));
+    if (y < 0 || y >= this.height)
+      throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
+              x, this.height));
     int[] ans = new int[4];
     this.raster.getPixel(x, y, ans);
     return new Color(ans[0], ans[1], ans[2], ans[3]);
   }
 
-  public void setPixels(int x, int y, int width, int height, Color c) {
+
+  /**
+   * Modifies the requested rectangle of pixels of this image to be the given color.
+   * Rectangle covers the pixels [x, x + width) by [y, y + height)
+   *
+   * @param x - the leftmost column of the desired rectangle
+   * @param y - the topmost row of the desired rectangle
+   * @param width - the width of the rectangular region to set
+   * @param height - the height of the rectangular region to set
+   * @param c - the color to set the desired pixel
+   * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   */
+  public void setPixels(int x, int y, int width, int height, Color c) throws IndexOutOfBoundsException {
+    if (x < 0 || x >= this.width)
+      throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
+              x, this.width));
+    if (y < 0 || y >= this.height)
+      throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
+              x, this.height));
+    if (width < 0)
+      throw new IndexOutOfBoundsException("Width cannot be negative");
+    else if (x + width > this.width)
+      throw new IndexOutOfBoundsException(String.format("Right edge of rectangle (%d) is not in range [0, %d)",
+              x + width, this.width));
+    if (height < 0)
+      throw new IndexOutOfBoundsException("Height cannot be negative");
+    else if (y + height > this.height)
+      throw new IndexOutOfBoundsException(String.format("Bottom edge of rectangle (%d) is not in range [0, %d)",
+              y + height, this.height));
     int[] sample = new int[]{c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()};
     for (int w = 0; w < width; w++)
       for (int h = 0; h < height; h++)
