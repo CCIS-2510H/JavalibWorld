@@ -1,5 +1,7 @@
 package javalib.worldimages;
 
+import javalib.worldcanvas.WorldCanvas;
+
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
@@ -29,12 +31,10 @@ public final class ComputedPixelImage extends WorldImage {
   private final WritableRaster raster;
 
   /**
-   * A full constructor for this rectangle image.
+   * Constructs an empty (transparent) rectangular image of the given size
    *
-   * @param width
-   *            -- the width of this rectangle
-   * @param height
-   *            -- the height of this rectangle
+   * @param width - the width of this rectangle
+   * @param height - the height of this rectangle
    */
   public ComputedPixelImage(int width, int height) {
     super(1);
@@ -80,6 +80,35 @@ public final class ComputedPixelImage extends WorldImage {
     int[] ans = new int[4];
     this.raster.getPixel(x, y, ans);
     return new Color(ans[0], ans[1], ans[2], ans[3]);
+  }
+
+  /**
+   * Retrieves the color of the requested  pixels of this image.
+   * (Same as {@link ComputedPixelImage#getPixel}, but with consistent naming
+   * with {@link FromFileImage#getColorAt} and
+   * {@link WorldCanvas#getColorAt}.)
+   *
+   * @param x - the column of the desired pixel
+   * @param y - the row of the desired pixel
+   * @return the {@link Color} of the desired pixel
+   * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   */
+  public Color getColorAt(int x, int y) throws IndexOutOfBoundsException {
+    return this.getPixel(x, y);
+  }
+
+  /**
+   * Modifies the requested pixel of this image to be the given color.
+   * (Same as {@link ComputedPixelImage#setPixel}, but with consistent naming with
+   * {@link ComputedPixelImage#getPixel}.)
+   *
+   * @param x - the column of the desired pixel
+   * @param y - the row of the desired pixel
+   * @param c - the color to set the desired pixel
+   * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   */
+  public void setColorAt(int x, int y, Color c) throws IndexOutOfBoundsException {
+    this.setPixel(x, y, c);
   }
 
 

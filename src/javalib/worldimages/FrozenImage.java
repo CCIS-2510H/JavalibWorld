@@ -1,6 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
@@ -9,7 +9,7 @@ public final class FrozenImage extends WorldImage {
     BufferedImage img;
     public FrozenImage(WorldImage img) {
         super(1);
-        this.img = new BufferedImage((int)img.getWidth(), (int)img.getHeight(), BufferedImage.TRANSLUCENT);
+        this.img = new BufferedImage((int)img.getWidth(), (int)img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = this.img.createGraphics();
         g.translate(img.getWidth() / 2, img.getHeight() / 2);
         img.draw(g);
@@ -20,6 +20,28 @@ public final class FrozenImage extends WorldImage {
         super(pinhole, 1);
         this.img = img;
     }
+
+    /**
+     * Retrieves the color of the requested  pixels of this image
+     *
+     * @param x - the column of the desired pixel
+     * @param y - the row of the desired pixel
+     * @return the {@link Color} of the desired pixel
+     * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+     */
+    public Color getColorAt(int x, int y) {
+        if (x < 0 || x >= this.img.getWidth())
+            throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
+                    x, this.img.getWidth()));
+        if (y < 0 || y >= this.img.getHeight())
+            throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
+                    x, this.img.getHeight()));
+        int[] ans = new int[4];
+        this.img.getRaster().getPixel(x, y, ans);
+        return new Color(ans[0], ans[1], ans[2], ans[3]);
+    }
+
+
     @Override
     int numKids() {
         return 0;

@@ -84,14 +84,21 @@ public final class ImageMaker {
     /**
      * Get the specified pixel in the <code>image</code> as an RGB color.
      * 
-     * @param x
-     *            the x coordinate of the pixel
-     * @param y
-     *            the y coordinate of the pixel
+     * @param x - the x coordinate of the pixel
+     * @param y - the y coordinate of the pixel
+     * @return the {@link Color} of the desired pixel
+     * @throws IndexOutOfBoundsException if (x, y) is out of bounds
      */
-    public Color getColorPixel(int x, int y) {
-        int pixel = this.image.getRGB(x, y);
-        return new Color(pixel);
+    public Color getColorPixel(int x, int y) throws IndexOutOfBoundsException {
+        if (x < 0 || x >= this.width)
+            throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
+                    x, this.width));
+        if (y < 0 || y >= this.height)
+            throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
+                    x, this.height));
+        int[] ans = new int[4];
+        this.image.getRaster().getPixel(x, y, ans);
+        return new Color(ans[0], ans[1], ans[2], ans[3]);
     }
 
 }
