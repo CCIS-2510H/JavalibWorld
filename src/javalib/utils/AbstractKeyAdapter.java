@@ -85,6 +85,8 @@ public class AbstractKeyAdapter extends KeyAdapter {
         return "delete";
       case VK_ESCAPE:
         return "escape";
+      case VK_BACK_SPACE:
+        return "backspace";
       default:
         return "" + e.getKeyChar();
     }
