@@ -22,20 +22,15 @@ public final class FrozenImage extends WorldImage {
     }
 
     /**
-     * Retrieves the color of the requested  pixels of this image
+     * Retrieves the color of the requested pixel of this image
      *
      * @param x - the column of the desired pixel
      * @param y - the row of the desired pixel
      * @return the {@link Color} of the desired pixel
      * @throws IndexOutOfBoundsException if (x, y) is out of bounds
      */
-    public Color getColorAt(int x, int y) {
-        if (x < 0 || x >= this.img.getWidth())
-            throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
-                    x, this.img.getWidth()));
-        if (y < 0 || y >= this.img.getHeight())
-            throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
-                    x, this.img.getHeight()));
+    public Color getColorAt(int x, int y) throws IndexOutOfBoundsException {
+        boundsCheck(x, y, this.img.getWidth(), this.img.getHeight());
         int[] ans = new int[4];
         this.img.getRaster().getPixel(x, y, ans);
         return new Color(ans[0], ans[1], ans[2], ans[3]);

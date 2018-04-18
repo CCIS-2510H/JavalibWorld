@@ -63,7 +63,7 @@ public final class ComputedPixelImage extends WorldImage {
   }
 
   /**
-   * Retrieves the color of the requested  pixels of this image
+   * Retrieves the color of the requested pixel of this image
    *
    * @param x - the column of the desired pixel
    * @param y - the row of the desired pixel
@@ -71,12 +71,7 @@ public final class ComputedPixelImage extends WorldImage {
    * @throws IndexOutOfBoundsException if (x, y) is out of bounds
    */
   public Color getPixel(int x, int y) throws IndexOutOfBoundsException {
-    if (x < 0 || x >= this.width)
-      throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
-              x, this.width));
-    if (y < 0 || y >= this.height)
-      throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
-              x, this.height));
+    boundsCheck(x, y, this.width, this.height);
     int[] ans = new int[4];
     this.raster.getPixel(x, y, ans);
     return new Color(ans[0], ans[1], ans[2], ans[3]);

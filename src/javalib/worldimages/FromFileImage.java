@@ -86,14 +86,14 @@ public final class FromFileImage extends WorldImage {
     }
 
     /**
-     * Retrieves the color of the requested  pixels of this image
+     * Retrieves the color of the requested pixel of this image
      *
      * @param x - the column of the desired pixel
      * @param y - the row of the desired pixel
      * @return the {@link Color} of the desired pixel
      * @throws IndexOutOfBoundsException if (x, y) is out of bounds
      */
-    public Color getColorAt(int x, int y) {
+    public Color getColorAt(int x, int y) throws IndexOutOfBoundsException {
         return this.imread.getColorPixel(x, y);
     }
 

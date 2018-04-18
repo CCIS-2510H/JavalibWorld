@@ -90,12 +90,7 @@ public final class ImageMaker {
      * @throws IndexOutOfBoundsException if (x, y) is out of bounds
      */
     public Color getColorPixel(int x, int y) throws IndexOutOfBoundsException {
-        if (x < 0 || x >= this.width)
-            throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
-                    x, this.width));
-        if (y < 0 || y >= this.height)
-            throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
-                    x, this.height));
+        WorldImage.boundsCheck(x, y, this.width, this.height);
         int[] ans = new int[4];
         this.image.getRaster().getPixel(x, y, ans);
         return new Color(ans[0], ans[1], ans[2], ans[3]);

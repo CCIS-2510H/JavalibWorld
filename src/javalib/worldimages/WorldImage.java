@@ -425,4 +425,14 @@ public abstract class WorldImage {
         result = result.substring(start, result.length());
         return "this.color = " + result;
     }
+
+    protected static void boundsCheck(int x, int y, int width, int height) throws IndexOutOfBoundsException {
+        if (x < 0 || x >= width)
+            throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
+                    x, width));
+        if (y < 0 || y >= height)
+            throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
+                    y, height));
+
+    }
 }
