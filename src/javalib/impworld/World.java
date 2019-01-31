@@ -102,11 +102,11 @@ abstract public class World {
 
     // if the user closes the Canvas window
     // it will only hide and can be reopened by invoking 'show'
-    this.theCanvas.f
+    this.theCanvas.frame
             .setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     this.windowClosing = new MyWindowClosingListener(this);
-    this.theCanvas.f.addWindowListener(this.windowClosing);
+    this.theCanvas.frame.addWindowListener(this.windowClosing);
 
     // pause a bit so that two canvases do not compete when being opened
     // almost at the same time
@@ -119,17 +119,17 @@ abstract public class World {
 
     // add the key listener to the frame for our canvas
     this.ka = new MyKeyAdapter(this);
-    this.theCanvas.f.addKeyListener(this.ka);
-    this.theCanvas.f.setFocusTraversalKeysEnabled(false);
+    this.theCanvas.frame.addKeyListener(this.ka);
+    this.theCanvas.frame.setFocusTraversalKeysEnabled(false);
 
 
     // add the mouse listener to the frame for our canvas
     this.ma = new MyMouseAdapter(this);
-    this.theCanvas.f.addMouseListener(this.ma);
-    this.theCanvas.f.addMouseMotionListener(this.ma);
+    this.theCanvas.frame.addMouseListener(this.ma);
+    this.theCanvas.frame.addMouseMotionListener(this.ma);
 
     // make sure the canvas responds to events
-    this.theCanvas.f.setFocusable(true);
+    this.theCanvas.frame.setFocusable(true);
 
     // finally, show the canvas and draw the initial world
     this.theCanvas.show();
@@ -192,8 +192,8 @@ abstract public class World {
       this.mytime.timer.stop();
       this.worldExists = false;
       this.mytime.stopTimer();
-      this.theCanvas.f.removeKeyListener(this.ka);
-      this.theCanvas.f.removeMouseListener(this.ma);
+      this.theCanvas.frame.removeKeyListener(this.ka);
+      this.theCanvas.frame.removeMouseListener(this.ma);
       System.out.println("The world stopped.");
 
       // draw the final scene of the world with the end of time message
@@ -953,7 +953,7 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   Posn adjustMousePosn(Posn mousePosn) {
     // .... use this to find the height of the top bar
-    Insets ins = this.currentWorld.theCanvas.f.getInsets();
+    Insets ins = this.currentWorld.theCanvas.frame.getInsets();
     mousePosn.y -= ins.top;
     mousePosn.x -= ins.left;
     return mousePosn;

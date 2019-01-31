@@ -64,7 +64,7 @@ public final class WorldEnd {
 
     public StringBuilder toIndentedString(StringBuilder sb, String linePrefix, int indent) {
         sb.append("new WorldEnd(this.worldEnds = ").append(this.worldEnds).append(",\n");
-        sb.append(linePrefix + "  this.lastScene = ");
+        sb.append(linePrefix).append("  this.lastScene = ");
         if (this.worldEnds)
           this.lastScene.toIndentedString(sb, linePrefix + "  ", indent);
         else

@@ -29,7 +29,7 @@ public class WorldCanvas {
     protected static int WINDOWS_OPEN = 0;
 
     /** the frame that holds the canvas */
-    public transient JFrame f;
+    public transient JFrame frame;
 
     /** the panel that allows us to paint graphics */
     public transient CanvasPanel panel;
@@ -58,27 +58,27 @@ public class WorldCanvas {
         this.height = height;
 
         // Label the frame as "Canvas" and set up the layout
-        f = new JFrame(title);
-        f.setLayout(new BorderLayout());
-        f.setResizable(false);
+        frame = new JFrame(title);
+        frame.setLayout(new BorderLayout());
+        frame.setResizable(false);
 
         // End the application when the last window closes
-        f.addWindowListener(winapt);
+        frame.addWindowListener(winapt);
 
         // if the user closes the Canvas window
         // it will only hide and can be reopened by invoking 'show'
-        f.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
         // set up the panel and the graphics
         panel = new CanvasPanel(width, height);
         panel.addNotify();
-        f.getContentPane().add(panel, BorderLayout.CENTER);
-        f.getContentPane().setMinimumSize(new Dimension(width, height));
+        frame.getContentPane().add(panel, BorderLayout.CENTER);
+        frame.getContentPane().setMinimumSize(new Dimension(width, height));
 
-        f.pack();
+        frame.pack();
         Graphics g = panel.getGraphics();
-        f.update(g);
-        f.setVisible(false);
+        frame.update(g);
+        frame.setVisible(false);
     }
 
     /**
@@ -159,8 +159,8 @@ public class WorldCanvas {
     // ///////////////////////////////////////////////////////////////////////
 
     public boolean drawScene(WorldSceneBase scene) {
-        if (f.getWidth() != scene.width || f.getHeight() != scene.height) {
-            f.getContentPane().setMinimumSize(
+        if (frame.getWidth() != scene.width || frame.getHeight() != scene.height) {
+            frame.getContentPane().setMinimumSize(
                     new Dimension(scene.width, scene.height));
         }
         ((CanvasPanel) panel).drawScene(scene);
@@ -182,11 +182,11 @@ public class WorldCanvas {
      */
     public boolean show() {
         // check if the widow is already open
-        if (!f.isVisible()) {
+        if (!frame.isVisible()) {
 
             // account for the open window, make it appear
             WINDOWS_OPEN = WINDOWS_OPEN + 1;
-            f.setVisible(true);
+            frame.setVisible(true);
             // redraw the background
             return true;
         } else {
@@ -202,9 +202,9 @@ public class WorldCanvas {
      * @return <code>true</code> if successfully closed, or closed already
      */
     public boolean close() {
-        if (f.isVisible()) {
+        if (frame.isVisible()) {
             WINDOWS_OPEN = WINDOWS_OPEN - 1;
-            f.setVisible(false);
+            frame.setVisible(false);
             panel.clearPanel();
         }
         return true;

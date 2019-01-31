@@ -52,12 +52,13 @@ abstract public class World {
   /**
    * the key adapter for this world
    */
-  private transient MyKeyAdapter ka;
+  private transient MyKeyAdapter keyAdapter
+          ;
 
   /**
    * the mouse adapter for this world
    */
-  private transient MyMouseAdapter ma;
+  private transient MyMouseAdapter mouseAdapter;
 
   /**
    * the window closing listener for this world
@@ -90,28 +91,28 @@ abstract public class World {
    * adding the key and mouse adapters, and starting the timer at the given
    * speed.
    *
-   * @param w     the width of the <code>{@link WorldCanvas Canvas}</code>
-   * @param h     the height of the <code>{@link WorldCanvas Canvas}</code>
-   * @param speed the speed at which the clock runs
+   * @param width  the width of the <code>{@link WorldCanvas Canvas}</code>
+   * @param height the height of the <code>{@link WorldCanvas Canvas}</code>
+   * @param speed  the speed at which the clock runs
    * @return <code>true</code>
    */
-  public boolean bigBang(int w, int h, double speed) {
+  public boolean bigBang(int width, int height, double speed) {
     if (this.worldExists) {
       System.out.println("Only one world can run at a time");
       return true;
     }
-    // throw runtime exceptions if w, h <= 0
-    this.theCanvas = new WorldCanvas(w, h);
-    this.blankScene = new WorldScene(w, h);
+    // throw runtime exceptions if width, height <= 0
+    this.theCanvas = new WorldCanvas(width, height);
+    this.blankScene = new WorldScene(width, height);
     this.lastWorld = new WorldEnd(false, this.blankScene);
 
     // if the user closes the Canvas window
     // it will only hide and can be reopened by invoking 'show'
-    this.theCanvas.f
+    this.theCanvas.frame
             .setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
     this.windowClosing = new MyWindowClosingListener(this);
-    this.theCanvas.f.addWindowListener(this.windowClosing);
+    this.theCanvas.frame.addWindowListener(this.windowClosing);
 
     // pause a bit so that two canvases do not compete when being opened
     // almost at the same time
@@ -123,17 +124,17 @@ abstract public class World {
     }
 
     // add the key listener to the frame for our canvas
-    this.ka = new MyKeyAdapter(this);
-    this.theCanvas.f.addKeyListener(this.ka);
-    this.theCanvas.f.setFocusTraversalKeysEnabled(false);
+    this.keyAdapter = new MyKeyAdapter(this);
+    this.theCanvas.frame.addKeyListener(this.keyAdapter);
+    this.theCanvas.frame.setFocusTraversalKeysEnabled(false);
 
     // add the mouse listener to the frame for our canvas
-    this.ma = new MyMouseAdapter(this);
-    this.theCanvas.f.addMouseListener(this.ma);
-    this.theCanvas.f.addMouseMotionListener(this.ma);
+    this.mouseAdapter = new MyMouseAdapter(this);
+    this.theCanvas.frame.addMouseListener(this.mouseAdapter);
+    this.theCanvas.frame.addMouseMotionListener(this.mouseAdapter);
 
     // make sure the canvas responds to events
-    this.theCanvas.f.setFocusable(true);
+    this.theCanvas.frame.setFocusable(true);
 
     // finally, show the canvas and draw the initial world
     this.theCanvas.show();
@@ -182,14 +183,14 @@ abstract public class World {
    * Stop the world, close all listeners and the timer, draw the last
    * <code>Scene</code>.
    */
-  void stopWorld() {
+  private void stopWorld() {
     if (worldExists) {
       // remove listeners and set worldExists to false
       this.mytime.timer.stop();
       this.worldExists = false;
       this.mytime.stopTimer();
-      this.theCanvas.f.removeKeyListener(this.ka);
-      this.theCanvas.f.removeMouseListener(this.ma);
+      this.theCanvas.frame.removeKeyListener(this.keyAdapter);
+      this.theCanvas.frame.removeMouseListener(this.mouseAdapter);
       System.out.println("The world stopped.");
 
       // draw the final scene of the world with the end of time message
@@ -729,11 +730,11 @@ abstract public class World {
       bw.worldExists = true;
 
       // with all the listeners
-      bw.ka = this.ka;
-      bw.ma = this.ma;
+      bw.keyAdapter = this.keyAdapter;
+      bw.mouseAdapter = this.mouseAdapter;
       bw.windowClosing = this.windowClosing;
-      bw.ka.resetWorld(bw);
-      bw.ma.currentWorld = bw;
+      bw.keyAdapter.resetWorld(bw);
+      bw.mouseAdapter.currentWorld = bw;
 
       // and the timer
       bw.mytime = this.mytime;
@@ -991,7 +992,7 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   Posn adjustMousePosn(Posn mousePosn) {
     // .... use this to find the height of the top bar
-    Insets ins = this.currentWorld.theCanvas.f.getInsets();
+    Insets ins = this.currentWorld.theCanvas.frame.getInsets();
     mousePosn.y -= ins.top;
     mousePosn.x -= ins.left;
     return mousePosn;
