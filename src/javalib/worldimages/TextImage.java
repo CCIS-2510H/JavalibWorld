@@ -195,17 +195,19 @@ public final class TextImage extends WorldImage {
     private Rectangle2D getBoundingBox() {
         Font newFont = font.deriveFont(this.style.ordinal(), (float)this.size);
 
-        FontRenderContext frc = g.getFontRenderContext();
+        FontRenderContext frc = new FontRenderContext(null, true, true);//g.getFontRenderContext();
         TextLayout layout = new TextLayout(this.text, newFont, frc);
 
-        double width = layout.getAdvance();
+
+        double width = layout.getBounds().getWidth();
         double height = layout.getAscent() + layout.getDescent();
 
         this.baselineDy = height / 2.0 - layout.getAscent();
 
         Rectangle2D ans = new Rectangle2D.Double(-width / 2.0, -height / 2.0,
                 width, height);
-
+        return ans;
+/*
         AffineTransform t = g.getTransform();
         Point2D topLeft = new Point2D.Double(ans.getMinX(), ans.getMinY());
         Point2D botRight = new Point2D.Double(ans.getMaxX(), ans.getMaxY());
@@ -224,6 +226,7 @@ public final class TextImage extends WorldImage {
         double maxY = Math.max(Math.max(topLeft.getY(), topRight.getY()),
                 Math.max(botLeft.getY(), botRight.getY()));
         return new Rectangle2D.Double(minX, minY, maxX - minX, maxY - minY);
+        */
     }
 
     @Override

@@ -31,7 +31,7 @@ public final class FrameImage extends RectangleImageBase {
      *            -- Color of the frame
      */
     public FrameImage(WorldImage img, Color color) {
-        super((int) Math.round(img.getBB().getWidth()), (int) Math.round(img
+        super((int) Math.ceil(img.getBB().getWidth()), (int) Math.ceil(img
                 .getBB().getHeight()), OutlineMode.OUTLINE, color);
         this.img = img;
         this.pinhole = this.img.pinhole;

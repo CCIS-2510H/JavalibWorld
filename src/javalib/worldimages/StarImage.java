@@ -105,13 +105,9 @@ public final class StarImage extends WorldImage {
     // be multiple pieces to this path
     double skipAngle = this.skipCount * (2.0 * Math.PI) / this.points;
     int pointsPerComponent, numComponents;
-    if (this.points % this.skipCount != 0) {
-      pointsPerComponent = this.points;
-      numComponents = 1;
-    } else {
-      pointsPerComponent = this.points / this.skipCount;
-      numComponents = this.skipCount;
-    }
+    int gcd = GCD(this.points, this.skipCount);
+    pointsPerComponent = this.points / gcd;
+    numComponents = gcd;
     for (int component = 0; component < numComponents; component++) {
       // start at the topmost point; rotate for each component
       double curAngle = (2.0 * Math.PI) * ((double)component / (double)this.points) + (Math.PI / 2.0);
@@ -125,6 +121,16 @@ public final class StarImage extends WorldImage {
     Rectangle2D bb = this.poly.getBounds2D();
     this.poly.transform(AffineTransform.getTranslateInstance(-bb.getCenterX(), -bb.getCenterY()));
     this.pinhole = new Posn((int)-bb.getCenterX(), (int)-bb.getCenterY());
+  }
+
+  private int GCD(int a, int b) {
+    int t;
+    while (b != 0) {
+      t = a;
+      a = b;
+      b = t % b;
+    }
+    return b==0 ? a : GCD(b, a%b);
   }
 
   @Override
