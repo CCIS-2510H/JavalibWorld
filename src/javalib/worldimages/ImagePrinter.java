@@ -47,7 +47,7 @@ class FieldsWLItem implements Iterator<ImageField> {
 
   }
 
-  void skipToEnd() { this.cur = fields.length; }
+  void skipToEnd() { this.cur = fields.length + 1; }
 }
 
 
@@ -115,9 +115,8 @@ class ImagePrinter {
       obj = worklist.peek();
       if (worklist.size() > 100 || valueCount > 1000) {
         if (obj instanceof FieldsWLItem) {
-          ((FieldsWLItem)obj).skipToEnd();
+          ((FieldsWLItem) obj).skipToEnd();
         } else {
-          Class<?> objClass = obj.getClass();
           // For the constant-size cases, show them anyway
           if (obj == null) {
             sb = sb.append("null");
@@ -140,8 +139,8 @@ class ImagePrinter {
             sb = sb.append(e.getDeclaringClass().getName().replace('$', '.')).append(".")
                    .append(e.name());
           }
-          else if (objClass.isPrimitive() || isWrapperClass(objClass.getName())) {
-            sb = sb.append(makePrimitiveStrings(objClass.getName(), obj));
+          else if (obj.getClass().isPrimitive() || isWrapperClass(obj.getClass().getName())) {
+            sb = sb.append(makePrimitiveStrings(obj.getClass().getName(), obj));
           }
           else {
             if (valueCount > 1000) {
