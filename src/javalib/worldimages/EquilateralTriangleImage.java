@@ -26,7 +26,7 @@ public final class EquilateralTriangleImage extends RegularPolyImageBase {
      */
     public EquilateralTriangleImage(double sideLen, OutlineMode fill,
             Color color) {
-        super(sideLen, 3, fill, color);
+        super(sideLen, LengthMode.SIDE, 3, fill, color);
     }
 
     /**

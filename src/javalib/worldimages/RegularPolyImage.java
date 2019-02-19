@@ -41,9 +41,8 @@ public final class RegularPolyImage extends RegularPolyImageBase {
      * @param color
      *            -- the color for this regular polygon
      */
-    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill,
-            Color color) {
-        super(sideLen, numSides, fill, color);
+    public RegularPolyImage(double sideLen, int numSides, OutlineMode fill, Color color) {
+        this(sideLen, LengthMode.SIDE, numSides, fill, color);
     }
 
     /**
@@ -58,9 +57,78 @@ public final class RegularPolyImage extends RegularPolyImageBase {
      * @param color
      *            -- the color for this regular polygon
      */
-    public RegularPolyImage(double sideLen, int numSides, String fill,
-            Color color) {
-        this(sideLen, numSides, OutlineMode.fromString(fill), color);
+    public RegularPolyImage(double sideLen, int numSides, String fill, Color color) {
+        this(sideLen, LengthMode.SIDE, numSides, OutlineMode.fromString(fill), color);
+    }
+
+    /**
+     * The full constructor for an equilateral regular polygon
+     *
+     * @param length
+     *            -- the size of this polygon
+     * @param lengthMode
+     *            -- interpretation of the length parameter
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(double length, String lengthMode, int numSides, OutlineMode fill, Color color) {
+        this(length, LengthMode.fromString(lengthMode), numSides, fill, color);
+    }
+    /**
+     * The full constructor for an equilateral regular polygon
+     *
+     * @param length
+     *            -- the size of this polygon
+     * @param lengthMode
+     *            -- interpretation of the length parameter
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(double length, LengthMode lengthMode, int numSides, OutlineMode fill, Color color) {
+        super(length, lengthMode, numSides, fill, color);
+    }
+
+    /**
+     * The full constructor for an equilateral regular polygon
+     *
+     * @param length
+     *            -- the size of this polygon
+     * @param lengthMode
+     *            -- interpretation of the length parameter
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(double length, String lengthMode, int numSides, String fill, Color color) {
+        super(length, LengthMode.fromString(lengthMode), numSides, OutlineMode.fromString(fill), color);
+    }
+    /**
+     * The full constructor for an equilateral regular polygon
+     *
+     * @param length
+     *            -- the size of this polygon
+     * @param lengthMode
+     *            -- interpretation of the length parameter
+     * @param numSides
+     *            -- the number of sides of the polygon
+     * @param fill
+     *            -- outline or solid
+     * @param color
+     *            -- the color for this regular polygon
+     */
+    public RegularPolyImage(double length, LengthMode lengthMode, int numSides, String fill, Color color) {
+        super(length, lengthMode, numSides, OutlineMode.fromString(fill), color);
     }
 }
 
@@ -83,8 +151,10 @@ abstract class RegularPolyImageBase extends WorldImage {
     /**
      * The full constructor for an equilateral regular polygon
      * 
-     * @param sideLen
-     *            -- the length of one of the sides
+     * @param length
+     *            -- the size of this polygon
+     * @param lengthMode
+     *            -- interpretation of the length parameter
      * @param numSides
      *            -- the number of sides of the polygon
      * @param fill
@@ -92,7 +162,7 @@ abstract class RegularPolyImageBase extends WorldImage {
      * @param color
      *            -- the color for this regular polygon
      */
-    public RegularPolyImageBase(double sideLen, int numSides, OutlineMode fill,
+    public RegularPolyImageBase(double length, LengthMode lengthMode, int numSides, OutlineMode fill,
             Color color) {
         super(1);
 
@@ -101,21 +171,34 @@ abstract class RegularPolyImageBase extends WorldImage {
                     "There must be at least 3 sides in a polygon");
         }
 
-        this.sideLen = sideLen;
         this.sides = numSides;
         this.color = color;
         this.fill = fill;
-        this.generatePoly();
+        this.generatePoly(length, lengthMode);
     }
 
     /**
      * Create the internal polygon representing the set of points to draw
      */
-    private void generatePoly() {
+    private void generatePoly(double sideLen, LengthMode lengthMode) {
         int[] xCoord = new int[this.sides];
         int[] yCoord = new int[this.sides];
         double internalAngle = (2.0 * Math.PI) / this.sides;
         double rotation = ((this.sides - 2) * (Math.PI / this.sides)) / 2;
+        double radius = 0;
+
+        // To ensure that each side has the specified length, we need
+        // to compute the radius of the circumcircle
+        switch(lengthMode) {
+        case SIDE:
+            this.sideLen = sideLen;
+            radius = sideLen / (2.0 * Math.sin(internalAngle / 2.0));
+            break;
+        case RADIUS:
+            radius = sideLen;
+            this.sideLen = 2.0 * radius * Math.sin(internalAngle / 2.0);
+            break;
+        }
 
         // Rotation adjustment for polygons:
         // This adjustment makes the output polygons look a lot nicer
@@ -131,17 +214,15 @@ abstract class RegularPolyImageBase extends WorldImage {
         // Triangle | 3 | pi / 6 | pi / 3
         // Square | 4 | pi / 4 | pi * 2 / 4
         // Pentagon | 5 | pi * 3 / 10 | pi * 3 / 5
-        // ... | ... | ... | ...
+        // ...   | ... | ... | ...
 
-        double xMin = sideLen, xMax = -sideLen, yMin = sideLen, yMax = -sideLen;
+        double xMin = radius, xMax = -radius, yMin = radius, yMax = -radius;
         for (int i = 0; i < this.sides; i++) {
-            double x = Math
-                    .round((Math.cos(i * internalAngle + rotation) * sideLen));
+            double x = Math.round(Math.cos(((double)i) * internalAngle + rotation) * radius);
             xMin = Math.min(xMin, x);
             xMax = Math.max(xMax, x);
             xCoord[i] = (int) x;
-            double y = Math
-                    .round((Math.sin(i * internalAngle + rotation) * sideLen));
+            double y = Math.round(Math.sin(((double)i) * internalAngle + rotation) * radius);
             yCoord[i] = (int) y;
             yMin = Math.min(yMin, y);
             yMax = Math.max(yMax, y);

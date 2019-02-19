@@ -29,7 +29,7 @@ public final class HexagonImage extends RegularPolyImageBase {
      *            -- the color for this hexagon
      */
     public HexagonImage(double sideLen, OutlineMode fill, Color color) {
-        super(sideLen, 6, fill, color);
+        super(sideLen, LengthMode.SIDE, 6, fill, color);
     }
 
     public HexagonImage(double sideLen, String fill, Color color) {

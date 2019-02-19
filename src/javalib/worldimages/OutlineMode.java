@@ -8,7 +8,14 @@ package javalib.worldimages;
  * 
  */
 public enum OutlineMode {
-    SOLID, OUTLINE;
+    /**
+     * Images drawn with this mode will be fully filled
+     */
+    SOLID,
+    /**
+     * Images drawn with this mode will be drawn solely as an outline
+     */
+    OUTLINE;
 
     @Override
     public String toString() {
