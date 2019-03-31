@@ -1,5 +1,6 @@
 package javalib.worldimages;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -129,10 +130,7 @@ class ImagePrinter {
             sb = sb.append("new Random()");
           }
           else if (obj instanceof java.awt.Color) {
-            String result = obj.toString();
-            int start = result.indexOf('[');
-            result = result.substring(start, result.length());
-            sb = sb.append(result);
+            sb = formatColor((Color) obj, sb);
           }
           else if (obj instanceof java.lang.Enum) {
             Enum<?> e = (Enum<?>) obj;
@@ -167,13 +165,7 @@ class ImagePrinter {
         worklist.pop();
       }
       else if (obj instanceof java.awt.Color) {
-        java.awt.Color c = (java.awt.Color)obj;
-        sb = sb.append("[r=").append(c.getRed())
-                .append(",g=").append(c.getGreen())
-                .append(",b=").append(c.getBlue());
-        if (c.getAlpha() < 255)
-          sb = sb.append(",a=").append(c.getAlpha());
-        sb = sb.append("]");
+        sb = formatColor((Color) obj, sb);
         worklist.pop();
       }
       else if (obj instanceof Posn) {
@@ -223,6 +215,17 @@ class ImagePrinter {
         worklist.pop();
       }
     }
+    return sb;
+  }
+
+  private static StringBuilder formatColor(Color obj, StringBuilder sb) {
+    Color c = obj;
+    sb = sb.append("[r=").append(c.getRed())
+            .append(",g=").append(c.getGreen())
+            .append(",b=").append(c.getBlue());
+    if (c.getAlpha() < 255)
+      sb = sb.append(",a=").append(c.getAlpha());
+    sb = sb.append("]");
     return sb;
   }
 
