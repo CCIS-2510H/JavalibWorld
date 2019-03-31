@@ -859,9 +859,9 @@ final class MyTimer {
    */
   MyTimer(World currentWorld, double speed) {
     this.currentWorld = currentWorld;
-    this.timer = new Timer((new Double(speed * 1000)).intValue(),
+    this.timer = new Timer((int)(speed * 1000),
             this.timerTasks);
-    this.speed = (new Double(speed * 1000)).intValue();
+    this.speed = (int)(speed * 1000);
   }
 
   /**
