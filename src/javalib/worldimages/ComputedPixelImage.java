@@ -53,12 +53,7 @@ public final class ComputedPixelImage extends WorldImage {
    * @throws IndexOutOfBoundsException if (x, y) is out of bounds
    */
   public void setPixel(int x, int y, Color c) throws IndexOutOfBoundsException {
-    if (x < 0 || x >= this.width)
-      throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
-              x, this.width));
-    if (y < 0 || y >= this.height)
-      throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
-              x, this.height));
+    boundsCheck(x, y, this.width, this.height);
     this.raster.setPixel(x, y, new int[]{c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()});
   }
 
@@ -119,12 +114,7 @@ public final class ComputedPixelImage extends WorldImage {
    * @throws IndexOutOfBoundsException if (x, y) is out of bounds
    */
   public void setPixels(int x, int y, int width, int height, Color c) throws IndexOutOfBoundsException {
-    if (x < 0 || x >= this.width)
-      throw new IndexOutOfBoundsException(String.format("Specified x (%d) is not in range [0, %d)",
-              x, this.width));
-    if (y < 0 || y >= this.height)
-      throw new IndexOutOfBoundsException(String.format("Specified y (%d) is not in range [0, %d)",
-              x, this.height));
+    boundsCheck(x, y, this.width, this.height);
     if (width < 0)
       throw new IndexOutOfBoundsException("Width cannot be negative");
     else if (x + width > this.width)
