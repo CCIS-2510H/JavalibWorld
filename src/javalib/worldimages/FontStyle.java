@@ -13,6 +13,12 @@ public enum FontStyle {
      * @return The enum associated with the given <code>name</code>
      */
     public static FontStyle fromString(String name) {
-        return FontStyle.valueOf(name.toUpperCase());
+        switch(name.toUpperCase()) {
+            case "REGULAR": return REGULAR;
+            case "BOLD": return BOLD;
+            case "ITALIC": return ITALIC;
+            case "BOLD_ITALIC": return BOLD_ITALIC;
+            default: throw new IllegalArgumentException("Unknown FontStyle: " + name);
+        }
     }
 }

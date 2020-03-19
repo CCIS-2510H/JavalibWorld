@@ -326,15 +326,16 @@ class Ocean extends World implements OceanWorldConstants {
     }
 
     // the world ends when the shark starves to death
-    public WorldEnd worldEnds() {
-        if (this.shark.isDead()) {
-            WorldScene scn = this.makeScene();
-            scn.placeImageXY(new TextImage("The shark died", Color.RED), 100,
-                    50);
-            return new WorldEnd(true, scn);
-        } else {
-            return new WorldEnd(false, this.makeScene());
-        }
+    public boolean shouldWorldEnd() {
+        return this.shark.isDead();
+    }
+
+    @Override
+    public WorldScene lastScene(String s) {
+        WorldScene scn = this.makeScene();
+        scn.placeImageXY(new TextImage("The shark died", Color.RED), 100,
+                50);
+        return scn;
     }
 
 }
@@ -561,16 +562,15 @@ class ExamplesOceanWorldImp implements OceanWorldConstants {
                                         this.noFish))))));
     }
 
-    // test Ocean method onTick, worldEnds
+    // test Ocean method onTick, shouldWorldEnd
     public void testOceanWorldEnds(Tester t) {
-        t.checkExpect(this.ocean.worldEnds(),
-                new WorldEnd(false, this.ocean.makeScene()));
+        t.checkExpect(this.ocean.shouldWorldEnd(), false);
         WorldScene scn = new Ocean(new Shark(HEIGHT / 2, 0), this.allFish)
                 .makeScene();
         scn.placeImageXY(new TextImage("The shark died", Color.RED), 100, 50);
-        t.checkExpect(
-                (new Ocean(new Shark(HEIGHT / 2, 0), this.allFish)).worldEnds(),
-                new WorldEnd(true, scn));
+        Ocean test2 = (new Ocean(new Shark(HEIGHT / 2, 0), this.allFish));
+        t.checkExpect(test2.shouldWorldEnd(), true);
+        t.checkExpect(test2.lastScene(""), scn);
     }
 
     public void testRun(Tester t) {

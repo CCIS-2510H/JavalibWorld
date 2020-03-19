@@ -31,7 +31,7 @@ class MyWorld extends World {
     if (this.tick < MAX_TICK) {
       return new MyWorld(this.tick + 1);
     } else {
-      return this.endOfWorld("");
+      return this.endOfWorld("onTick " + this.tick);
     }
   }
 
@@ -41,8 +41,8 @@ class MyWorld extends World {
   }
 
   public WorldScene lastScene(String m) {
-    System.out.println("Last scene");
-    return this.getEmptyScene().placeImageXY(new CircleImage(20, OutlineMode.SOLID, Color.red), 30, 30);
+    System.out.println("Last scene: " + m);
+    return null;//this.getEmptyScene().placeImageXY(new CircleImage(20, OutlineMode.SOLID, Color.red), 30, 30);
   }
 
 }

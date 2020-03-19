@@ -21,6 +21,12 @@ public enum AlignModeY {
      * @return The enum associated with the given <code>name</code>
      */
     public static AlignModeY fromString(String name) {
-        return AlignModeY.valueOf(name.toUpperCase());
+        switch(name.toUpperCase()) {
+            case "BOTTOM": return BOTTOM;
+            case "TOP": return TOP;
+            case "MIDDLE": return MIDDLE;
+            case "PINHOLE": return PINHOLE;
+            default: throw new IllegalArgumentException("Unknown AlignModeY: " + name);
+        }
     }
 }

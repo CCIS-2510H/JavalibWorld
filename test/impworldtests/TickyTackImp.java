@@ -206,11 +206,8 @@ public class TickyTackImp extends World {
     }
 
     // say goodbye to the sun, when it gets to be big enough again
-    public WorldEnd worldEnds() {
-        if (10 < sun.size && sun.size < 20)
-            return new WorldEnd(true, this.lastScene("Goodbye sun!"));
-        else
-            return new WorldEnd(false, this.makeScene());
+    public boolean shouldWorldEnd() {
+        return (10 < sun.size && sun.size < 20);
     }
 
     // produce the image of the whole world -
@@ -236,9 +233,14 @@ public class TickyTackImp extends World {
     }
 
     public WorldScene lastScene(String s) {
-        WorldScene scn = this.makeScene();
-        scn.placeImageXY(new TextImage(s, 15, FontStyle.BOLD_ITALIC, Color.RED), 150, 80);
-        return scn;
+        if (10 < sun.size && sun.size < 20) {
+            WorldScene scn = this.makeScene();
+            scn.placeImageXY(new TextImage("Goodbye sun", 15, FontStyle.BOLD_ITALIC, Color.RED), 150, 80);
+            return scn;
+        } else {
+            return this.makeScene();
+        }
+
     }
 
     // support for the regression tests

@@ -27,6 +27,10 @@ public enum OutlineMode {
      * @return The enum associated with the given <code>name</code>
      */
     public static OutlineMode fromString(String name) {
-        return OutlineMode.valueOf(name.toUpperCase());
+        switch(name.toUpperCase()) {
+            case "SOLID": return SOLID;
+            case "OUTLINE": return OUTLINE;
+            default: throw new IllegalArgumentException("Unknown OutlineMode: " + name);
+        }
     }
 }

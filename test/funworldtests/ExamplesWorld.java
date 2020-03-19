@@ -60,15 +60,16 @@ public class ExamplesWorld extends World {
     /**
      * Check whether the World ended.
      */
-    public WorldEnd worldEnds() {
-        // if the blob is outside the canvas, stop
-        if (this.worldEnd)
-            return new WorldEnd(true, this.makeScene()
+    public boolean shouldWorldEnd() {
+        return this.worldEnd;
+    }
+
+    @Override
+    public WorldScene lastScene(String s) {
+            return this.makeScene()
                     .placeImageXY(
                             new TextImage("End of the World!!", 13, Color.red),
-                            100, 40));
-        else
-            return new WorldEnd(false, this.makeScene());
+                            100, 40);
     }
 
     // at each tick print the current position of the ball

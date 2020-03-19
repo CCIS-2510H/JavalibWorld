@@ -1,7 +1,15 @@
 package javalib.worldimages;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
+import java.awt.image.ColorModel;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -21,6 +29,44 @@ import java.util.Stack;
  * @since April 4 2015
  */
 public final class FromFileImage extends WorldImage {
+    private static Map<String, BufferedImage> loadedImages = new HashMap<>();
+    private static Map<String, Long> modifiedTimes = new HashMap<>();
+
+    /**
+     * Construct the <code>BufferedImage</code> from the given file. The file
+     * can be given as an URL, or a reference to local image file. If this image
+     * has been loaded already, use the saved version.
+     *
+     * @param filename
+     *            the file name for the desired image
+     */
+    private static String loadFromFile(String filename) {
+        /** now we set up the image file for the user to process */
+        try {
+            File inputfile = new File(filename);
+            String abs = inputfile.getCanonicalPath();
+            long lastModTime = inputfile.lastModified();
+            if (loadedImages.containsKey(abs) && modifiedTimes.containsKey(abs) &&
+                    modifiedTimes.get(abs) >= lastModTime) {
+                return abs;
+            } else {
+                BufferedImage imageSource = ImageIO.read(inputfile);
+                ColorModel cmodel = imageSource.getColorModel();
+                BufferedImage image = new BufferedImage(imageSource.getWidth(), imageSource.getHeight(),
+                        BufferedImage.TYPE_INT_ARGB);
+                ColorConvertOp colorOp = new ColorConvertOp(cmodel.getColorSpace(),
+                        image.getColorModel().getColorSpace(), null);
+                colorOp.filter(imageSource, image);
+                loadedImages.put(abs, image);
+                modifiedTimes.put(abs, lastModTime);
+                return abs;
+            }
+        } catch (IOException e) {
+            System.out.println("Could not open the image file " + filename);
+        }
+        return null;
+    }
+
 
     /** the file name for the image source */
     public String fileName;
@@ -29,7 +75,9 @@ public final class FromFileImage extends WorldImage {
      * the instance of the class that handles reading of files just once set to
      * be transient, so that it is not used in comparisons by tester lib
      */
-    protected volatile ImageMaker imread;
+    protected volatile BufferedImage image;
+
+    protected volatile long modifiedTime;
 
     /**
      * A full constructor for this image created from the file input
@@ -40,12 +88,10 @@ public final class FromFileImage extends WorldImage {
     public FromFileImage(String fileName) {
         super(1);
 
-        // determine how to read the file name
-        // then read the image, or verify that it has been read already
-        this.imread = new ImageMaker(fileName);
-
-        // set the filename
+        String absName = loadFromFile(fileName);
         this.fileName = fileName;
+        this.image = loadedImages.get(absName);
+        this.modifiedTime = modifiedTimes.get(absName);
     }
     @Override
     int numKids() {
@@ -63,12 +109,12 @@ public final class FromFileImage extends WorldImage {
     @Override
     protected void drawStackUnsafe(Graphics2D g) {
         // Adjust the position of the frame
-        g.translate(-(this.imread.width / 2.0), -(this.imread.height / 2.0));
+        g.translate(-(this.image.getWidth() / 2.0), -(this.image.getHeight() / 2.0));
 
-        g.drawRenderedImage(this.imread.image, new AffineTransform());
+        g.drawRenderedImage(this.image, new AffineTransform());
 
         // Reset to original position
-        g.translate((this.imread.width / 2.0), (this.imread.height / 2.0));
+        g.translate((this.image.getWidth() / 2.0), (this.image.getHeight() / 2.0));
     }
     @Override
     protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
@@ -77,12 +123,12 @@ public final class FromFileImage extends WorldImage {
 
     @Override
     public double getWidth() {
-        return this.imread.width;
+        return this.image.getWidth();
     }
 
     @Override
     public double getHeight() {
-        return this.imread.height;
+        return this.image.getHeight();
     }
 
     /**
@@ -94,7 +140,10 @@ public final class FromFileImage extends WorldImage {
      * @throws IndexOutOfBoundsException if (x, y) is out of bounds
      */
     public Color getColorAt(int x, int y) throws IndexOutOfBoundsException {
-        return this.imread.getColorPixel(x, y);
+        WorldImage.boundsCheck(x, y, this.image.getWidth(), this.image.getHeight());
+        int[] ans = new int[4];
+        this.image.getRaster().getPixel(x, y, ans);
+        return new Color(ans[0], ans[1], ans[2], ans[3]);
     }
 
     @Override
@@ -123,7 +172,9 @@ public final class FromFileImage extends WorldImage {
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         if (other instanceof FromFileImage) {
             FromFileImage that = (FromFileImage)other;
-            return this.fileName.equals(that.fileName) && this.pinhole.equals(that.pinhole);
+            return this.fileName.equals(that.fileName)
+                    && this.modifiedTime == that.modifiedTime
+                    && this.pinhole.equals(that.pinhole);
         }
         return false;
     }

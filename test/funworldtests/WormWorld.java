@@ -51,18 +51,23 @@ public class WormWorld extends World {
     /**
      * Check whether the Worm is out of bounds, or ate itself
      */
-    public WorldEnd worldEnds() {
+    public boolean shouldWorldEnd() {
+        return w.ateItself() || w.ranIntoWall(this.b);
+    }
+
+    @Override
+    public WorldScene lastScene(String s) {
         // if the blob is outside the canvas, stop
         if (w.ateItself())
-            return new WorldEnd(true, this.makeScene().placeImageXY(
+            return this.makeScene().placeImageXY(
                     new TextImage("Your worm ate itself.", 13, Color.red), 100,
-                    40));
+                    40);
         else if (w.ranIntoWall(this.b))
-            return new WorldEnd(true, this.makeScene().placeImageXY(
+            return this.makeScene().placeImageXY(
                     new TextImage("Your worm ran into a wall.", 13, Color.red),
-                    100, 40));
+                    100, 40);
         else
-            return new WorldEnd(false, this.makeScene());
+            return this.makeScene();
     }
 
     // see where the worm moved to - and proceed with the game

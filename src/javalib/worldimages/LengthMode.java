@@ -23,6 +23,10 @@ public enum LengthMode {
    * @return The enum associated with the given <code>name</code>
    */
   public static LengthMode fromString(String name) {
-    return LengthMode.valueOf(name.toUpperCase());
+    switch(name.toUpperCase()) {
+      case "RADIUS": return RADIUS;
+      case "SIDE": return SIDE;
+      default: throw new IllegalArgumentException("Unknown LengthMode: " + name);
+    }
   }
 }

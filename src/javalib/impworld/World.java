@@ -46,10 +46,10 @@ abstract public class World {
   transient boolean stopTimer = false;
 
   /** the key adapter for this world */
-  private transient MyKeyAdapter ka;
+  private transient MyKeyAdapter keyAdapter;
 
   /** the mouse adapter for this world */
-  private transient MyMouseAdapter ma;
+  private transient MyMouseAdapter mouseAdapter;
 
   /** the window closing listener for this world */
   private transient WindowListener windowClosing;
@@ -57,8 +57,16 @@ abstract public class World {
   /** a blank image, to avoid <code>null</code> in the <code>lastWorld</code> */
   private transient WorldScene blankScene = new WorldScene(0, 0);
 
-  /** the last world - if needed */
-  public WorldEnd lastWorld = new WorldEnd(false, this.blankScene);
+  /**
+   * Has the world ended?
+   */
+  private transient boolean worldEnded = false;
+  public final boolean hasWorldEnded() {
+    return this.worldEnded || this.shouldWorldEnd();
+  }
+
+  private transient WorldScene lastScene = null;
+
 
   private int width, height;
 
@@ -81,24 +89,24 @@ abstract public class World {
    * speed.
    * </p>
    *
-   * @param w
+   * @param width
    *            the width of the <code>{@link WorldCanvas Canvas}</code>
-   * @param h
+   * @param height
    *            the height of the <code>{@link WorldCanvas Canvas}</code>
    * @param speed
    *            the speed at which the clock runs
    */
-  public void bigBang(int w, int h, double speed) {
+  public void bigBang(int width, int height, double speed) {
     if (this.worldExists) {
       System.out.println("Only one world can run at a time");
       return;
     }
-    // throw runtime exceptions if w, h <= 0
-    this.width = w;
-    this.height = h;
-    this.theCanvas = new WorldCanvas(w, h);
-    this.blankScene = new WorldScene(w, h);
-    this.lastWorld = new WorldEnd(false, this.blankScene);
+    // throw runtime exceptions if width, height <= 0
+    this.width = width;
+    this.height = height;
+    this.theCanvas = new WorldCanvas(width, height);
+    this.blankScene = new WorldScene(width, height);
+    this.worldEnded = false;
 
     // if the user closes the Canvas window
     // it will only hide and can be reopened by invoking 'show'
@@ -118,15 +126,15 @@ abstract public class World {
     }
 
     // add the key listener to the frame for our canvas
-    this.ka = new MyKeyAdapter(this);
-    this.theCanvas.frame.addKeyListener(this.ka);
+    this.keyAdapter = new MyKeyAdapter(this);
+    this.theCanvas.frame.addKeyListener(this.keyAdapter);
     this.theCanvas.frame.setFocusTraversalKeysEnabled(false);
 
 
     // add the mouse listener to the frame for our canvas
-    this.ma = new MyMouseAdapter(this);
-    this.theCanvas.frame.addMouseListener(this.ma);
-    this.theCanvas.frame.addMouseMotionListener(this.ma);
+    this.mouseAdapter = new MyMouseAdapter(this);
+    this.theCanvas.frame.addMouseListener(this.mouseAdapter);
+    this.theCanvas.frame.addMouseMotionListener(this.mouseAdapter);
 
     // make sure the canvas responds to events
     this.theCanvas.frame.setFocusable(true);
@@ -135,9 +143,12 @@ abstract public class World {
     this.theCanvas.show();
 
     // draw the initial world
-    this.worldExists = true;
+    this.worldEnded = this.shouldWorldEnd();
     this.mytime = new MyTimer(this, speed);
-    this.drawWorld("");
+    if (!this.worldEnded) {
+      this.worldExists = true;
+    }
+    this.drawWorld();
 
     // pause again after the Canvas is shown to make sure
     // all listeners and the timer are installed for theCanvas
@@ -153,7 +164,7 @@ abstract public class World {
     if (speed > 0.0)
       this.mytime.timer.start();
 
-    this.drawWorld("");
+    this.drawWorld();
 
     // print a header that specifies the current version of the World
     System.out.println(Versions.CURRENT_VERSION);
@@ -186,19 +197,22 @@ abstract public class World {
    * </p>
    * <code>Scene</code>.
    */
-  void stopWorld() {
+  void stopWorld(WorldScene toDraw) {
     if (worldExists) {
       // remove listeners and set worldExists to false
       this.mytime.timer.stop();
       this.worldExists = false;
       this.mytime.stopTimer();
-      this.theCanvas.frame.removeKeyListener(this.ka);
-      this.theCanvas.frame.removeMouseListener(this.ma);
+      this.theCanvas.frame.removeKeyListener(this.keyAdapter);
+      this.theCanvas.frame.removeMouseListener(this.mouseAdapter);
       System.out.println("The world stopped.");
 
       // draw the final scene of the world with the end of time message
-      this.theCanvas.clear();
-      this.theCanvas.drawScene(this.lastWorld.lastScene);
+      if (toDraw != null) {
+        this.lastScene = toDraw;
+        this.theCanvas.clear();
+        this.theCanvas.drawScene(toDraw);
+      }
     }
   }
 
@@ -207,15 +221,9 @@ abstract public class World {
    * This method is invoked at each tick. It checks if the world should end
    * now.
    * </p>
-   * <p>
-   * The saved image will be shown when the world ends, otherwise it is
-   * ignored.
-   * </p>
-   *
-   * @return pair (true, last image) or (false, any image)
    */
-  public WorldEnd worldEnds() {
-    return new WorldEnd(false, this.makeScene());
+  public boolean shouldWorldEnd() {
+    return false;
   }
 
   /**
@@ -227,27 +235,8 @@ abstract public class World {
    */
   public void endOfWorld(String s) {
     // set up the last world pair and finish as usual
-    this.lastWorld = new WorldEnd(true, this.lastScene(s));
-    this.stopWorld();
-  }
-
-  /**
-   * The <code>onTick</code> method is invoked only if the world exists. To
-   * test the method <code>onTick</code> we provide this method that will
-   * invoke the <code>onTick</code> method for the testing purposes.
-   */
-  public void testOnTick() {
-    // the world does not exist, but run the test for the end of the world
-    // and handle the last sound effect as needed
-    this.lastWorld = this.worldEnds();
-    if (this.lastWorld.worldEnds) {
-      this.stopWorld();
-    }
-
-    // now invoke the onTick method -
-    // it will ignore the code similar to that above
-    // but will handle the tickTunes manipulation
-    this.processTick();
+    this.worldEnded = true;
+    this.stopWorld(this.getLastScene(s));
   }
 
   /**
@@ -261,21 +250,21 @@ abstract public class World {
   synchronized void processTick() {
     try {
       if (this.worldExists && !this.stopTimer) {
-        this.lastWorld = this.worldEnds();
-        if (this.lastWorld.worldEnds) {
-          this.stopWorld();
+        this.worldEnded = this.shouldWorldEnd();
+        if (this.worldEnded) {
+          this.stopWorld(this.getLastScene("tick"));
         } else {
           this.onTick();
-          if (this.lastWorld.worldEnds) {
-            this.stopWorld();
+          if (this.worldEnded) {
+            this.stopWorld(this.getLastScene("tick"));
           } else {
-            this.drawWorld("");
+            this.drawWorld();
           }
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -306,16 +295,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onKeyReleased(key);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("keyReleased"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -346,16 +335,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onKeyEvent(ke);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("keyEvent"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -401,16 +390,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onMouseClicked(mouse, button);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("mouseClicked"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -465,16 +454,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onMouseEntered(mouse);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("mouseEntered"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -511,16 +500,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onMouseExited(mouse);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("mouseExited"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -557,16 +546,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onMousePressed(mouse, button);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("mousePressed"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -607,16 +596,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onMouseReleased(mouse, button);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("mouseReleased"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -672,16 +661,16 @@ abstract public class World {
     try {
       if (this.worldExists) {
         this.onMouseMoved(mouse, button);
-        if (!this.lastWorld.worldEnds)
-          this.drawWorld("");
+        if (!this.worldEnded)
+          this.drawWorld();
         else {
           // draw the last world
-          this.theCanvas.drawScene(lastWorld.lastScene);
+          this.theCanvas.drawScene(this.getLastScene("mouseMoved"));
         }
       }
     } catch (RuntimeException re) {
       re.printStackTrace();
-      this.drawWorld("");
+      this.drawWorld();
       // throw re;
       Runtime.getRuntime().halt(1);
     }
@@ -732,13 +721,13 @@ abstract public class World {
    * defined <code>lastImage</code> method
    * </p>
    */
-  synchronized void drawWorld(String s) {
+  synchronized void drawWorld() {
     if (this.worldExists) {
       this.theCanvas.clear();
       this.theCanvas.drawScene(this.makeScene());
     } else {
       this.theCanvas.clear();
-      this.theCanvas.drawScene(this.lastScene(s));
+      this.theCanvas.drawScene(this.lastScene(""));
     }
   }
 
@@ -765,7 +754,14 @@ abstract public class World {
    * @return the image that represents the last world to be drawn
    */
   public WorldScene lastScene(String s) {
-    return this.makeScene();
+    return null;
+  }
+
+  private WorldScene getLastScene(String s) {
+    if (this.lastScene == null) {
+      this.lastScene = this.lastScene(s);
+    }
+    return this.lastScene;
   }
 }
 

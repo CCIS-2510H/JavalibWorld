@@ -21,6 +21,12 @@ public enum AlignModeX {
      * @return The enum associated with the given <code>name</code>
      */
     public static AlignModeX fromString(String name) {
-        return AlignModeX.valueOf(name.toUpperCase());
+        switch(name.toUpperCase()) {
+            case "LEFT": return LEFT;
+            case "RIGHT": return RIGHT;
+            case "CENTER": return CENTER;
+            case "PINHOLE": return PINHOLE;
+            default: throw new IllegalArgumentException("Unknown AlignModeX: " + name);
+        }
     }
 }

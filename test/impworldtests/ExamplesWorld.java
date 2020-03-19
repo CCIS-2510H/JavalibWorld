@@ -60,15 +60,20 @@ public class ExamplesWorld extends World {
     /**
      * Check whether the World ended.
      */
-    public WorldEnd worldEnds() {
+    public boolean shouldWorldEnd() {
+        return this.worldEnd;
+    }
+
+    @Override
+    public WorldScene lastScene(String s) {
         // if the blob is outside the canvas, stop
         if (this.worldEnd) {
             WorldScene scn = this.makeScene();
             scn.placeImageXY(
                     new TextImage("End of the World!!", 13, Color.red), 100, 40);
-            return new WorldEnd(true, scn);
+            return scn;
         } else {
-            return new WorldEnd(false, this.makeScene());
+            return this.makeScene();
         }
     }
 

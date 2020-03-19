@@ -137,6 +137,14 @@ public class BlobWorldImp extends World {
      */
     public WorldScene lastScene(String s) {
         WorldScene scn = this.makeScene();
+        // if the blob is outside the canvas, stop
+        if (this.blob.outsideBounds(this.width, this.height)) {
+            s = "Blob is outside the bounds";
+        }
+        // time ends is the blob falls into the black hole in the middle
+        else if (this.blob.nearCenter(this.width, this.height)) {
+            s = "Black hole ate the blob";
+        }
         scn.placeImageXY(new TextImage(s, Color.red), 100, 40);
         return scn;
     }
@@ -145,21 +153,9 @@ public class BlobWorldImp extends World {
      * Check whether the Blob is out of bounds, or fell into the black hole in
      * the middle.
      */
-    public WorldEnd worldEnds() {
-        // if the blob is outside the canvas, stop
-        if (this.blob.outsideBounds(this.width, this.height)) {
-            return new WorldEnd(true,
-                    this.lastScene("Blob is outside the bounds"));
-        }
-        // time ends is the blob falls into the black hole in the middle
-        if (this.blob.nearCenter(this.width, this.height)) {
-            WorldScene scn = this.makeScene();
-            scn.placeImageXY(new TextImage("Black hole ate the blob", 13, FontStyle.BOLD_ITALIC,
-                    Color.red), 100, 40);
-            return new WorldEnd(true, scn);
-        } else {
-            return new WorldEnd(false, this.makeScene());
-        }
+    public boolean shouldWorldEnd() {
+        return this.blob.outsideBounds(this.width, this.height)
+                || this.blob.nearCenter(this.width, this.height);
     }
 
     // support for the regression tests
@@ -289,7 +285,8 @@ class BlobExamples {
         this.b1Gw.onKeyEvent("x");
         WorldScene scn = this.b1Gw.makeScene();
         scn.placeImageXY(new TextImage("Goodbye", Color.red), 100, 40);
-        t.checkExpect(this.b1Gw.lastWorld, new WorldEnd(true, scn));
+        t.checkExpect(this.b1Gw.hasWorldEnded(), true);
+        t.checkExpect(this.b1Gw.lastScene(""), scn);
     }
 
     /** test the method outsideBounds in the Blob class */
@@ -376,24 +373,25 @@ class BlobExamples {
         t.checkExpect(result, true);
     }
 
-    // test the method worldEnds for the class BlobWorld
+    // test the method shouldWorldEnd for the class BlobWorld
     void testWorldEnds(Tester t) {
 
         this.reset();
         WorldScene scn = this.bwOutOfBounds.makeScene();
         scn.placeImageXY(
                 new TextImage("Blob is outside the bounds", Color.red), 100, 40);
-        t.checkExpect(this.bwOutOfBounds.worldEnds(), new WorldEnd(true, scn));
+        t.checkExpect(this.bwOutOfBounds.hasWorldEnded(), true);
+        t.checkExpect(this.bwOutOfBounds.lastScene(""), scn);
 
         this.reset();
         scn = this.bwInTheCenter.makeScene();
         scn.placeImageXY(new TextImage("Black hole ate the blob", 13, FontStyle.BOLD_ITALIC,
                 Color.red), 100, 40);
-        t.checkExpect(this.bwInTheCenter.worldEnds(), new WorldEnd(true, scn));
+        t.checkExpect(this.bwInTheCenter.hasWorldEnded(), true);
+        t.checkExpect(this.bwInTheCenter.lastScene(""), scn);
 
         this.reset();
-        t.checkExpect(this.b1w.worldEnds(),
-                new WorldEnd(false, this.b1w.makeScene()));
+        t.checkExpect(this.b1w.hasWorldEnded(), false);
     }
 
     /** run the animation */

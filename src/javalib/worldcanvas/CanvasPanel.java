@@ -65,8 +65,6 @@ public class CanvasPanel extends JPanel {
 
         // install the painter panel
         add(painter);
-
-        ImageMaker.canvasColorModel = buffer.getColorModel();
     }
 
     /**
@@ -220,85 +218,15 @@ public class CanvasPanel extends JPanel {
      */
     public void drawImage(String fileName, int x, int y) {
         // read the given image file
-        ImageMaker imread = new ImageMaker(fileName);
+        FromFileImage fileImage = new FromFileImage(fileName);
 
         Graphics2D g = getBufferGraphics();
-        // set up color conversion if different color models are used
-        ColorConvertOp colorOp = new ColorConvertOp(
-                imread.cmodel.getColorSpace(), buffer.getColorModel()
-                        .getColorSpace(), null);
-        // draw the given image at the given location
-        g.drawImage(imread.image, colorOp, x, y);
+        fileImage.draw(g);
 
         // repaint the panel
         repaint();
     }
 
-    /**
-     * Draw the image from the .png file that has been read by the given
-     * <code>{@link ImageMaker ImageMaker}</code>.
-     * 
-     * @param imread
-     *            the given image maker
-     * @param x
-     *            the x coordinate for the NW corner
-     * @param y
-     *            the y coordinate for the NW corner
-     */
-    public void drawImage(ImageMaker imread, int x, int y) {
-
-        Graphics2D g = getBufferGraphics();
-        // set up color conversion if different color models are used
-        ColorConvertOp colorOp = new ColorConvertOp(
-                imread.cmodel.getColorSpace(), buffer.getColorModel()
-                        .getColorSpace(), null);
-        // draw the given image at the given location
-        g.drawImage(imread.image, colorOp, x, y);
-
-        // repaint the panel
-        repaint();
-    }
-
-    /**
-     * Draw the image from the .png file that has been read by the given
-     * <code>{@link ImageMaker ImageMaker}</code>.
-     * 
-     * @param imread
-     *            the given image maker
-     * @param x
-     *            the x coordinate for the NW corner
-     * @param y
-     *            the y coordinate for the NW corner
-     */
-    public void drawImagePixels(ImageMaker imread, int x, int y) {
-
-        Graphics2D g = getBufferGraphics();
-
-        // save the current paint
-        Paint oldPaint = g.getPaint();
-        Color c;
-        for (int col = 0; col < imread.width; col++)
-            for (int row = 0; row < imread.height; row++) {
-                c = imread.getColorPixel(col, row);
-                if (!this.isWhite(c)) {
-
-                    // set the paint to the given color
-                    g.setPaint(c);
-                    // draw the object
-                    g.fillRect(x + col, y + row, 1, 1);
-                }
-            }
-
-        // reset the original paint
-        g.setPaint(oldPaint);
-        // repaint the panel
-        repaint();
-    }
-
-    protected boolean isWhite(Color c) {
-        return (c.getRed() == 255) && (c.getBlue() == 255)
-                && (c.getGreen() == 255);
-    }
 
     public void drawScene(WorldSceneBase scene) {
         scene.draw(getBufferGraphics());
