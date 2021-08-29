@@ -91,8 +91,7 @@ public final class WedgeImage extends EllipseImageBase {
   }
 
   private double makePosAngle(double angle) {
-    if (angle < 0) { return angle + 2 * Math.PI; }
-    return angle;
+    return angle - Math.floor(angle / (2 * Math.PI)) * (2 * Math.PI);
   }
   @Override
   protected BoundingBox getBBHelp(AffineTransform t) {
@@ -159,22 +158,38 @@ public final class WedgeImage extends EllipseImageBase {
     final BoundingBox bb = new BoundingBox( // start with the transformed center of ellipse
             ellipseBB.getCenterX(), ellipseBB.getCenterY(),
             ellipseBB.getCenterX(), ellipseBB.getCenterY());
-    double angleInRadians = Math.toRadians(this.angle); // arcs go counterclockwise
+    double angleInRadians = makePosAngle(Math.toRadians(this.angle)); // arcs go counterclockwise
     bb.combineWith(t.transform(
             new Point2D.Double(1, 0), null));
     bb.combineWith(t.transform(
             new Point2D.Double(Math.cos(angleInRadians), Math.sin(angleInRadians)), null));
-    if (0 <= thetaXMax && thetaXMax <= angleInRadians) {
-      bb.combineWith(xMax, yAtXMax);
-    }
-    if (0 <= thetaXMin && thetaXMin <= angleInRadians) {
-      bb.combineWith(xMin, yAtXMin);
-    }
-    if (0 <= thetaYMax && thetaYMax <= angleInRadians) {
-      bb.combineWith(xAtYMax, yMax);
-    }
-    if (0 <= thetaYMin && thetaYMin <= angleInRadians) {
-      bb.combineWith(xAtYMin, yMin);
+    boolean fullTurn = this.angle >= 360 || this.angle <= -360;
+    if (this.angle >= 0) {
+      if (fullTurn || (0 <= thetaXMax && thetaXMax <= angleInRadians)) {
+        bb.combineWith(xMax, yAtXMax);
+      }
+      if (fullTurn || (0 <= thetaXMin && thetaXMin <= angleInRadians)) {
+        bb.combineWith(xMin, yAtXMin);
+      }
+      if (fullTurn || (0 <= thetaYMax && thetaYMax <= angleInRadians)) {
+        bb.combineWith(xAtYMax, yMax);
+      }
+      if (fullTurn || (0 <= thetaYMin && thetaYMin <= angleInRadians)) {
+        bb.combineWith(xAtYMin, yMin);
+      }
+    } else {
+      if (fullTurn || (angleInRadians <= thetaXMax && thetaXMax <= 2 * Math.PI)) {
+        bb.combineWith(xMax, yAtXMax);
+      }
+      if (fullTurn || (angleInRadians <= thetaXMin && thetaXMin <= 2 * Math.PI)) {
+        bb.combineWith(xMin, yAtXMin);
+      }
+      if (fullTurn || (angleInRadians <= thetaYMax && thetaYMax <= 2 * Math.PI)) {
+        bb.combineWith(xAtYMax, yMax);
+      }
+      if (fullTurn || (angleInRadians <= thetaYMin && thetaYMin <= 2 * Math.PI)) {
+        bb.combineWith(xAtYMin, yMin);
+      }
     }
 
     return bb;
