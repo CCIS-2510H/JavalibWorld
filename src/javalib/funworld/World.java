@@ -983,6 +983,9 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   Posn adjustMousePosn(Posn mousePosn) {
     // .... use this to find the height of the top bar
+    if (this.currentWorld == null || this.currentWorld.theCanvas == null || this.currentWorld.theCanvas.frame == null) {
+      return mousePosn;
+    }
     Insets ins = this.currentWorld.theCanvas.frame.getInsets();
     mousePosn.y -= ins.top;
     mousePosn.x -= ins.left;
