@@ -167,7 +167,7 @@ public abstract class WorldImage {
 
     /**
      * Move the image's pinhole to the point represented by <code>p</code>,
-     * given in the image's own coordinate system with it's own center at the
+     * given in the image's own coordinate system with its own center at the
      * origin
      * 
      * @param p
