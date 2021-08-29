@@ -1,5 +1,6 @@
 package javalib.worldimages;
 
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
 /**
@@ -26,6 +27,10 @@ public final class BoundingBox {
     
     BoundingBox(BoundingBox bb) {
         this(bb.tlx, bb.tly, bb.brx, bb.bry);
+    }
+
+    BoundingBox(Rectangle bounds) {
+        this(bounds.getMinX(), bounds.getMinY(), bounds.getMaxX(), bounds.getMaxY());
     }
     
     /**

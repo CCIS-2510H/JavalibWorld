@@ -121,12 +121,40 @@ class WedgeWorld extends World {
 
     @Override
     public WorldScene makeScene() {
+        WorldImage p;
+        int x = (int)(100 * Math.cos(Math.toRadians(this.theta)));
+        int y = -(int)(100 * Math.sin(Math.toRadians(this.theta)));
+        if (theta <= -270) {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(0, 100), new Posn(-100, 0), new Posn(0, -100), new Posn(x, y));
+        } else if (theta <= -180) {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(0, 100), new Posn(-100, 0), new Posn(x, y));
+        } else if (theta <= -90) {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(0, 100), new Posn(x, y));
+        } else if (theta <= 90) {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(x, y));
+        } else if (theta <= 180) {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(0, -100), new Posn(x, y));
+        } else if (theta <= 270) {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(0, -100), new Posn(-100, 0), new Posn(x, y));
+        } else {
+            p = new PointPolygonImage("solid", Color.RED,
+                    new Posn(0, 0), new Posn(100, 0), new Posn(0, -100), new Posn(-100, 0), new Posn(0, 100), new Posn(x, y));
+        }
+        p = p.movePinholeTo(new Posn(0, 0));
         WorldImage rotatedEllipse =
             new OverlayImage(
                 new FrameImage(
                     new RotateImage(
-                        new VisiblePinholeImage(
-                            new WedgeImage(100, this.theta, "outline", Color.LIGHT_GRAY), Color.RED),
+                        new OverlayImage(
+                            p,
+                            new VisiblePinholeImage(
+                                new WedgeImage(100, this.theta, "outline", Color.LIGHT_GRAY), Color.RED)),
                         this.start)),
                 new RectangleImage(300, 300, "solid", Color.gray));
         return this.getEmptyScene().placeImageXY(new ScaleImage(rotatedEllipse, SCALE), SCALE * 200, SCALE * 200);

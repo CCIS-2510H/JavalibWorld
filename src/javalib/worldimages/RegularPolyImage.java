@@ -1,8 +1,7 @@
 package javalib.worldimages;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
+import java.awt.Color;
+import java.awt.geom.Path2D;
 import java.util.Stack;
 
 /**
@@ -132,21 +131,13 @@ public final class RegularPolyImage extends RegularPolyImageBase {
     }
 }
 
-abstract class RegularPolyImageBase extends WorldImage {
+abstract class RegularPolyImageBase extends PolyImageBase {
 
     /** the number of sides of this polygon */
     public int sides;
 
     /** the length of each side of this polygon */
     public double sideLen;
-
-    /** the outline mode - solid/outline of this polygon */
-    public OutlineMode fill;
-
-    /** the color of this polygon */
-    public Color color;
-
-    private Polygon poly;
 
     /**
      * The full constructor for an equilateral regular polygon
@@ -164,39 +155,43 @@ abstract class RegularPolyImageBase extends WorldImage {
      */
     public RegularPolyImageBase(double length, LengthMode lengthMode, int numSides, OutlineMode fill,
             Color color) {
-        super(1);
-
-        if (numSides < 3) {
-            throw new IllegalArgumentException(
-                    "There must be at least 3 sides in a polygon");
-        }
+        super(generatePoly(numSides, length, lengthMode), fill, color);
 
         this.sides = numSides;
-        this.color = color;
-        this.fill = fill;
-        this.generatePoly(length, lengthMode);
+        // To ensure that each side has the specified length, we need
+        // to compute the radius of the circumcircle
+        switch(lengthMode) {
+            case SIDE:
+                this.sideLen = length;
+                break;
+            case RADIUS:
+                double internalAngle = (2.0 * Math.PI) / sides;
+                this.sideLen = 2.0 * length * Math.sin(internalAngle / 2.0);
+                break;
+        }
+
     }
 
     /**
      * Create the internal polygon representing the set of points to draw
      */
-    private void generatePoly(double sideLen, LengthMode lengthMode) {
-        int[] xCoord = new int[this.sides];
-        int[] yCoord = new int[this.sides];
-        double internalAngle = (2.0 * Math.PI) / this.sides;
-        double rotation = ((this.sides - 2) * (Math.PI / this.sides)) / 2;
+    private static Path2D generatePoly(int sides, double sideLen, LengthMode lengthMode) {
+        if (sides < 3) {
+            throw new IllegalArgumentException(
+                    "There must be at least 3 sides in a polygon");
+        }
+        double internalAngle = (2.0 * Math.PI) / sides;
+        double rotation = ((sides - 2) * (Math.PI / sides)) / 2;
         double radius = 0;
 
         // To ensure that each side has the specified length, we need
         // to compute the radius of the circumcircle
         switch(lengthMode) {
         case SIDE:
-            this.sideLen = sideLen;
             radius = sideLen / (2.0 * Math.sin(internalAngle / 2.0));
             break;
         case RADIUS:
             radius = sideLen;
-            this.sideLen = 2.0 * radius * Math.sin(internalAngle / 2.0);
             break;
         }
 
@@ -216,99 +211,21 @@ abstract class RegularPolyImageBase extends WorldImage {
         // Pentagon | 5 | pi * 3 / 10 | pi * 3 / 5
         // ...   | ... | ... | ...
 
-        double xMin = radius, xMax = -radius, yMin = radius, yMax = -radius;
-        for (int i = 0; i < this.sides; i++) {
+        Path2D.Double path = new Path2D.Double();
+
+
+        for (int i = 0; i < sides; i++) {
             double x = Math.round(Math.cos(((double)i) * internalAngle + rotation) * radius);
-            xMin = Math.min(xMin, x);
-            xMax = Math.max(xMax, x);
-            xCoord[i] = (int) x;
             double y = Math.round(Math.sin(((double)i) * internalAngle + rotation) * radius);
-            yCoord[i] = (int) y;
-            yMin = Math.min(yMin, y);
-            yMax = Math.max(yMax, y);
+            if (i == 0) {
+                path.moveTo(x, y);
+            } else {
+                path.lineTo(x, y);
+            }
         }
-        double xAvg = (xMin + xMax) / 2.0;
-        double yAvg = (yMin + yMax) / 2.0;
-        for (int i = 0; i < this.sides; i++) {
-            xCoord[i] -= xAvg;
-            yCoord[i] -= yAvg;
-        }
-        this.pinhole = new Posn((int)-xAvg, (int)-yAvg);
+        path.closePath();
 
-        this.poly = new Polygon(xCoord, yCoord, this.sides);
-    }
-
-    @Override
-    protected BoundingBox getBBHelp(AffineTransform t) {
-        Point2D p1 = WorldImage.transformPosn(t, this.poly.xpoints[0],
-                this.poly.ypoints[0]);
-        Point2D p2 = WorldImage.transformPosn(t, this.poly.xpoints[1],
-                this.poly.ypoints[1]);
-        BoundingBox ans = new BoundingBox(p1, p2);
-        for (int i = 2; i < this.sides; i++) {
-            Point2D p = WorldImage.transformPosn(t, this.poly.xpoints[i],
-                    this.poly.ypoints[i]);
-            ans.combineWith(p);
-        }
-        return ans;
-    }
-    @Override
-    int numKids() {
-        return 0;
-    }
-    @Override
-    WorldImage getKid(int i) {
-        throw new IllegalArgumentException("No such kid " + i);
-    }
-    @Override
-    AffineTransform getTransform(int i) {
-        throw new IllegalArgumentException("No such kid " + i);
-    }
-    
-    @Override
-    protected void drawStackUnsafe(Graphics2D g) {
-        if (color == null)
-            color = new Color(0, 0, 0);
-
-        // save the current paint
-        Paint oldPaint = g.getPaint();
-        // set the paint to the given color
-        g.setPaint(color);
-
-        if (this.fill == OutlineMode.OUTLINE) {
-            g.draw(this.poly);
-        } else if (this.fill == OutlineMode.SOLID) {
-            g.fill(this.poly);
-        }
-
-        // reset the original paint
-        g.setPaint(oldPaint);
-    }
-    @Override
-    protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
-        this.drawStackUnsafe(g);
-    }
-
-    @Override
-    public double getWidth() {
-        int minX = this.poly.xpoints[0];
-        int maxX = this.poly.xpoints[0];
-        for (int i = 0; i < this.sides; i = i + 1) {
-            minX = Math.min(minX, this.poly.xpoints[i]);
-            maxX = Math.max(maxX, this.poly.xpoints[i]);
-        }
-        return maxX - minX;
-    }
-
-    @Override
-    public double getHeight() {
-        int minY = this.poly.ypoints[0];
-        int maxY = this.poly.ypoints[0];
-        for (int i = 0; i < this.sides; i = i + 1) {
-            minY = Math.min(minY, this.poly.ypoints[i]);
-            maxY = Math.max(maxY, this.poly.ypoints[i]);
-        }
-        return maxY - minY;
+        return path;
     }
 
     @Override
@@ -322,6 +239,7 @@ abstract class RegularPolyImageBase extends WorldImage {
                         new ImageField("color", this.color)));
         return sb;
     }
+
 
     @Override
     protected boolean equalsStacksafe(WorldImage other,
