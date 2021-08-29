@@ -195,6 +195,8 @@ public final class BoundingBox {
     double getTly() { return this.tly; }
     double getBrx() { return this.brx; }
     double getBry() { return this.bry; }
+    double getCenterX() { return (this.tlx + this.bry) / 2.0; }
+    double getCenterY() { return (this.tly + this.bry) / 2.0; }
 
     @Override
     public String toString() {
