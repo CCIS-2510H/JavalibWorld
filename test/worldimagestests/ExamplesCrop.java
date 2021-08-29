@@ -1,5 +1,6 @@
 package worldimagestests;
 
+import javalib.funworld.World;
 import javalib.worldcanvas.WorldCanvas;
 import javalib.worldimages.*;
 import javalib.funworld.WorldScene;
@@ -49,16 +50,25 @@ public class ExamplesCrop {
     WorldImage phantom = new PhantomImage(new LineImage(new Posn(10, 50),
             Color.BLACK));
 
+    WorldImage rotatedEllipse =
+            new OverlayImage(
+                new FrameImage(
+                    new RotateImage(
+                            new VisiblePinholeImage(
+                        new WedgeImage(100, 120, "solid", Color.LIGHT_GRAY), Color.RED), 00)),
+                new RectangleImage(300, 300, "solid", Color.gray));
+
     WorldScene combined = scene
-            .placeImageXY(new VisiblePinholeImage(circle.movePinhole(-10, -10)), 200, 100)
-            .placeImageXY(new FrameImage(croppedCircle), 200, 200)
-            .placeImageXY(new FrameImage(croppedEllipse), 100, 200)
-            .placeImageXY(new FrameImage(shearedCrop), 300, 200)
-            .placeImageXY(new ShearedImage(ellipse, 0.5, 0.25), 200, 300)
-            .placeImageXY(new FrameImage(croppedShear), 300, 300)
-            .placeImageXY(new FrameImage(new CropImage(0, 0, 80, 100, ellipse)), 350, 300)
-            .placeImageXY(new FrameImage(new OverlayImage(phantom, rectangle)),
-                    100, 100);
+            .placeImageXY(rotatedEllipse, 200, 200);
+//            .placeImageXY(new VisiblePinholeImage(circle.movePinhole(-10, -10)), 200, 100)
+//            .placeImageXY(new FrameImage(croppedCircle), 200, 200)
+//            .placeImageXY(new FrameImage(croppedEllipse), 100, 200)
+//            .placeImageXY(new FrameImage(shearedCrop), 300, 200)
+//            .placeImageXY(new ShearedImage(ellipse, 0.5, 0.25), 200, 300)
+//            .placeImageXY(new FrameImage(croppedShear), 300, 300)
+//            .placeImageXY(new FrameImage(new CropImage(0, 0, 80, 100, ellipse)), 350, 300)
+//            .placeImageXY(new FrameImage(new OverlayImage(phantom, rectangle)),
+//                    100, 100);
 
     public void testAll(Tester t) {
         String[] args = new String[] {};
@@ -68,11 +78,57 @@ public class ExamplesCrop {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
-        WorldCanvas c = new WorldCanvas(400, 400);
+        WorldCanvas c = new WorldCanvas(WedgeWorld.SCALE * 400, WedgeWorld.SCALE * 400);
 
         ExamplesCrop e = new ExamplesCrop();
 
         // show several images in the canvas
-        boolean makeDrawing = c.show() && c.drawScene(e.combined);
+        // boolean makeDrawing = c.show() && c.drawScene(e.combined);
+
+        new WedgeWorld(60, 0, 1).bigBang(WedgeWorld.SCALE * 400, WedgeWorld.SCALE * 400, 0.1);
+    }
+}
+
+class WedgeWorld extends World {
+    int theta, start, speed;
+    static final int SCALE = 2;
+
+    WedgeWorld(int theta, int start, int speed) {
+        this.theta = theta;
+        this.start = start;
+        this.speed = speed;
+    }
+
+    @Override
+    public World onTick() {
+        return new WedgeWorld(this.theta, (this.start + this.speed) % 360, this.speed);
+    }
+
+    @Override
+    public World onKeyEvent(String s) {
+        if (s.equals("w")) {
+            return new WedgeWorld(this.theta + 5, this.start, this.speed);
+        } else if (s.equals("n")) {
+            return new WedgeWorld(this.theta - 5, this.start, this.speed);
+        } else if (s.equals("f")) {
+            return new WedgeWorld(this.theta, this.start, this.speed + 1);
+        } else if (s.equals("s")) {
+            return new WedgeWorld(this.theta, this.start, this.speed - 1);
+        } else {
+            return this;
+        }
+    }
+
+    @Override
+    public WorldScene makeScene() {
+        WorldImage rotatedEllipse =
+            new OverlayImage(
+                new FrameImage(
+                    new RotateImage(
+                        new VisiblePinholeImage(
+                            new WedgeImage(100, this.theta, "outline", Color.LIGHT_GRAY), Color.RED),
+                        this.start)),
+                new RectangleImage(300, 300, "solid", Color.gray));
+        return this.getEmptyScene().placeImageXY(new ScaleImage(rotatedEllipse, SCALE), SCALE * 200, SCALE * 200);
     }
 }
