@@ -50,16 +50,16 @@ public class ExamplesCrop {
     WorldImage phantom = new PhantomImage(new LineImage(new Posn(10, 50),
             Color.BLACK));
 
-    WorldImage rotatedEllipse =
-            new OverlayImage(
-                new FrameImage(
-                    new RotateImage(
-                            new VisiblePinholeImage(
-                        new WedgeImage(100, 120, "solid", Color.LIGHT_GRAY), Color.RED), 00)),
-                new RectangleImage(300, 300, "solid", Color.gray));
-
-    WorldScene combined = scene
-            .placeImageXY(rotatedEllipse, 200, 200);
+//    WorldImage rotatedEllipse =
+//            new OverlayImage(
+//                new FrameImage(
+//                    new RotateImage(
+//                            new VisiblePinholeImage(
+//                        new WedgeImage(100, 120, "solid", Color.LIGHT_GRAY), Color.RED), 00)),
+//                new RectangleImage(300, 300, "solid", Color.gray));
+//
+//    WorldScene combined = scene
+//            .placeImageXY(rotatedEllipse, 200, 200);
 //            .placeImageXY(new VisiblePinholeImage(circle.movePinhole(-10, -10)), 200, 100)
 //            .placeImageXY(new FrameImage(croppedCircle), 200, 200)
 //            .placeImageXY(new FrameImage(croppedEllipse), 100, 200)

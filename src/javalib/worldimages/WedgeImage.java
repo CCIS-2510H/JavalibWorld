@@ -6,6 +6,10 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.Stack;
 
+/**
+ * Represents a wedge image drawn from the +x axis (to the right)
+ * counterclockwise (for positive angles) by an angle specified in degrees
+ */
 public final class WedgeImage extends EllipseImageBase {
   /**
    * the radius of this wedge
@@ -18,28 +22,30 @@ public final class WedgeImage extends EllipseImageBase {
   public int angle;
 
   /**
-   * A full constructor for this circle image.
+   * A full constructor for this wedge image.
    *
-   * @param radius -- the radius of this circle
+   * @param radius -- the radius of the underlying circle for this wedge
+   * @param angle  -- the angle (in degrees) of the wedge; positive angles increase counterclockwise
    * @param fill   -- Outline or solid
    * @param color  -- the color for this image
    */
   public WedgeImage(int radius, int angle, OutlineMode fill, Color color) {
+    // Note: this passes in 2 * radius as the width and height *of the underlying ellipse*
+    // It does *not* imply that the width and height of this wedge are 2 * radius.
     super(2 * radius, 2 * radius, fill, color);
     this.radius = radius;
     this.angle = angle;
     this.pinhole = new Posn(0, 0);
-//    if ((angle % 360) >= 180) {
-//      this.pinhole = new Posn(this.radius, this.radius);
-//    } else if (angle >= 90) {
-//      this.pinhole = new Posn(
-//              (int)(-this.radius * Math.cos(Math.toRadians(this.angle))),
-//              this.radius);
-//    } else {
-//      this.pinhole = new Posn(0, (int)(this.radius * Math.sin(Math.toRadians(this.angle))));
-//    }
   }
 
+  /**
+   * A full constructor for this wedge image.
+   *
+   * @param radius -- the radius of the underlying circle for this wedge
+   * @param angle  -- the angle (in degrees) of the wedge; positive angles increase counterclockwise
+   * @param fill   -- Outline or solid
+   * @param color  -- the color for this image
+   */
   public WedgeImage(int radius, int angle, String fill, Color color) {
     this(radius, angle, OutlineMode.fromString(fill), color);
   }
@@ -226,16 +232,6 @@ public final class WedgeImage extends EllipseImageBase {
   @Override
   protected void drawStacksafe(Graphics2D g, Stack<WorldImage> images, Stack<AffineTransform> txs) {
     this.drawStackUnsafe(g);
-  }
-
-  @Override
-  public double getWidth() {
-    return this.radius * 2;
-  }
-
-  @Override
-  public double getHeight() {
-    return this.radius * 2;
   }
 
   @Override
