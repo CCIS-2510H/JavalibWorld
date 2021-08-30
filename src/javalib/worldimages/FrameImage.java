@@ -47,6 +47,17 @@ public final class FrameImage extends RectangleImageBase {
         this(img, Color.black);
     }
 
+
+    @Override
+    public BoundingBox getBB() {
+        return this.img.getBB();
+    }
+
+    @Override
+    protected BoundingBox getBBHelp(AffineTransform t) {
+        return this.img.getBBHelp(t);
+    }
+
     @Override
     protected void drawStackUnsafe(Graphics2D g) {
         if (this.width <= 0)
