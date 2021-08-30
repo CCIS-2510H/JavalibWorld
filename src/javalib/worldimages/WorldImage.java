@@ -191,6 +191,11 @@ public abstract class WorldImage {
                 (int) Math.round(this.pinhole.y + dy)));
     }
 
+    public WorldImage centerPinhole() {
+        BoundingBox bb = this.getBB();
+        return movePinholeTo(new Posn((int)bb.getCenterX(), (int)bb.getCenterY()));
+    }
+
     /**
      * Draw this image in the provided <code>Graphics2D</code> context.
      * 
@@ -343,7 +348,7 @@ public abstract class WorldImage {
 
     @Override
     public String toString() {
-        return this.toIndentedString(new StringBuilder(), "", 0).toString();
+        return this.toIndentedString(new StringBuilder(), "", 2).toString();
     }
 
     /**
