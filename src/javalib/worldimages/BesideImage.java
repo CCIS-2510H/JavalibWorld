@@ -23,8 +23,7 @@ import java.util.Stack;
 public final class BesideImage extends OverlayOffsetAlignBase {
 
     private BesideImage(WorldImage im1, WorldImage im2) {
-        super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, im1, im1.getWidth() / 2
-                + im2.getWidth() / 2, 0, im2);
+        super(AlignModeX.LEFT, AlignModeY.MIDDLE, im1, im1.getWidth(), 0, im2);
     }
 
     /**

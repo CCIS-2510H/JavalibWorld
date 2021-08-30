@@ -99,43 +99,74 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         this.dx = dx;
         this.dy = dy;
 
-        // Calculate proper center point
-        double botWidth = this.bot.getWidth();
-        double topWidth = this.top.getWidth();
-        double botHeight = this.bot.getHeight();
-        double topHeight = this.top.getHeight();
+        BoundingBox botBox = this.bot.getBB();
+        BoundingBox topBox = this.top.getBB();
+        double botDeltaX, botDeltaY, topDeltaX, topDeltaY;
+        switch(alignX) {
+            case LEFT: // move both images so their left sides are at x = 0;
+                botDeltaX = -botBox.getTlx();
+                topDeltaX = -topBox.getTlx();
+                break;
+            case CENTER:
+                botDeltaX = -botBox.getCenterX();
+                topDeltaX = -topBox.getCenterX();
+                break;
+            case PINHOLE:
+                botDeltaX = -bot.pinhole.x;
+                topDeltaX = -top.pinhole.x;
+                break;
+            case RIGHT:
+                botDeltaX = -botBox.getBrx();
+                topDeltaX = -topBox.getBrx();
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected AlignModeX");
+        }
+        switch(alignY) {
+            case TOP: // move both images so their left sides are at x = 0;
+                botDeltaY = -botBox.getTly();
+                topDeltaY = -topBox.getTly();
+                break;
+            case MIDDLE:
+                botDeltaY = -botBox.getCenterY();
+                topDeltaY = -topBox.getCenterY();
+                break;
+            case PINHOLE:
+                botDeltaY = -bot.pinhole.y;
+                topDeltaY = -top.pinhole.y;
+                break;
+            case BOTTOM:
+                botDeltaY = -botBox.getBry();
+                topDeltaY = -topBox.getBry();
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected AlignModeY");
+        }
+        topDeltaX -= dx;
+        topDeltaY -= dy;
 
-        double rightX = Math.max((botWidth / 2.0) + xBotMoveDist(),
-                (topWidth / 2.0) + xTopMoveDist());
-        double leftX = Math.min((-botWidth / 2.0) + xBotMoveDist(),
-                (-topWidth / 2.0) + xTopMoveDist());
-        double bottomY = Math.max((botHeight / 2.0) + yBotMoveDist(),
-                (topHeight / 2.0) + yTopMoveDist());
-        double topY = Math.min((-botHeight / 2.0) + yBotMoveDist(),
-                (-topHeight / 2.0) + yTopMoveDist());
+        double minX = Math.min(botBox.getTlx() + botDeltaX, topBox.getTlx() + topDeltaX);
+        double minY = Math.min(botBox.getTly() + botDeltaY, topBox.getTly() + topDeltaY);
+        double maxX = Math.max(botBox.getBrx() + botDeltaX, topBox.getBrx() + topDeltaX);
+        double maxY = Math.max(botBox.getBry() + botDeltaY, topBox.getBry() + topDeltaY);
 
-        // yBotMoveDist(), yTopMoveDist(), xBotMoveDist(), and
-        // xTopMoveDist() position the two images relative to
-        // each other, but not correctly positioned at the origin,
-        // which is why centerX and centerY exist
-        double centerX = (rightX + leftX) / 2.0;
-        double centerY = (bottomY + topY) / 2.0;
+        double centerX = (minX + maxX) / 2.0;
+        double centerY = (minY + maxY) / 2.0;
 
-        double botDeltaY = -centerY + yBotMoveDist();
-        double topDeltaY = -centerY + yTopMoveDist();
-        double botDeltaX = -centerX + xBotMoveDist();
-        double topDeltaX = -centerX + xTopMoveDist();
+//        topDeltaX -= centerX;
+//        topDeltaY -= centerY;
+//        botDeltaX -= centerX;
+//        botDeltaY -= centerY;
 
         this.deltaBot = new DPosn(botDeltaX, botDeltaY);
         this.deltaTop = new DPosn(topDeltaX, topDeltaY);
 
-        if (alignY == AlignModeY.PINHOLE && alignX == AlignModeX.PINHOLE
-                && dx == 0 && dy == 0) {
-            // Set the pinhole
-            this.pinhole = new Posn((int) -Math.round(centerX),
-                    (int) -Math.round(centerY));
+        if (alignX == AlignModeX.PINHOLE && alignY == AlignModeY.PINHOLE && dx == 0 && dy == 0) {
+            this.pinhole = new Posn((int)(top.pinhole.x + topDeltaX), (int)(top.pinhole.y + topDeltaY));
+        } else {
+            this.pinhole = new Posn((int) centerX, (int) centerY);
         }
-        
+
         this.hashCode = this.bot.hashCode() + this.top.hashCode()
             + this.alignX.hashCode() + this.alignY.hashCode()
             + (int) this.dx * 37 + (int) this.dy * 16;
@@ -166,78 +197,6 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         if (i == 0) { return AffineTransform.getTranslateInstance(this.deltaBot.x, this.deltaBot.y); }
         if (i == 1) { return AffineTransform.getTranslateInstance(this.deltaTop.x, this.deltaTop.y); }
         throw new IllegalArgumentException("No such kid " + i);
-    }
-    
-    /**
-     * How much should bottom image move in the Y direction relative to the top
-     * image?
-     * 
-     * @return y move distance
-     */
-    private double yBotMoveDist() {
-        double moveDist = 0;
-        if (this.alignY == AlignModeY.TOP || this.alignY == AlignModeY.BOTTOM) {
-            double h1 = this.top.getHeight();
-            double h2 = this.bot.getHeight();
-            if (this.alignY == AlignModeY.TOP) {
-                moveDist = (h2 - h1) / 2.0;
-            } else if (this.alignY == AlignModeY.BOTTOM) {
-                moveDist = (h1 - h2) / 2.0;
-            }
-        } else if (this.alignY == AlignModeY.PINHOLE) {
-            moveDist = -this.bot.pinhole.y;
-        }
-        moveDist += dy;
-        return moveDist;
-    }
-
-    /**
-     * How much should top image move in the Y direction relative to the bottom
-     * image?
-     * 
-     * @return y move distance
-     */
-    private double yTopMoveDist() {
-        if (this.alignY == AlignModeY.PINHOLE) {
-            return -this.top.pinhole.y;
-        }
-        return 0;
-    }
-
-    /**
-     * How much should bottom image move in the X direction relative to the top
-     * image?
-     * 
-     * @return x move distance
-     */
-    private double xBotMoveDist() {
-        double moveDist = 0;
-        if (this.alignX == AlignModeX.LEFT || this.alignX == AlignModeX.RIGHT) {
-            double w1 = this.top.getWidth();
-            double w2 = this.bot.getWidth();
-            if (this.alignX == AlignModeX.LEFT) {
-                moveDist = (w2 - w1) / 2.0;
-            } else if (this.alignX == AlignModeX.RIGHT) {
-                moveDist = (w1 - w2) / 2.0;
-            }
-        } else if (this.alignX == AlignModeX.PINHOLE) {
-            moveDist = -this.bot.pinhole.x;
-        }
-        moveDist += dx;
-        return moveDist;
-    }
-
-    /**
-     * How much should top image move in the X direction relative to the bottom
-     * image?
-     * 
-     * @return x move distance
-     */
-    private double xTopMoveDist() {
-        if (this.alignX == AlignModeX.PINHOLE) {
-            return -this.top.pinhole.x;
-        }
-        return 0;
     }
 
     @Override

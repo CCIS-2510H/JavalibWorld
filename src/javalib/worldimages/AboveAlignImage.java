@@ -24,8 +24,7 @@ import java.util.Stack;
 public final class AboveAlignImage extends OverlayOffsetAlignBase {
 
     private AboveAlignImage(AlignModeX mode, WorldImage im1, WorldImage im2) {
-        super(mode, AlignModeY.PINHOLE, im1, 0, im1.getHeight() / 2.0
-                + im2.getHeight() / 2.0, im2);
+        super(mode, AlignModeY.TOP, im1, 0, im1.getHeight(), im2);
     }
 
     /**
