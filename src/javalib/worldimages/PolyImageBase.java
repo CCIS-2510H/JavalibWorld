@@ -114,23 +114,21 @@ abstract class PolyImageBase extends WorldImage {
     fields.add(new ImageField("color", this.color));
     double[] coords = new double[6];
     PathIterator pi = this.poly.getPathIterator(new AffineTransform());
-    int i = 0;
-    while (!pi.isDone()) {
+    for (int i = 0; !pi.isDone(); i++, pi.next()) {
       switch(pi.currentSegment(coords)) {
         case PathIterator.SEG_MOVETO:
         case PathIterator.SEG_LINETO:
-          fields.add(new ImageField(String.format("points[%d]", i + 2), new Posn((int)coords[0], (int)coords[1])));
+          fields.add(new ImageField(String.format("points[%d]", i), new Posn((int)coords[0], (int)coords[1])));
           break;
         case PathIterator.SEG_QUADTO:
-          fields.add(new ImageField(String.format("points[%d]", i + 2), new Posn((int)coords[2], (int)coords[3])));
+          fields.add(new ImageField(String.format("points[%d]", i), new Posn((int)coords[2], (int)coords[3])));
           break;
         case PathIterator.SEG_CUBICTO:
-          fields.add(new ImageField(String.format("points[%d]", i + 2), new Posn((int)coords[4], (int)coords[5])));
+          fields.add(new ImageField(String.format("points[%d]", i), new Posn((int)coords[4], (int)coords[5])));
           break;
         case PathIterator.SEG_CLOSE:
           break;
       }
-      pi.next();
     }
     stack.push(new FieldsWLItem(this.pinhole, fields.toArray(new ImageField[0])));
     return sb;
