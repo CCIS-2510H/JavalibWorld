@@ -87,6 +87,9 @@ public abstract class WorldImage {
             if (tx.isIdentity() && WorldImage.bbCache.containsKey(this)) { 
                 return this.getBB(); 
             }
+            else if (tx.getType() == AffineTransform.TYPE_TRANSLATION && WorldImage.bbCache.containsKey(this)) {
+                return this.getBB().translated(tx.getTranslateX(), tx.getTranslateY());
+            }
             else { 
                 return this.getBBHelp(tx); 
             }
