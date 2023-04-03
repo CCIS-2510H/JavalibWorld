@@ -253,7 +253,7 @@ abstract public class World {
   private World stopOrReset(World w, String why) {
     w.worldEnded = w.hasWorldEnded();
     if (w.worldEnded) {
-      this.stopWorld(w.getLastScene(why));
+      this.stopWorld(resetWorld(w).getLastScene(why));
       return w;
     } else {
       return resetWorld(w);
