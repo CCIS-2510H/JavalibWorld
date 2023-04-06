@@ -1,7 +1,7 @@
 package javalib.impworld;
 
-import javalib.worldimages.*;
-import javalib.worldcanvas.*;
+import javalib.worldcanvas.WorldCanvas;
+import javalib.worldimages.Posn;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -11,8 +11,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.PrintStream;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
 
 /**
  * Copyright 2007, 2008 2009, 2012 Viera K. Proulx
@@ -67,6 +70,9 @@ abstract public class World {
 
   private transient WorldScene lastScene = null;
 
+  protected PrintStream getOutputStream() { return System.out; }
+  protected PrintStream getErrorStream() { return System.err; }
+
 
   private int width, height;
 
@@ -98,13 +104,13 @@ abstract public class World {
    */
   public void bigBang(int width, int height, double speed) {
     if (this.worldExists) {
-      System.out.println("Only one world can run at a time");
+      getOutputStream().println("Only one world can run at a time");
       return;
     }
     // throw runtime exceptions if width, height <= 0
     this.width = width;
     this.height = height;
-    this.theCanvas = new WorldCanvas(width, height);
+    this.theCanvas = new WorldCanvas(width, height, this.getTitle());
     this.blankScene = new WorldScene(width, height);
     this.worldEnded = false;
 
@@ -154,7 +160,7 @@ abstract public class World {
     // all listeners and the timer are installed for theCanvas
     start = System.currentTimeMillis();
     tmp = System.currentTimeMillis();
-    // System.out.println("Going to sleep again.");
+    // getOutputStream().println("Going to sleep again.");
 
     while (tmp - start < 1000) {
       tmp = System.currentTimeMillis();
@@ -167,13 +173,14 @@ abstract public class World {
     this.drawWorld();
 
     // print a header that specifies the current version of the World
-    System.out.println(Versions.CURRENT_VERSION);
+    getOutputStream().println(Versions.CURRENT_VERSION);
   }
 
   public WorldScene getEmptyScene() {
     return new WorldScene(this.width, this.height);
   }
 
+  public String getTitle() { return this.getClass().getSimpleName(); }
   /**
    * EFFECT:
    * <p>

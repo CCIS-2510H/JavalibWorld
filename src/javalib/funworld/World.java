@@ -1,7 +1,7 @@
 package javalib.funworld;
 
-import javalib.worldimages.*;
-import javalib.worldcanvas.*;
+import javalib.worldcanvas.WorldCanvas;
+import javalib.worldimages.Posn;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -11,8 +11,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.PrintStream;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
 
 /**
  * Copyright 2007, 2008 2009, 2012 Viera K. Proulx
@@ -84,6 +87,11 @@ abstract public class World {
   public World() {
   }
 
+
+
+  protected PrintStream getOutputStream() { return System.out; }
+  protected PrintStream getErrorStream() { return System.err; }
+
   // ///////////////////////////////////////////////////////////////////////
   // Methods for interacting with the World //
   // ///////////////////////////////////////////////////////////////////////
@@ -100,11 +108,11 @@ abstract public class World {
    */
   public boolean bigBang(int width, int height, double speed) {
     if (this.worldExists) {
-      System.out.println("Only one world can run at a time");
+      getOutputStream().println("Only one world can run at a time");
       return true;
     }
     // throw runtime exceptions if width, height <= 0
-    this.theCanvas = new WorldCanvas(width, height);
+    this.theCanvas = new WorldCanvas(width, height, this.getTitle());
     this.blankScene = new WorldScene(width, height);
     this.worldEnded = false;
 
@@ -164,7 +172,7 @@ abstract public class World {
       this.mytime.timer.start();
 
     // print a header that specifies the current version of the World
-    System.out.println(Versions.CURRENT_VERSION);
+    getOutputStream().println(Versions.CURRENT_VERSION);
 
     return this.drawWorld();
   }
@@ -172,6 +180,8 @@ abstract public class World {
   public WorldScene getEmptyScene() {
     return this.blankScene;
   }
+
+  public String getTitle() { return this.getClass().getSimpleName(); }
 
   /**
    * Start the world by creating a canvas of the given size, creating and
@@ -197,7 +207,7 @@ abstract public class World {
       this.mytime.stopTimer();
       this.theCanvas.frame.removeKeyListener(this.keyAdapter);
       this.theCanvas.frame.removeMouseListener(this.mouseAdapter);
-      System.out.println("The world stopped.");
+      getOutputStream().println("The world stopped.");
 
       // draw the final scene of the world with the end of time message
       if (toDraw != null) {

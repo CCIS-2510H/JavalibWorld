@@ -13,7 +13,6 @@ package javalib.impworld;
  * @since 26 June 2012, 8 August 2012
  */
 public interface Versions {
-    String CURRENT_VERSION = "impworld version 1.0 --- 26 June  2012" + "\n"
+    String CURRENT_VERSION = "impworld v.2023" + "\n"
             + "-----------------------------------------" + "\n";
-    String VERSION_1_0 = "impworld version 1.0 --- 26 June 2012";
 }
