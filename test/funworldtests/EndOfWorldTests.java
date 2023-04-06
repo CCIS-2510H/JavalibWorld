@@ -6,9 +6,7 @@ import javalib.worldimages.AboveAlignImage;
 import javalib.worldimages.AlignModeX;
 import javalib.worldimages.TextImage;
 
-import java.awt.*;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.awt.Color;
 
 class WorldWithEnding extends World {
   int value;

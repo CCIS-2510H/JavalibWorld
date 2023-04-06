@@ -4,8 +4,8 @@ import tester.*;
 import javalib.impworld.*;
 import javalib.worldimages.*;
 
-import java.util.*;
 import java.awt.Color;
+import java.util.Random;
 
 /**
  * Copyright 2012 Viera K. Proulx This program is distributed under the terms of

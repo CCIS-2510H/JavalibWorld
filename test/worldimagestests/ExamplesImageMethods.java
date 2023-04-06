@@ -3,7 +3,7 @@ package worldimagestests;
 import javalib.worldimages.*;
 import tester.*;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Copyright 2012 Viera K. Proulx

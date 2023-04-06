@@ -2,7 +2,10 @@ package javalib.worldimages;
 
 import javalib.worldcanvas.CanvasPanel;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;

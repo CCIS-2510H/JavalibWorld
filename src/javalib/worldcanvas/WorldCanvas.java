@@ -1,14 +1,19 @@
 package javalib.worldcanvas;
 
 import javalib.impworld.WorldScene;
-import javalib.worldimages.*;
+import javalib.worldimages.CircleImage;
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
-import javax.swing.*;
-
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 /**
  * Copyright 2007, 2008, 2009, 2012 Viera K. Proulx

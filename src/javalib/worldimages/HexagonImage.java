@@ -1,6 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * <p>Copyright 2015 Benjamin Lerner</p>

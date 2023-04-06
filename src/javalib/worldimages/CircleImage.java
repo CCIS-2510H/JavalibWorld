@@ -1,6 +1,6 @@
 package javalib.worldimages;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Stack;
 
 /**

@@ -1,12 +1,11 @@
-import java.awt.*;
-import java.io.*;
+import java.awt.Color;
+import java.io.IOException;
 import java.lang.reflect.Array;
 
+import funworldtests.BlobWorldFun;
+import funworldtests.TickyTackFun;
 import javalib.funworld.World;
 import tester.Tester;
-import funworldtests.*;
-import impworldtests.*;
-import worldimagestests.ExamplesImageDrawings;
 import worldimagestests.ExamplesImageMethods;
 
 class MyWorld extends javalib.funworld.World {

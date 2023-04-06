@@ -1,12 +1,22 @@
 package javalib.worldcanvas;
 
-import javalib.worldimages.*;
+import javalib.worldimages.FromFileImage;
+import javalib.worldimages.WorldImage;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Window;
+import java.awt.image.BufferedImage;
+import java.util.Hashtable;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
 
 /**
  * Copyright 2007, 2008 Viera K. Proulx
