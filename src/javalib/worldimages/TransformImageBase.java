@@ -3,22 +3,31 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 import java.util.Stack;
 
 abstract public class TransformImageBase extends WorldImage {
 
     /** the image to scale */
-    public WorldImage img;
+    public final WorldImage img;
 
     /** the transformation for that image */
-    public AffineTransform tx;
+    public final AffineTransform tx;
     
     TransformImageBase(WorldImage img, AffineTransform tx) {
-        super(1 + img.depth);
+        this(Objects.requireNonNull(img, "Transformed image cannot be null"),
+                Objects.requireNonNull(tx, "Transformation cannot be null"),
+                transformPosnAsPosn(tx, img.pinhole));
+    }
+    TransformImageBase(WorldImage img, AffineTransform tx, Posn pinhole) {
+        super(pinhole,1 + Objects.requireNonNull(img, "Transformed image cannot be null").depth);
         this.img = img;
-        this.tx = tx;
-        Point2D p = WorldImage.transformPosn(tx, img.pinhole);
-        this.pinhole = new DPosn(p.getX(), p.getY()).asPosn();
+        this.tx = Objects.requireNonNull(tx, "Transformation cannot be null");
+    }
+    private static Posn transformPosnAsPosn(AffineTransform tx, Posn p) {
+        Point2D p2d = WorldImage.transformPosn(tx, p);
+        return new DPosn(p2d.getX(), p2d.getY()).asPosn();
+
     }
     
     @Override

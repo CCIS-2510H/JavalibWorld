@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javalib.funworld.*;
+import javalib.funworld.World;
+import javalib.funworld.WorldScene;
 import javalib.worldimages.AboveImage;
 import javalib.worldimages.BesideImage;
 import javalib.worldimages.EmptyImage;

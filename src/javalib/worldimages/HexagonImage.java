@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.Color;
+import java.util.Objects;
 
 /**
  * <p>Copyright 2015 Benjamin Lerner</p>
@@ -31,6 +32,9 @@ public final class HexagonImage extends RegularPolyImageBase {
     public HexagonImage(double sideLen, OutlineMode fill, Color color) {
         super(sideLen, LengthMode.SIDE, 6, fill, color);
     }
+    private HexagonImage(double sideLen, OutlineMode fill, Color color, Posn pinhole) {
+        super(sideLen, LengthMode.SIDE, 6, fill, color, pinhole);
+    }
 
     public HexagonImage(double sideLen, String fill, Color color) {
         this(sideLen, OutlineMode.fromString(fill), color);
@@ -38,8 +42,7 @@ public final class HexagonImage extends RegularPolyImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new HexagonImage(this.sideLen, this.fill, this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new HexagonImage(this.sideLen, this.fill, this.color, p);
     }
 }

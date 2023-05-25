@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -32,8 +33,8 @@ import java.util.Stack;
  * @since April 4 2015
  */
 public final class FromFileImage extends WorldImage {
-    private static Map<String, BufferedImage> loadedImages = new HashMap<>();
-    private static Map<String, Long> modifiedTimes = new HashMap<>();
+    private static final Map<String, BufferedImage> loadedImages = new HashMap<>();
+    private static final Map<String, Long> modifiedTimes = new HashMap<>();
 
     /**
      * Construct the <code>BufferedImage</code> from the given file. The file
@@ -72,24 +73,30 @@ public final class FromFileImage extends WorldImage {
 
 
     /** the file name for the image source */
-    public String fileName;
+    public final String fileName;
 
     /**
      * the instance of the class that handles reading of files just once set to
      * be transient, so that it is not used in comparisons by tester lib
      */
-    protected volatile BufferedImage image;
+    private transient final BufferedImage image;
 
-    protected volatile long modifiedTime;
+    private transient final long modifiedTime;
 
     /**
      * A full constructor for this image created from the file input
      * 
      * @param fileName
      *            -- the file name for the image source
+     * @throws NullPointerException if fileName is null
      */
     public FromFileImage(String fileName) {
-        super(1);
+        this(fileName, DEFAULT_PINHOLE);
+    }
+
+    private FromFileImage(String fileName, Posn pinhole) {
+        super(pinhole, 1);
+        Objects.requireNonNull(fileName, "Filename cannot be null");
 
         String absName = loadFromFile(fileName);
         this.fileName = fileName;
@@ -190,8 +197,7 @@ public final class FromFileImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new FromFileImage(this.fileName);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new FromFileImage(this.fileName, p);
     }
 }

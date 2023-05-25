@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.Color;
+import java.util.Objects;
 
 /**
  * <p>Copyright 2015 Benjamin Lerner</p>
@@ -43,11 +44,15 @@ public final class EquilateralTriangleImage extends RegularPolyImageBase {
         this(sideLen, OutlineMode.fromString(fill), color);
     }
 
+    private EquilateralTriangleImage(double sideLen, OutlineMode fill, Color color, Posn pinhole) {
+        super(sideLen, LengthMode.SIDE, 3, fill, color, pinhole);
+    }
+
+
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new EquilateralTriangleImage(this.sideLen, this.fill,
-                this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new EquilateralTriangleImage(this.sideLen, this.fill,
+                this.color, p);
     }
 }

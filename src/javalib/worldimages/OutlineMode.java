@@ -1,5 +1,7 @@
 package javalib.worldimages;
 
+import java.util.Objects;
+
 /**
  * An enum representing the type of outline/fill mode a WorldImage should have
  * 
@@ -27,6 +29,7 @@ public enum OutlineMode {
      * @return The enum associated with the given <code>name</code>
      */
     public static OutlineMode fromString(String name) {
+        Objects.requireNonNull(name, "Outline mode cannot be null");
         switch(name.toUpperCase()) {
             case "SOLID": return SOLID;
             case "OUTLINE": return OUTLINE;

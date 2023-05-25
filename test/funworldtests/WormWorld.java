@@ -2,8 +2,12 @@ package funworldtests;
 
 import java.awt.Color;
 
-import javalib.funworld.*;
-import javalib.worldimages.*;
+import javalib.funworld.World;
+import javalib.funworld.WorldScene;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
 
 /**
  * Copyright 2012 Viera K. Proulx, Matthias Felleisen This program is

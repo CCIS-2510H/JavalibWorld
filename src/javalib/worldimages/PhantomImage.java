@@ -3,6 +3,7 @@ package javalib.worldimages;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -13,8 +14,8 @@ import java.util.Stack;
  * 
  */
 final public class PhantomImage extends WorldImage {
-    int width, height;
-    WorldImage img;
+    final int width, height;
+    final WorldImage img;
 
     /**
      * Creates a phantom image based on <code>img</code> of size
@@ -26,9 +27,10 @@ final public class PhantomImage extends WorldImage {
      *            -- The height of the "phantom" image
      * @param height
      *            -- The width of the "phantom" image
+     * @throws NullPointerException if img is null
      */
     public PhantomImage(WorldImage img, int width, int height) {
-        super(img.pinhole, 1 + img.depth);
+        super(Objects.requireNonNull(img, "Image cannot be null").pinhole, 1 + img.depth);
         this.img = img;
         this.width = width;
         this.height = height;
@@ -40,6 +42,7 @@ final public class PhantomImage extends WorldImage {
      * 
      * @param img
      *            -- Image to turn into a "phantom" image
+     * @throws NullPointerException if img is null
      */
     public PhantomImage(WorldImage img) {
         this(img, 0, 0);
@@ -74,6 +77,7 @@ final public class PhantomImage extends WorldImage {
     
     @Override
     public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
         return new PhantomImage(this.img.movePinholeTo(p), this.width, this.height);
     }
 

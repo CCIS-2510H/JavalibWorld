@@ -1,7 +1,11 @@
 package impworldtests;
 
-import javalib.impworld.*;
-import javalib.worldimages.*;
+import javalib.impworld.World;
+import javalib.impworld.WorldScene;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.Posn;
+import javalib.worldimages.TextImage;
 
 import java.awt.Color;
 
@@ -46,11 +50,11 @@ public class ExamplesWorld extends World {
     public void onKeyEvent(String ke) {
         System.out.println("Key event " + ke);
         if (ke.equals("right"))
-            this.pos.x = this.pos.x;
+            this.pos = this.pos.offset(20, 0);
         if (ke.equals("left"))
-            this.pos.x = this.pos.x - 20;
+            this.pos = this.pos.offset(-20, 0);
         if (ke.equals("up"))
-            this.pos.x = 0;
+            this.pos = new Posn(0, this.pos.y);
         if (ke.equals("E"))
             this.worldEnd = true;
         if (ke.equals("q"))
@@ -81,14 +85,13 @@ public class ExamplesWorld extends World {
     public void onTick() {
         System.out.println("Tick -- pos = (" + this.pos.x + ", " + this.pos.y
                 + ")");
-        this.pos.x = (this.pos.x + 2) % this.width;
+        this.pos = new Posn((this.pos.x + 2) % this.width, this.pos.y);
     }
 
     // at each mouse click print the location of the mouse click
     public void onMouseClicked(Posn loc) {
         System.out.println("Click -- pos = (" + loc.x + ", " + loc.y + ")");
-        this.pos.x = loc.x;
-        this.pos.y = loc.y;
+        this.pos = loc;
     }
 
     // run two worlds concurrently - the one in focus responds to mouse and key

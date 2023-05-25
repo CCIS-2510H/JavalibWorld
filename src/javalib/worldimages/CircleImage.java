@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.Color;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Stack;
 public final class CircleImage extends EllipseImageBase {
 
     /** the radius of this circle */
-    public int radius;
+    public final int radius;
 
     /**
      * A full constructor for this circle image.
@@ -32,9 +33,13 @@ public final class CircleImage extends EllipseImageBase {
      *            -- Outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if fill or color is null
      */
     public CircleImage(int radius, OutlineMode fill, Color color) {
-        super(radius * 2, radius * 2, fill, color);
+        this(radius, fill, color, DEFAULT_PINHOLE);
+    }
+    private CircleImage(int radius, OutlineMode fill, Color color, Posn pinhole) {
+        super(radius * 2, radius * 2, fill, color, pinhole);
         this.radius = radius;
     }
 
@@ -72,8 +77,7 @@ public final class CircleImage extends EllipseImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new CircleImage(this.radius, this.fill, this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new CircleImage(this.radius, this.fill, this.color, p);
     }
 }

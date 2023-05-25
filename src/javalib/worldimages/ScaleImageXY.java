@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -22,18 +23,29 @@ public final class ScaleImageXY extends ScaleImageXYBase {
      *            -- amount to scale on the X axis
      * @param scaleY
      *            -- amount to scale on the Y axis
+     * @throws NullPointerException if img is null
      */
     public ScaleImageXY(WorldImage img, double scaleX, double scaleY) {
         super(img, scaleX, scaleY);
+    }
+
+    private ScaleImageXY(WorldImage img, double scaleX, double scaleY, Posn pinhole) {
+        super(img, scaleX, scaleY, pinhole);
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new ScaleImageXY(this.img, this.scaleX, this.scaleY, p);
     }
 }
 
 abstract class ScaleImageXYBase extends TransformImageBase {
     /** the x axis scale amount */
-    public double scaleX;
+    public final double scaleX;
 
     /** the y axis scale amount */
-    public double scaleY;
+    public final double scaleY;
 
     /**
      * Scale the image
@@ -44,10 +56,19 @@ abstract class ScaleImageXYBase extends TransformImageBase {
      *            -- amount to scale on the X axis
      * @param scaleY
      *            -- amount to scale on the Y axis
+     * @throws NullPointerException if img is null
      */
     public ScaleImageXYBase(WorldImage img, double scaleX, double scaleY) {
-        super(img, AffineTransform.getScaleInstance(scaleX, scaleY));
-        this.img = img;
+        super(Objects.requireNonNull(img, "Scaled image cannot be null"),
+                AffineTransform.getScaleInstance(scaleX, scaleY));
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+    }
+
+    public ScaleImageXYBase(WorldImage img, double scaleX, double scaleY, Posn pinhole) {
+        super(Objects.requireNonNull(img, "Scaled image cannot be null"),
+                AffineTransform.getScaleInstance(scaleX, scaleY),
+                pinhole);
         this.scaleX = scaleX;
         this.scaleY = scaleY;
     }
@@ -87,12 +108,5 @@ abstract class ScaleImageXYBase extends TransformImageBase {
      */
     public int hashCode() {
         return (int) (this.scaleX * 42 + this.scaleY * -57);
-    }
-
-    @Override
-    public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new ScaleImageXY(this.img, this.scaleX, this.scaleY);
-        i.pinhole = p;
-        return i;
     }
 }

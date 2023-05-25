@@ -3,6 +3,8 @@ package javalib.funworld;
 import javalib.worldcanvas.WorldSceneBase;
 import javalib.worldimages.WorldImage;
 
+import java.util.Objects;
+
 /**
  * This class represents a functional empty scene
  * 
@@ -37,8 +39,10 @@ public class WorldScene extends WorldSceneBase {
      *            -- x coordinate of the image
      * @param y
      *            -- y coordinate of the image
+     * @throws NullPointerException if image is null
      */
     public WorldScene placeImageXY(WorldImage image, int x, int y) {
+        Objects.requireNonNull(image, "Image cannot be null");
         return new WorldScene(width, height, this.imgs.add(new PlaceImage(
                 image, x, y)));
     }

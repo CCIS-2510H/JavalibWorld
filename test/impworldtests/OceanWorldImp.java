@@ -1,8 +1,16 @@
 package impworldtests;
 
-import tester.*;
-import javalib.impworld.*;
-import javalib.worldimages.*;
+import javalib.impworld.World;
+import javalib.impworld.WorldScene;
+import javalib.worldimages.BesideImage;
+import javalib.worldimages.EllipseImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.TriangleImage;
+import javalib.worldimages.WorldImage;
+import tester.Tester;
 
 import java.awt.Color;
 import java.util.Random;
@@ -39,11 +47,14 @@ interface OceanWorldConstants {
 
 // To represent a location (x,y) in graphics coordinates
 // -- adding methods to the library Posn class
-class CartPt extends Posn implements OceanWorldConstants {
+class CartPt implements OceanWorldConstants {
 
+    int x, y;
     // teh standard constructor - invokes the one in the super class
     CartPt(int x, int y) {
-        super(x, y);
+
+        this.x = x;
+        this.y = y;
     }
 
     // EFFECT:

@@ -2,9 +2,22 @@ package funworldtests;
 
 import java.awt.Color;
 
-import tester.*;
-import javalib.funworld.*;
-import javalib.worldimages.*;
+import javalib.funworld.World;
+import javalib.funworld.WorldScene;
+import javalib.worldimages.AboveImage;
+import javalib.worldimages.BesideImage;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.EllipseImage;
+import javalib.worldimages.FontStyle;
+import javalib.worldimages.LineImage;
+import javalib.worldimages.OverlayOffsetAlign;
+import javalib.worldimages.OverlayOffsetImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.TriangleImage;
+import javalib.worldimages.WorldImage;
+import tester.Tester;
 
 /**
  * Copyright 2012 Viera K. Proulx This program is distributed under the terms of

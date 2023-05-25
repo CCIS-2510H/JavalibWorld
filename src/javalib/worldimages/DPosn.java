@@ -9,8 +9,8 @@ package javalib.worldimages;
  */
 class DPosn {
     private static final double EPSILON = 10e-7;
-    public double x;
-    public double y;
+    public final double x;
+    public final double y;
 
     public DPosn(double x, double y) {
         this.x = x;

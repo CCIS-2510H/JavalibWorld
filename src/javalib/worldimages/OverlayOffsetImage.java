@@ -10,6 +10,7 @@ package javalib.worldimages;
  * </p>
  */
 
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -37,10 +38,14 @@ public final class OverlayOffsetImage extends OverlayOffsetAlignBase {
      *            -- Amount to shift the bottom image by along the Y axis
      * @param bot
      *            -- Bottom image
+     * @throws NullPointerException if top or bot is null
      */
-    public OverlayOffsetImage(WorldImage top, double dx, double dy,
-            WorldImage bot) {
+    public OverlayOffsetImage(WorldImage top, double dx, double dy, WorldImage bot) {
         super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, dx, dy, bot);
+    }
+
+    private OverlayOffsetImage(WorldImage top, double dx, double dy, WorldImage bot, Posn pinhole) {
+        super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, dx, dy, bot, pinhole);
     }
 
     @Override
@@ -56,9 +61,7 @@ public final class OverlayOffsetImage extends OverlayOffsetAlignBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new OverlayOffsetImage(this.top, this.dx, this.dy,
-                this.bot);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new OverlayOffsetImage(this.top, this.dx, this.dy, this.bot, p);
     }
 }

@@ -4,18 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import java.util.Stack;
 
 public final class FrozenImage extends WorldImage {
-    BufferedImage img;
+    final BufferedImage img;
     public FrozenImage(WorldImage img) {
-        super(1);
+        super(Objects.requireNonNull(img, "Image cannot be null").pinhole,1);
         this.img = new BufferedImage((int)img.getWidth(), (int)img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = this.img.createGraphics();
         g.translate(img.getWidth() / 2, img.getHeight() / 2);
         img.draw(g);
         g.dispose();
-        this.pinhole = img.pinhole;
     }
     private FrozenImage(BufferedImage img, Posn pinhole) {
         super(pinhole, 1);
@@ -61,6 +61,7 @@ public final class FrozenImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
         return new FrozenImage(this.img, p);
     }
 

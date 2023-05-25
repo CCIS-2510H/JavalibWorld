@@ -2,8 +2,12 @@ package impworldtests;
 
 import java.awt.Color;
 
-import javalib.impworld.*;
-import javalib.worldimages.*;
+import javalib.impworld.World;
+import javalib.impworld.WorldScene;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
 
 /**
  * Copyright 2012 Viera K. Proulx, Matthias Felleisen This program is

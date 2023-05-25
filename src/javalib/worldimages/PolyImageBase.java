@@ -9,24 +9,31 @@ import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 abstract class PolyImageBase extends WorldImage {
   protected PolyImageBase(Path2D poly, OutlineMode mode, Color color) {
-    super(1);
-    this.fill = mode;
-    this.color = color;
+    this(poly, mode, color, pinholeFromPoly(Objects.requireNonNull(poly, "Poly cannot be null")));
+  }
+
+  PolyImageBase(Path2D poly, OutlineMode mode, Color color, Posn pinhole) {
+    super(pinhole, 1);
+    this.fill = Objects.requireNonNull(mode, "Mode cannot be null");
+    this.color = Objects.requireNonNull(color, "Color cannot be null");
     this.poly = poly;
     this.poly.setWindingRule(Path2D.WIND_NON_ZERO);
-    Rectangle bounds = this.poly.getBounds();
-    this.pinhole = new Posn((int)bounds.getCenterX(), (int)bounds.getCenterY());
+  }
+  static Posn pinholeFromPoly(Path2D poly) {
+    Rectangle bounds = poly.getBounds();
+    return new Posn((int)bounds.getCenterX(), (int)bounds.getCenterY());
   }
 
   /** the outline mode - solid/outline of this polygon */
-  public OutlineMode fill;
+  public final OutlineMode fill;
 
   /** the color of this polygon */
-  public Color color;
+  public final Color color;
 
   private final Path2D poly;
 
@@ -51,9 +58,6 @@ abstract class PolyImageBase extends WorldImage {
 
   @Override
   protected void drawStackUnsafe(Graphics2D g) {
-    if (color == null)
-      color = new Color(0, 0, 0);
-
     // save the current paint
     Paint oldPaint = g.getPaint();
     // set the paint to the given color

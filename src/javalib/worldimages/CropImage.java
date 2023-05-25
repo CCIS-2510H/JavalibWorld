@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -15,19 +16,19 @@ import java.util.Stack;
 final public class CropImage extends WorldImage {
 
     /** upper left x coordinate of the crop location on the img */
-    int x;
+    final int x;
 
     /** upper left y coordinate of the crop location on the img */
-    int y;
+    final int y;
 
     /** width of the crop */
-    int width;
+    final int width;
 
     /** height of the crop */
-    int height;
+    final int height;
 
     /** the image to crop */
-    WorldImage img;
+    final WorldImage img;
 
     /**
      * Crops <code>img</code> to the rectangle with the upper left at the point
@@ -46,7 +47,10 @@ final public class CropImage extends WorldImage {
      *            -- Image to crop
      */
     public CropImage(int x, int y, int width, int height, WorldImage img) {
-        super(1 + img.depth);
+        this(x, y, width, height, img, DEFAULT_PINHOLE);
+    }
+    private CropImage(int x, int y, int width, int height, WorldImage img, Posn pinhole) {
+        super(pinhole, 1 + Objects.requireNonNull(img, "img cannot be null").depth);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -83,10 +87,9 @@ final public class CropImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        CropImage c = new CropImage(this.x, this.y, this.width, this.height,
-                this.img);
-        c.pinhole = p;
-        return c;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new CropImage(this.x, this.y, this.width, this.height,
+                this.img, p);
     }
 
     @Override

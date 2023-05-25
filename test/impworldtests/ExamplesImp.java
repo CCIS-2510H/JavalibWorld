@@ -3,8 +3,12 @@ package impworldtests;
 import java.awt.Color;
 
 import javalib.impworld.WorldScene;
-import javalib.worldcanvas.*;
-import javalib.worldimages.*;
+import javalib.worldcanvas.WorldCanvas;
+import javalib.worldimages.LineImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
 
 /**
  * Copyright 2012 Viera K. Proulx This program is distributed under the terms of

@@ -3,9 +3,17 @@ package funworldtests;
 import java.awt.Color;
 import java.util.Random;
 
-import tester.*;
-import javalib.funworld.*;
-import javalib.worldimages.*;
+import javalib.funworld.World;
+import javalib.funworld.WorldScene;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.FontStyle;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.OverlayImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.WorldImage;
+import tester.Tester;
 
 /**
  * Copyright 2012 Viera K. Proulx

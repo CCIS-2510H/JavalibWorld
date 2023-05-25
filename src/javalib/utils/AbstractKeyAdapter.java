@@ -4,8 +4,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Locale;
 
-import static java.awt.event.KeyEvent.*;
-
 /**
  * Created by blerner on 2/13/17.
  */
@@ -48,7 +46,7 @@ public class AbstractKeyAdapter extends KeyAdapter {
    *            the <code>KeyEvent</code> that caused the callback
    */
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() != VK_UNDEFINED)
+    if (e.getKeyCode() != KeyEvent.VK_UNDEFINED)
       this.onKey.apply(this.getNamedKey(e));
   }
 
@@ -64,7 +62,7 @@ public class AbstractKeyAdapter extends KeyAdapter {
    *            the <code>KeyEvent</code> that caused the callback
    */
   public void keyReleased(KeyEvent e) {
-    if (e.getKeyCode() != VK_UNDEFINED)
+    if (e.getKeyCode() != KeyEvent.VK_UNDEFINED)
       this.onReleased.apply(this.getNamedKey(e));
   }
 
@@ -74,26 +72,26 @@ public class AbstractKeyAdapter extends KeyAdapter {
   String getKeyName(KeyEvent e) {
     Locale.setDefault(Locale.ROOT);
     switch (e.getKeyChar()) {
-      case CHAR_UNDEFINED:
+      case KeyEvent.CHAR_UNDEFINED:
         return getKeyText(e.getKeyCode()).toLowerCase().replace(' ', '-');
-      case VK_TAB:
+      case KeyEvent.VK_TAB:
         return "tab";
-      case VK_ENTER:
+      case KeyEvent.VK_ENTER:
         return "enter";
-      case VK_DELETE:
+      case KeyEvent.VK_DELETE:
         return "delete";
-      case VK_ESCAPE:
+      case KeyEvent.VK_ESCAPE:
         return "escape";
-      case VK_BACK_SPACE:
+      case KeyEvent.VK_BACK_SPACE:
         return "backspace";
       default:
-        return "" + e.getKeyChar();
+        return String.valueOf(e.getKeyChar());
     }
   }
   String getLocationPrefix(KeyEvent e) {
     switch (e.getKeyLocation()) {
-      case KEY_LOCATION_NUMPAD: return "numpad-";
-      case KEY_LOCATION_RIGHT: return "right-";
+      case KeyEvent.KEY_LOCATION_NUMPAD: return "numpad-";
+      case KeyEvent.KEY_LOCATION_RIGHT: return "right-";
       default: return "";
     }
   }
@@ -101,171 +99,171 @@ public class AbstractKeyAdapter extends KeyAdapter {
   // Copied from KeyEvent.getKeyText, so as to deliberately de-localize the strings
   // On Mac, these are undesirably localized to unicode characters
   public static String getKeyText(int keyCode) {
-    if (keyCode >= VK_0 && keyCode <= VK_9 || keyCode >= VK_A && keyCode <= VK_Z) {
+    if (keyCode >= KeyEvent.VK_0 && keyCode <= KeyEvent.VK_9 || keyCode >= KeyEvent.VK_A && keyCode <= KeyEvent.VK_Z) {
       return String.valueOf((char)keyCode);
     }
 
     switch(keyCode) {
-      case VK_ENTER: return "Enter";
-      case VK_BACK_SPACE: return "Backspace";
-      case VK_TAB: return "Tab";
-      case VK_CANCEL: return "Cancel";
-      case VK_CLEAR: return "Clear";
-      case VK_COMPOSE: return "Compose";
-      case VK_PAUSE: return "Pause";
-      case VK_CAPS_LOCK: return "Caps Lock";
-      case VK_ESCAPE: return "Escape";
-      case VK_SPACE: return "Space";
-      case VK_PAGE_UP: return "Page Up";
-      case VK_PAGE_DOWN: return "Page Down";
-      case VK_END: return "End";
-      case VK_HOME: return "Home";
-      case VK_LEFT: return "Left";
-      case VK_UP: return "Up";
-      case VK_RIGHT: return "Right";
-      case VK_DOWN: return "Down";
-      case VK_BEGIN: return "Begin";
+      case KeyEvent.VK_ENTER: return "Enter";
+      case KeyEvent.VK_BACK_SPACE: return "Backspace";
+      case KeyEvent.VK_TAB: return "Tab";
+      case KeyEvent.VK_CANCEL: return "Cancel";
+      case KeyEvent.VK_CLEAR: return "Clear";
+      case KeyEvent.VK_COMPOSE: return "Compose";
+      case KeyEvent.VK_PAUSE: return "Pause";
+      case KeyEvent.VK_CAPS_LOCK: return "Caps Lock";
+      case KeyEvent.VK_ESCAPE: return "Escape";
+      case KeyEvent.VK_SPACE: return "Space";
+      case KeyEvent.VK_PAGE_UP: return "Page Up";
+      case KeyEvent.VK_PAGE_DOWN: return "Page Down";
+      case KeyEvent.VK_END: return "End";
+      case KeyEvent.VK_HOME: return "Home";
+      case KeyEvent.VK_LEFT: return "Left";
+      case KeyEvent.VK_UP: return "Up";
+      case KeyEvent.VK_RIGHT: return "Right";
+      case KeyEvent.VK_DOWN: return "Down";
+      case KeyEvent.VK_BEGIN: return "Begin";
 
       // modifiers
-      case VK_SHIFT: return "Shift";
-      case VK_CONTROL: return "Control";
-      case VK_ALT: return "Alt";
-      case VK_META: return "Meta";
-      case VK_ALT_GRAPH: return "Alt Graph";
+      case KeyEvent.VK_SHIFT: return "Shift";
+      case KeyEvent.VK_CONTROL: return "Control";
+      case KeyEvent.VK_ALT: return "Alt";
+      case KeyEvent.VK_META: return "Meta";
+      case KeyEvent.VK_ALT_GRAPH: return "Alt Graph";
 
       // punctuation
-      case VK_COMMA: return "Comma";
-      case VK_PERIOD: return "Period";
-      case VK_SLASH: return "Slash";
-      case VK_SEMICOLON: return "Semicolon";
-      case VK_EQUALS: return "Equals";
-      case VK_OPEN_BRACKET: return "Open Bracket";
-      case VK_BACK_SLASH: return "Back Slash";
-      case VK_CLOSE_BRACKET: return "Close Bracket";
+      case KeyEvent.VK_COMMA: return "Comma";
+      case KeyEvent.VK_PERIOD: return "Period";
+      case KeyEvent.VK_SLASH: return "Slash";
+      case KeyEvent.VK_SEMICOLON: return "Semicolon";
+      case KeyEvent.VK_EQUALS: return "Equals";
+      case KeyEvent.VK_OPEN_BRACKET: return "Open Bracket";
+      case KeyEvent.VK_BACK_SLASH: return "Back Slash";
+      case KeyEvent.VK_CLOSE_BRACKET: return "Close Bracket";
 
       // numpad numeric keys handled below
-      case VK_MULTIPLY: return "NumPad *";
-      case VK_ADD: return "NumPad +";
-      case VK_SEPARATOR: return "NumPad ,";
-      case VK_SUBTRACT: return "NumPad -";
-      case VK_DECIMAL: return "NumPad .";
-      case VK_DIVIDE: return "NumPad /";
-      case VK_DELETE: return "Delete";
-      case VK_NUM_LOCK: return "Num Lock";
-      case VK_SCROLL_LOCK: return "Scroll Lock";
+      case KeyEvent.VK_MULTIPLY: return "NumPad *";
+      case KeyEvent.VK_ADD: return "NumPad +";
+      case KeyEvent.VK_SEPARATOR: return "NumPad ,";
+      case KeyEvent.VK_SUBTRACT: return "NumPad -";
+      case KeyEvent.VK_DECIMAL: return "NumPad .";
+      case KeyEvent.VK_DIVIDE: return "NumPad /";
+      case KeyEvent.VK_DELETE: return "Delete";
+      case KeyEvent.VK_NUM_LOCK: return "Num Lock";
+      case KeyEvent.VK_SCROLL_LOCK: return "Scroll Lock";
 
-      case VK_WINDOWS: return "Windows";
-      case VK_CONTEXT_MENU: return "Context Menu";
+      case KeyEvent.VK_WINDOWS: return "Windows";
+      case KeyEvent.VK_CONTEXT_MENU: return "Context Menu";
 
-      case VK_F1: return "F1";
-      case VK_F2: return "F2";
-      case VK_F3: return "F3";
-      case VK_F4: return "F4";
-      case VK_F5: return "F5";
-      case VK_F6: return "F6";
-      case VK_F7: return "F7";
-      case VK_F8: return "F8";
-      case VK_F9: return "F9";
-      case VK_F10: return "F10";
-      case VK_F11: return "F11";
-      case VK_F12: return "F12";
-      case VK_F13: return "F13";
-      case VK_F14: return "F14";
-      case VK_F15: return "F15";
-      case VK_F16: return "F16";
-      case VK_F17: return "F17";
-      case VK_F18: return "F18";
-      case VK_F19: return "F19";
-      case VK_F20: return "F20";
-      case VK_F21: return "F21";
-      case VK_F22: return "F22";
-      case VK_F23: return "F23";
-      case VK_F24: return "F24";
+      case KeyEvent.VK_F1: return "F1";
+      case KeyEvent.VK_F2: return "F2";
+      case KeyEvent.VK_F3: return "F3";
+      case KeyEvent.VK_F4: return "F4";
+      case KeyEvent.VK_F5: return "F5";
+      case KeyEvent.VK_F6: return "F6";
+      case KeyEvent.VK_F7: return "F7";
+      case KeyEvent.VK_F8: return "F8";
+      case KeyEvent.VK_F9: return "F9";
+      case KeyEvent.VK_F10: return "F10";
+      case KeyEvent.VK_F11: return "F11";
+      case KeyEvent.VK_F12: return "F12";
+      case KeyEvent.VK_F13: return "F13";
+      case KeyEvent.VK_F14: return "F14";
+      case KeyEvent.VK_F15: return "F15";
+      case KeyEvent.VK_F16: return "F16";
+      case KeyEvent.VK_F17: return "F17";
+      case KeyEvent.VK_F18: return "F18";
+      case KeyEvent.VK_F19: return "F19";
+      case KeyEvent.VK_F20: return "F20";
+      case KeyEvent.VK_F21: return "F21";
+      case KeyEvent.VK_F22: return "F22";
+      case KeyEvent.VK_F23: return "F23";
+      case KeyEvent.VK_F24: return "F24";
 
-      case VK_PRINTSCREEN: return "Print Screen";
-      case VK_INSERT: return "Insert";
-      case VK_HELP: return "Help";
-      case VK_BACK_QUOTE: return "Back Quote";
-      case VK_QUOTE: return "Quote";
+      case KeyEvent.VK_PRINTSCREEN: return "Print Screen";
+      case KeyEvent.VK_INSERT: return "Insert";
+      case KeyEvent.VK_HELP: return "Help";
+      case KeyEvent.VK_BACK_QUOTE: return "Back Quote";
+      case KeyEvent.VK_QUOTE: return "Quote";
 
-      case VK_KP_UP: return "Up";
-      case VK_KP_DOWN: return "Down";
-      case VK_KP_LEFT: return "Left";
-      case VK_KP_RIGHT: return "Right";
+      case KeyEvent.VK_KP_UP: return "Up";
+      case KeyEvent.VK_KP_DOWN: return "Down";
+      case KeyEvent.VK_KP_LEFT: return "Left";
+      case KeyEvent.VK_KP_RIGHT: return "Right";
 
-      case VK_DEAD_GRAVE: return "Dead Grave";
-      case VK_DEAD_ACUTE: return "Dead Acute";
-      case VK_DEAD_CIRCUMFLEX: return "Dead Circumflex";
-      case VK_DEAD_TILDE: return "Dead Tilde";
-      case VK_DEAD_MACRON: return "Dead Macron";
-      case VK_DEAD_BREVE: return "Dead Breve";
-      case VK_DEAD_ABOVEDOT: return "Dead Above Dot";
-      case VK_DEAD_DIAERESIS: return "Dead Diaeresis";
-      case VK_DEAD_ABOVERING: return "Dead Above Ring";
-      case VK_DEAD_DOUBLEACUTE: return "Dead Double Acute";
-      case VK_DEAD_CARON: return "Dead Caron";
-      case VK_DEAD_CEDILLA: return "Dead Cedilla";
-      case VK_DEAD_OGONEK: return "Dead Ogonek";
-      case VK_DEAD_IOTA: return "Dead Iota";
-      case VK_DEAD_VOICED_SOUND: return "Dead Voiced Sound";
-      case VK_DEAD_SEMIVOICED_SOUND: return "Dead Semivoiced Sound";
+      case KeyEvent.VK_DEAD_GRAVE: return "Dead Grave";
+      case KeyEvent.VK_DEAD_ACUTE: return "Dead Acute";
+      case KeyEvent.VK_DEAD_CIRCUMFLEX: return "Dead Circumflex";
+      case KeyEvent.VK_DEAD_TILDE: return "Dead Tilde";
+      case KeyEvent.VK_DEAD_MACRON: return "Dead Macron";
+      case KeyEvent.VK_DEAD_BREVE: return "Dead Breve";
+      case KeyEvent.VK_DEAD_ABOVEDOT: return "Dead Above Dot";
+      case KeyEvent.VK_DEAD_DIAERESIS: return "Dead Diaeresis";
+      case KeyEvent.VK_DEAD_ABOVERING: return "Dead Above Ring";
+      case KeyEvent.VK_DEAD_DOUBLEACUTE: return "Dead Double Acute";
+      case KeyEvent.VK_DEAD_CARON: return "Dead Caron";
+      case KeyEvent.VK_DEAD_CEDILLA: return "Dead Cedilla";
+      case KeyEvent.VK_DEAD_OGONEK: return "Dead Ogonek";
+      case KeyEvent.VK_DEAD_IOTA: return "Dead Iota";
+      case KeyEvent.VK_DEAD_VOICED_SOUND: return "Dead Voiced Sound";
+      case KeyEvent.VK_DEAD_SEMIVOICED_SOUND: return "Dead Semivoiced Sound";
 
-      case VK_AMPERSAND: return "Ampersand";
-      case VK_ASTERISK: return "Asterisk";
-      case VK_QUOTEDBL: return "Double Quote";
-      case VK_LESS: return "Less";
-      case VK_GREATER: return "Greater";
-      case VK_BRACELEFT: return "Left Brace";
-      case VK_BRACERIGHT: return "Right Brace";
-      case VK_AT: return "At";
-      case VK_COLON: return "Colon";
-      case VK_CIRCUMFLEX: return "Circumflex";
-      case VK_DOLLAR: return "Dollar";
-      case VK_EURO_SIGN: return "Euro";
-      case VK_EXCLAMATION_MARK: return "Exclamation Mark";
-      case VK_INVERTED_EXCLAMATION_MARK: return "Inverted Exclamation Mark";
-      case VK_LEFT_PARENTHESIS: return "Left Parenthesis";
-      case VK_NUMBER_SIGN: return "Number Sign";
-      case VK_MINUS: return "Minus";
-      case VK_PLUS: return "Plus";
-      case VK_RIGHT_PARENTHESIS: return "Right Parenthesis";
-      case VK_UNDERSCORE: return "Underscore";
+      case KeyEvent.VK_AMPERSAND: return "Ampersand";
+      case KeyEvent.VK_ASTERISK: return "Asterisk";
+      case KeyEvent.VK_QUOTEDBL: return "Double Quote";
+      case KeyEvent.VK_LESS: return "Less";
+      case KeyEvent.VK_GREATER: return "Greater";
+      case KeyEvent.VK_BRACELEFT: return "Left Brace";
+      case KeyEvent.VK_BRACERIGHT: return "Right Brace";
+      case KeyEvent.VK_AT: return "At";
+      case KeyEvent.VK_COLON: return "Colon";
+      case KeyEvent.VK_CIRCUMFLEX: return "Circumflex";
+      case KeyEvent.VK_DOLLAR: return "Dollar";
+      case KeyEvent.VK_EURO_SIGN: return "Euro";
+      case KeyEvent.VK_EXCLAMATION_MARK: return "Exclamation Mark";
+      case KeyEvent.VK_INVERTED_EXCLAMATION_MARK: return "Inverted Exclamation Mark";
+      case KeyEvent.VK_LEFT_PARENTHESIS: return "Left Parenthesis";
+      case KeyEvent.VK_NUMBER_SIGN: return "Number Sign";
+      case KeyEvent.VK_MINUS: return "Minus";
+      case KeyEvent.VK_PLUS: return "Plus";
+      case KeyEvent.VK_RIGHT_PARENTHESIS: return "Right Parenthesis";
+      case KeyEvent.VK_UNDERSCORE: return "Underscore";
 
-      case VK_FINAL: return "Final";
-      case VK_CONVERT: return "Convert";
-      case VK_NONCONVERT: return "No Convert";
-      case VK_ACCEPT: return "Accept";
-      case VK_MODECHANGE: return "Mode Change";
-      case VK_KANA: return "Kana";
-      case VK_KANJI: return "Kanji";
-      case VK_ALPHANUMERIC: return "Alphanumeric";
-      case VK_KATAKANA: return "Katakana";
-      case VK_HIRAGANA: return "Hiragana";
-      case VK_FULL_WIDTH: return "Full-Width";
-      case VK_HALF_WIDTH: return "Half-Width";
-      case VK_ROMAN_CHARACTERS: return "Roman Characters";
-      case VK_ALL_CANDIDATES: return "All Candidates";
-      case VK_PREVIOUS_CANDIDATE: return "Previous Candidate";
-      case VK_CODE_INPUT: return "Code Input";
-      case VK_JAPANESE_KATAKANA: return "Japanese Katakana";
-      case VK_JAPANESE_HIRAGANA: return "Japanese Hiragana";
-      case VK_JAPANESE_ROMAN: return "Japanese Roman";
-      case VK_KANA_LOCK: return "Kana Lock";
-      case VK_INPUT_METHOD_ON_OFF: return "Input Method On/Off";
+      case KeyEvent.VK_FINAL: return "Final";
+      case KeyEvent.VK_CONVERT: return "Convert";
+      case KeyEvent.VK_NONCONVERT: return "No Convert";
+      case KeyEvent.VK_ACCEPT: return "Accept";
+      case KeyEvent.VK_MODECHANGE: return "Mode Change";
+      case KeyEvent.VK_KANA: return "Kana";
+      case KeyEvent.VK_KANJI: return "Kanji";
+      case KeyEvent.VK_ALPHANUMERIC: return "Alphanumeric";
+      case KeyEvent.VK_KATAKANA: return "Katakana";
+      case KeyEvent.VK_HIRAGANA: return "Hiragana";
+      case KeyEvent.VK_FULL_WIDTH: return "Full-Width";
+      case KeyEvent.VK_HALF_WIDTH: return "Half-Width";
+      case KeyEvent.VK_ROMAN_CHARACTERS: return "Roman Characters";
+      case KeyEvent.VK_ALL_CANDIDATES: return "All Candidates";
+      case KeyEvent.VK_PREVIOUS_CANDIDATE: return "Previous Candidate";
+      case KeyEvent.VK_CODE_INPUT: return "Code Input";
+      case KeyEvent.VK_JAPANESE_KATAKANA: return "Japanese Katakana";
+      case KeyEvent.VK_JAPANESE_HIRAGANA: return "Japanese Hiragana";
+      case KeyEvent.VK_JAPANESE_ROMAN: return "Japanese Roman";
+      case KeyEvent.VK_KANA_LOCK: return "Kana Lock";
+      case KeyEvent.VK_INPUT_METHOD_ON_OFF: return "Input Method On/Off";
 
-      case VK_AGAIN: return "Again";
-      case VK_UNDO: return "Undo";
-      case VK_COPY: return "Copy";
-      case VK_PASTE: return "Paste";
-      case VK_CUT: return "Cut";
-      case VK_FIND: return "Find";
-      case VK_PROPS: return "Props";
-      case VK_STOP: return "Stop";
+      case KeyEvent.VK_AGAIN: return "Again";
+      case KeyEvent.VK_UNDO: return "Undo";
+      case KeyEvent.VK_COPY: return "Copy";
+      case KeyEvent.VK_PASTE: return "Paste";
+      case KeyEvent.VK_CUT: return "Cut";
+      case KeyEvent.VK_FIND: return "Find";
+      case KeyEvent.VK_PROPS: return "Props";
+      case KeyEvent.VK_STOP: return "Stop";
     }
 
-    if (keyCode >= VK_NUMPAD0 && keyCode <= VK_NUMPAD9) {
+    if (keyCode >= KeyEvent.VK_NUMPAD0 && keyCode <= KeyEvent.VK_NUMPAD9) {
       String numpad = "NumPad";
-      char c = (char)(keyCode - VK_NUMPAD0 + '0');
+      char c = (char)(keyCode - KeyEvent.VK_NUMPAD0 + '0');
       return numpad + "-" + c;
     }
 

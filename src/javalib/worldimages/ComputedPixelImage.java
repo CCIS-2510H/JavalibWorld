@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.util.Objects;
 import java.util.Stack;
 /*
 
@@ -39,7 +40,10 @@ public final class ComputedPixelImage extends WorldImage {
    * @param height - the height of this rectangle
    */
   public ComputedPixelImage(int width, int height) {
-    super(1);
+    this(width, height, DEFAULT_PINHOLE);
+  }
+  private ComputedPixelImage(int width, int height, Posn pinhole) {
+    super(pinhole, 1);
     this.width = width;
     this.height = height;
     this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -53,9 +57,11 @@ public final class ComputedPixelImage extends WorldImage {
    * @param y - the row of the desired pixel
    * @param c - the color to set the desired pixel
    * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   * @throws NullPointerException if c is null
    */
   public void setPixel(int x, int y, Color c) throws IndexOutOfBoundsException {
     boundsCheck(x, y, this.width, this.height);
+    Objects.requireNonNull(c, "Color cannot be null");
     this.raster.setPixel(x, y, new int[]{c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()});
   }
 
@@ -98,6 +104,7 @@ public final class ComputedPixelImage extends WorldImage {
    * @param y - the row of the desired pixel
    * @param c - the color to set the desired pixel
    * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   * @throws NullPointerException if c is null
    */
   public void setColorAt(int x, int y, Color c) throws IndexOutOfBoundsException {
     this.setPixel(x, y, c);
@@ -114,9 +121,11 @@ public final class ComputedPixelImage extends WorldImage {
    * @param height - the height of the rectangular region to set
    * @param c - the color to set the desired pixel
    * @throws IndexOutOfBoundsException if (x, y) is out of bounds
+   * @throws NullPointerException if c is null
    */
   public void setPixels(int x, int y, int width, int height, Color c) throws IndexOutOfBoundsException {
     boundsCheck(x, y, this.width, this.height);
+    Objects.requireNonNull(c, "Color cannot be null");
     if (width < 0)
       throw new IndexOutOfBoundsException("Width cannot be negative");
     else if (x + width > this.width)
@@ -228,8 +237,8 @@ public final class ComputedPixelImage extends WorldImage {
 
   @Override
   public WorldImage movePinholeTo(Posn p) {
-    ComputedPixelImage i = new ComputedPixelImage(this.width, this.height);
-    i.pinhole = p;
+    Objects.requireNonNull(p, "Pinhole position cannot be null");
+    ComputedPixelImage i = new ComputedPixelImage(this.width, this.height, p);
     i.raster.setDataElements(0, 0, this.raster);
     return i;
   }

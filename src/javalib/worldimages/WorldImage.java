@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
@@ -28,27 +29,27 @@ import java.util.concurrent.Callable;
  * @since April 4 2015
  */
 public abstract class WorldImage {
-    
+    static final Posn DEFAULT_PINHOLE = new Posn(0, 0);
     /**
      * the pinhole of the image. When this image gets overlaid on top of another
      * image, they will be aligned on their respective pinholes (unless
      * otherwise specified)
      */
-    public Posn pinhole;
+    public final Posn pinhole;
     /**
      * This can't be a field on the object itself, or else the presence or absence of a cached
      * bounding box might affect the tester library deciding if two objects are the same or not
      */
-    static WeakHashMap<WorldImage, BoundingBox> bbCache;
+    static final WeakHashMap<WorldImage, BoundingBox> bbCache = new WeakHashMap<>();
     
     /** this describes how deeply nested the image object is constructed */
-    int depth;
+    final int depth;
     
     /** How deeply nested are the image objects in this image? */
     public int getImageNestingDepth() { return this.depth; }
 
     protected WorldImage(int depth) {
-        this(new Posn(0, 0), depth);
+        this(DEFAULT_PINHOLE, depth);
     }
 
     /**
@@ -59,12 +60,11 @@ public abstract class WorldImage {
      *            coordinate system of the image. 0, 0 is the center of the
      *            image and the default pinhole location). By default it is the
      *            origin
+     * @throws NullPointerException if pinhole is null
      */
     protected WorldImage(Posn pinhole, int depth) {
-        this.pinhole = pinhole;
+        this.pinhole = Objects.requireNonNull(pinhole, "Pinhole cannot be null");
         this.depth = depth;
-        if (WorldImage.bbCache == null)
-            WorldImage.bbCache = new WeakHashMap<WorldImage, BoundingBox>();
     }
 
     abstract int numKids();
@@ -177,6 +177,7 @@ public abstract class WorldImage {
      * @param p
      *            -- The new location of the pinhole
      * @return a new image with an adjusted pinhole
+     * @throws NullPointerException if p is null
      */
     public abstract WorldImage movePinholeTo(Posn p);
 

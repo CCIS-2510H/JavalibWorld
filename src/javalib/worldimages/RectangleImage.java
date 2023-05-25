@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -31,9 +32,14 @@ public final class RectangleImage extends RectangleImageBase {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if fill or color is null
      */
     public RectangleImage(int width, int height, OutlineMode fill, Color color) {
         super(width, height, fill, color);
+    }
+
+    private RectangleImage(int width, int height, OutlineMode fill, Color color, Posn pinhole) {
+        super(width, height, fill, color, pinhole);
     }
 
     /**
@@ -47,9 +53,17 @@ public final class RectangleImage extends RectangleImageBase {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if fill or color is null
      */
     public RectangleImage(int width, int height, String fill, Color color) {
         super(width, height, fill, color);
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new RectangleImage(this.width, this.height, this.fill,
+                this.color, p);
     }
 }
 
@@ -66,16 +80,16 @@ public final class RectangleImage extends RectangleImageBase {
 abstract class RectangleImageBase extends WorldImage {
 
     /** the width of the rectangle */
-    public int width;
+    public final int width;
 
     /** the height of the rectangle */
-    public int height;
+    public final int height;
 
     /** the color of the rectangle */
-    public Color color;
+    public final Color color;
 
     /** the outline mode of the rectangle - solid/outline */
-    public OutlineMode fill;
+    public final OutlineMode fill;
 
     /**
      * A full constructor for this rectangle image.
@@ -88,14 +102,19 @@ abstract class RectangleImageBase extends WorldImage {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if fill or color is null
      */
     public RectangleImageBase(int width, int height, OutlineMode fill,
             Color color) {
-        super(1);
+        this(width, height, fill, color, DEFAULT_PINHOLE);
+    }
+
+    RectangleImageBase(int width, int height, OutlineMode fill, Color color, Posn pinhole) {
+        super(pinhole,1);
         this.width = width;
         this.height = height;
-        this.fill = fill;
-        this.color = color;
+        this.fill = Objects.requireNonNull(fill, "Fill cannot be null");
+        this.color = Objects.requireNonNull(color, "Color cannot be null");
     }
 
     /**
@@ -109,6 +128,7 @@ abstract class RectangleImageBase extends WorldImage {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if fill or color is null
      */
     public RectangleImageBase(int width, int height, String fill, Color color) {
         this(width, height, OutlineMode.fromString(fill), color);
@@ -145,8 +165,6 @@ abstract class RectangleImageBase extends WorldImage {
             return;
         if (this.height <= 0)
             return;
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
 
         // save the current paint
         Paint oldPaint = g.getPaint();
@@ -209,13 +227,5 @@ abstract class RectangleImageBase extends WorldImage {
      */
     public int hashCode() {
         return this.color.hashCode() + this.width + this.height;
-    }
-
-    @Override
-    public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new RectangleImage(this.width, this.height, this.fill,
-                this.color);
-        i.pinhole = p;
-        return i;
     }
 }

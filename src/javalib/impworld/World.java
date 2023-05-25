@@ -810,7 +810,7 @@ final class MyTimer {
   /** the <code>Timer</code> that generates the time events */
   Timer timer;
 
-  public boolean running = true;
+  private boolean running = true;
 
   /** the timer speed */
   int speed;
@@ -950,16 +950,14 @@ final class MyMouseAdapter extends MouseAdapter {
   /**
    * Adjust the reported mouse position to account for the top bar
    *
-   * @param mousePosn
+   * @param e
    *            the recorded mouse position
    * @return the actual mouse position
    */
-  Posn adjustMousePosn(Posn mousePosn) {
+  Posn adjustMousePosn(MouseEvent e) {
     // .... use this to find the height of the top bar
     Insets ins = this.currentWorld.theCanvas.frame.getInsets();
-    mousePosn.y -= ins.top;
-    mousePosn.x -= ins.left;
-    return mousePosn;
+    return new Posn(e.getX() - ins.left, e.getY() - ins.top);
   }
 
   /**
@@ -970,8 +968,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseClicked(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseClicked(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMouseClicked(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -983,8 +981,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseEntered(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseEntered(adjustMousePosn(this.mousePosn));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMouseEntered(this.mousePosn);
     this.currentWorld.stopTimer = false;
   }
 
@@ -996,8 +994,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseExited(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseExited(adjustMousePosn(this.mousePosn));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMouseExited(this.mousePosn);
     this.currentWorld.stopTimer = false;
   }
 
@@ -1009,8 +1007,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mousePressed(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMousePressed(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMousePressed(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -1022,8 +1020,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseReleased(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseReleased(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMouseReleased(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -1033,8 +1031,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseMoved(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseMoved(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMouseMoved(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 }

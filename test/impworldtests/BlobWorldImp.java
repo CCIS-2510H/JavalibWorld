@@ -1,12 +1,20 @@
 package impworldtests;
 
-import javalib.impworld.*;
-import javalib.worldimages.*;
+import javalib.impworld.World;
+import javalib.impworld.WorldScene;
 
 import java.awt.Color;
 import java.util.Random;
 
-import tester.*;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.FontStyle;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.OverlayImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.WorldImage;
+import tester.Tester;
 
 /**
  * Copyright 2012 Viera K. Proulx This program is distributed under the terms of
@@ -38,13 +46,13 @@ class Blob {
      */
     public void moveBlob(String ke) {
         if (ke.equals("right")) {
-            this.center.x = this.center.x + 5;
+            this.center = this.center.offset(5, 0);
         } else if (ke.equals("left")) {
-            this.center.x = this.center.x - 5;
+            this.center = this.center.offset(-5, 0);
         } else if (ke.equals("up")) {
-            this.center.y = this.center.y - 5;
+            this.center = this.center.offset(0, -5);
         } else if (ke.equals("down")) {
-            this.center.y = this.center.y + 5;
+            this.center = this.center.offset(0, 5);
         }
         // change the color to Y, G, R
         else if (ke.equals("Y")) {

@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Stack;
  * 
  */
 public final class RotateImage extends TransformImageBase {
-    private double rotationDegrees;
+    private final double rotationDegrees;
     /**
      * Rotate the image
      * 
@@ -20,9 +21,20 @@ public final class RotateImage extends TransformImageBase {
      *            -- Image to rotate
      * @param rotationDegrees
      *            -- Degrees to rotate the image
+     * @throws NullPointerException if img is null
      */
     public RotateImage(WorldImage img, double rotationDegrees) {
-        super(img, AffineTransform.getRotateInstance(Math.toRadians(rotationDegrees)));
+        super(
+                Objects.requireNonNull(img, "Rotated image cannot be null"),
+                AffineTransform.getRotateInstance(Math.toRadians(rotationDegrees)));
+        this.rotationDegrees = rotationDegrees;
+    }
+
+    private RotateImage(WorldImage img, double rotationDegrees, Posn pinhole) {
+        super(
+                Objects.requireNonNull(img, "Rotated image cannot be null"),
+                AffineTransform.getRotateInstance(Math.toRadians(rotationDegrees)),
+                pinhole);
         this.rotationDegrees = rotationDegrees;
     }
 
@@ -61,8 +73,7 @@ public final class RotateImage extends TransformImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new RotateImage(this.img, this.rotationDegrees);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new RotateImage(this.img, this.rotationDegrees, p);
     }
 }

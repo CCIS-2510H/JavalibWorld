@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -32,27 +33,28 @@ import java.util.Stack;
  */
 public final class StarImage extends WorldImage {
   /** the number of points of this polygon */
-  public int points;
+  public final int points;
 
   /** the length of each side of this polygon */
-  public double radius;
+  public final double radius;
 
   /** the number of points to skip to the next one */
-  public int skipCount;
+  public final int skipCount;
 
   /** the outline mode - solid/outline of this polygon */
-  public OutlineMode fill;
+  public final OutlineMode fill;
 
   /** the color of this polygon */
-  public Color color;
+  public final Color color;
 
-  private Path2D poly;
+  private final Path2D poly;
 
   /**
    * Constructs a simple 5-pointed star
    * @param radius -- the radius of the enclosing circle
    * @param fill -- outline or solid
    * @param color -- ths color for this star
+   * @throws NullPointerException if fill or color is null
    */
   public StarImage(double radius, OutlineMode fill, Color color) {
     this(radius, 5, fill, color);
@@ -64,6 +66,7 @@ public final class StarImage extends WorldImage {
    * @param numPoints -- the number of points of the star
    * @param fill -- outline or solid
    * @param color -- the color for this star
+   * @throws NullPointerException if fill or color is null
    */
   public StarImage(double radius, int numPoints, OutlineMode fill, Color color) {
     this(radius, numPoints, numPoints / 2, fill, color);
@@ -77,62 +80,97 @@ public final class StarImage extends WorldImage {
    * @param skipCount -- how many points away is the next point of the star
    * @param fill -- outline or solid
    * @param color -- the color for this star
+   * @throws NullPointerException if fill or color is null
    */
   public StarImage(double radius, int numPoints, int skipCount, OutlineMode fill, Color color) {
-    super(1);
-
-    if (numPoints < 3) {
-      throw new IllegalArgumentException(
-              "There must be at least 3 points in a polygon");
-    }
-    if (skipCount < 1 || skipCount >= numPoints) {
-      throw new IllegalArgumentException(
-              "The skip-count must be positive and less than the number of points");
-    }
-
-    this.radius = radius;
-    this.points = numPoints;
-    this.skipCount = skipCount;
-    this.color = color;
-    this.fill = fill;
-    this.generatePoly();
+    this(new TransientStarImage(
+            radius,
+            numPoints,
+            skipCount,
+            Objects.requireNonNull(fill, "Fille cannot be null"),
+            Objects.requireNonNull(color, "Color cnanot be null")));
   }
+  public StarImage(double radius, int numPoints, int skipCount, OutlineMode fill, Color color, Posn pinhole) {
+    this(new TransientStarImage(
+            radius,
+            numPoints,
+            skipCount,
+            Objects.requireNonNull(fill, "Fille cannot be null"),
+            Objects.requireNonNull(color, "Color cnanot be null")),
+          pinhole);
+  }
+  private StarImage(TransientStarImage img) {
+    this(img, img.pinhole);
+  }
+  private StarImage(TransientStarImage img, Posn pinhole) {
+    super(pinhole, 1);
+    this.radius = img.radius;
+    this.points = img.points;
+    this.skipCount = img.skipCount;
+    this.color = img.color;
+    this.fill = img.fill;
+    this.poly = img.poly;
+  }
+  private static final class TransientStarImage {
+    final double radius;
+    final Posn pinhole;
+    final int points;
+    final int skipCount;
+    final Color color;
+    final OutlineMode fill;
+    final Path2D poly;
 
-  /**
-   * Create the internal polygon representing the set of points to draw
-   */
-  private void generatePoly() {
-    this.poly = new Path2D.Double();
-    // If the number of points and the skipCount aren't coprime, there could
-    // be multiple pieces to this path
-    double skipAngle = this.skipCount * (2.0 * Math.PI) / this.points;
-    int pointsPerComponent, numComponents;
-    int gcd = GCD(this.points, this.skipCount);
-    pointsPerComponent = this.points / gcd;
-    numComponents = gcd;
-    for (int component = 0; component < numComponents; component++) {
-      // start at the topmost point; rotate for each component
-      double curAngle = (2.0 * Math.PI) * ((double)component / (double)this.points) + (Math.PI / 2.0);
-      this.poly.moveTo(Math.cos(curAngle) * this.radius, -Math.sin(curAngle) * this.radius);
-      for (int i = 0; i < pointsPerComponent; i++) {
-        curAngle += skipAngle;
-        this.poly.lineTo(Math.cos(curAngle) * this.radius, -Math.sin(curAngle) * this.radius);
+    TransientStarImage(double radius, int numPoints, int skipCount, OutlineMode fill, Color color) {
+
+      if (numPoints < 3) {
+        throw new IllegalArgumentException(
+                "There must be at least 3 points in a polygon");
       }
-      this.poly.closePath();
+      if (skipCount < 1 || skipCount >= numPoints) {
+        throw new IllegalArgumentException(
+                "The skip-count must be positive and less than the number of points");
+      }
+
+      this.radius = radius;
+      this.points = numPoints;
+      this.skipCount = skipCount;
+      this.color = color;
+      this.fill = fill;
+
+      this.poly = new Path2D.Double();
+      // If the number of points and the skipCount aren't coprime, there could
+      // be multiple pieces to this path
+      double skipAngle = this.skipCount * (2.0 * Math.PI) / this.points;
+      int pointsPerComponent, numComponents;
+      int gcd = GCD(this.points, this.skipCount);
+      pointsPerComponent = this.points / gcd;
+      numComponents = gcd;
+      for (int component = 0; component < numComponents; component++) {
+        // start at the topmost point; rotate for each component
+        double curAngle = (2.0 * Math.PI) * ((double)component / (double)this.points) + (Math.PI / 2.0);
+        this.poly.moveTo(Math.cos(curAngle) * this.radius, -Math.sin(curAngle) * this.radius);
+        for (int i = 0; i < pointsPerComponent; i++) {
+          curAngle += skipAngle;
+          this.poly.lineTo(Math.cos(curAngle) * this.radius, -Math.sin(curAngle) * this.radius);
+        }
+        this.poly.closePath();
+      }
+      Rectangle2D bb = this.poly.getBounds2D();
+      this.poly.transform(AffineTransform.getTranslateInstance(-bb.getCenterX(), -bb.getCenterY()));
+      this.pinhole = new Posn((int)-bb.getCenterX(), (int)-bb.getCenterY());
     }
-    Rectangle2D bb = this.poly.getBounds2D();
-    this.poly.transform(AffineTransform.getTranslateInstance(-bb.getCenterX(), -bb.getCenterY()));
-    this.pinhole = new Posn((int)-bb.getCenterX(), (int)-bb.getCenterY());
   }
 
-  private int GCD(int a, int b) {
+
+
+  private static int GCD(int a, int b) {
     int t;
     while (b != 0) {
       t = a;
       a = b;
       b = t % b;
     }
-    return b==0 ? a : GCD(b, a%b);
+    return a;
   }
 
   @Override
@@ -155,9 +193,6 @@ public final class StarImage extends WorldImage {
 
   @Override
   protected void drawStackUnsafe(Graphics2D g) {
-    if (color == null)
-      color = new Color(0, 0, 0);
-
     // save the current paint
     Paint oldPaint = g.getPaint();
     // set the paint to the given color
@@ -224,9 +259,8 @@ public final class StarImage extends WorldImage {
 
   @Override
   public WorldImage movePinholeTo(Posn p) {
-    WorldImage i = new StarImage(this.radius, this.points, this.skipCount,
-            this.fill, this.color);
-    i.pinhole = p;
-    return i;
+    Objects.requireNonNull(p, "Pinhole position cannot be null");
+    return new StarImage(this.radius, this.points, this.skipCount,
+            this.fill, this.color, p);
   }
 }

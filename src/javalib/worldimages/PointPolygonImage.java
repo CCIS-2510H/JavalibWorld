@@ -2,11 +2,14 @@ package javalib.worldimages;
 
 import java.awt.Color;
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class PointPolygonImage extends PolyImageBase {
-  public List<Posn> points;
+  public final List<Posn> points;
 
   public PointPolygonImage(String fill, Color color, Posn... points) {
     this(Arrays.asList(points), OutlineMode.fromString(fill), color);
@@ -22,7 +25,12 @@ public final class PointPolygonImage extends PolyImageBase {
 
   public PointPolygonImage(List<Posn> points, OutlineMode fill, Color color) {
     super(generatePoly(points), fill, color);
-    this.points = points;
+    this.points = Collections.unmodifiableList(new ArrayList<>(points));
+  }
+
+  private PointPolygonImage(List<Posn> points, OutlineMode fill, Color color, Posn pinhole) {
+    super(generatePoly(points), fill, color, pinhole);
+    this.points = Collections.unmodifiableList(new ArrayList<>(points));
   }
 
   private static Path2D generatePoly(List<Posn> points) {
@@ -51,9 +59,8 @@ public final class PointPolygonImage extends PolyImageBase {
 
   @Override
   public WorldImage movePinholeTo(Posn p) {
-    WorldImage i = new PointPolygonImage(this.points, this.fill, this.color);
-    i.pinhole = p;
-    return i;
+    Objects.requireNonNull(p, "Pinhole position cannot be null");
+    return new PointPolygonImage(this.points, this.fill, this.color, p);
   }
 
 }

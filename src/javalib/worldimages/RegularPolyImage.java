@@ -2,9 +2,10 @@ package javalib.worldimages;
 
 import java.awt.Color;
 import java.awt.geom.Path2D;
+import java.util.Objects;
 import java.util.Stack;
 
-/**
+/*
  * <p>
  * Copyright 2015 Benjamin Lerner
  * </p>
@@ -42,6 +43,10 @@ public final class RegularPolyImage extends RegularPolyImageBase {
      */
     public RegularPolyImage(double sideLen, int numSides, OutlineMode fill, Color color) {
         this(sideLen, LengthMode.SIDE, numSides, fill, color);
+    }
+
+    RegularPolyImage(double sideLen, int numSides, OutlineMode fill, Color color, Posn pinhole) {
+        this(sideLen, LengthMode.SIDE, numSides, fill, color, pinhole);
     }
 
     /**
@@ -95,6 +100,10 @@ public final class RegularPolyImage extends RegularPolyImageBase {
         super(length, lengthMode, numSides, fill, color);
     }
 
+    private RegularPolyImage(double length, LengthMode lengthMode, int numSides, OutlineMode fill, Color color, Posn pinhole) {
+        super(length, lengthMode, numSides, fill, color, pinhole);
+    }
+
     /**
      * The full constructor for an equilateral regular polygon
      *
@@ -134,10 +143,10 @@ public final class RegularPolyImage extends RegularPolyImageBase {
 abstract class RegularPolyImageBase extends PolyImageBase {
 
     /** the number of sides of this polygon */
-    public int sides;
+    public final int sides;
 
     /** the length of each side of this polygon */
-    public double sideLen;
+    public final double sideLen;
 
     /**
      * The full constructor for an equilateral regular polygon
@@ -168,18 +177,41 @@ abstract class RegularPolyImageBase extends PolyImageBase {
                 double internalAngle = (2.0 * Math.PI) / sides;
                 this.sideLen = 2.0 * length * Math.sin(internalAngle / 2.0);
                 break;
+            default:
+                throw new IllegalArgumentException("lengthMode cannot be null; already checked above");
         }
-
     }
 
-    /**
-     * Create the internal polygon representing the set of points to draw
-     */
+    public RegularPolyImageBase(double length, LengthMode lengthMode, int numSides, OutlineMode fill,
+                                Color color, Posn pinhole) {
+        super(generatePoly(numSides, length, lengthMode), fill, color, pinhole);
+
+        this.sides = numSides;
+        // To ensure that each side has the specified length, we need
+        // to compute the radius of the circumcircle
+        switch(lengthMode) {
+            case SIDE:
+                this.sideLen = length;
+                break;
+            case RADIUS:
+                double internalAngle = (2.0 * Math.PI) / sides;
+                this.sideLen = 2.0 * length * Math.sin(internalAngle / 2.0);
+                break;
+            default:
+                throw new IllegalArgumentException("lengthMode cannot be null; already checked above");
+        }
+    }
+
+
+        /**
+         * Create the internal polygon representing the set of points to draw
+         */
     private static Path2D generatePoly(int sides, double sideLen, LengthMode lengthMode) {
         if (sides < 3) {
             throw new IllegalArgumentException(
                     "There must be at least 3 sides in a polygon");
         }
+        Objects.requireNonNull(lengthMode, "Length mode cannot be null");
         double internalAngle = (2.0 * Math.PI) / sides;
         double rotation = ((sides - 2) * (Math.PI / sides)) / 2;
         double radius = 0;
@@ -264,9 +296,8 @@ abstract class RegularPolyImageBase extends PolyImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new RegularPolyImage(this.sideLen, this.sides,
-                this.fill, this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new RegularPolyImage(this.sideLen, this.sides,
+                this.fill, this.color, p);
     }
 }

@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -27,10 +28,10 @@ import java.util.Stack;
 public final class LineImage extends WorldImage {
 
     /** the ending point of this line. the starting point is (0, 0) */
-    public Posn endPoint;
+    public final Posn endPoint;
 
     /** The color of the line */
-    public Color color;
+    public final Color color;
 
     /**
      * A full constructor for this line image. The starting point is the origin.
@@ -39,11 +40,15 @@ public final class LineImage extends WorldImage {
      *            -- the ending point of this line
      * @param color
      *            -- the color for this line
+     * @throws NullPointerException if endPoint or color is null
      */
     public LineImage(Posn endPoint, Color color) {
-        super(1);
-        this.endPoint = endPoint;
-        this.color = color;
+        this(endPoint, color, DEFAULT_PINHOLE);
+    }
+    private LineImage(Posn endPoint, Color color, Posn pinhole) {
+        super(pinhole, 1);
+        this.endPoint = Objects.requireNonNull(endPoint, "Endpoint cannot be null");
+        this.color = Objects.requireNonNull(color, "Color cannot be null");
 
     }
     @Override
@@ -131,8 +136,7 @@ public final class LineImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new LineImage(this.endPoint, this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new LineImage(this.endPoint, this.color, p);
     }
 }

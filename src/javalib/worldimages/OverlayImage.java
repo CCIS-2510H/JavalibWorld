@@ -6,6 +6,7 @@ package javalib.worldimages;
  * GNU Lesser General Public License (LGPL)</p>
  */
 
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -35,9 +36,14 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
      *            -- the bottom image for the combined image
      * @param top
      *            -- the bottom image for the combined image
+     * @throws NullPointerException if top or bot is null
      */
     public OverlayImage(WorldImage top, WorldImage bot) {
         super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, 0, 0, bot);
+    }
+
+    private OverlayImage(WorldImage top, WorldImage bot, Posn pinhole) {
+        super(AlignModeX.PINHOLE, AlignModeY.PINHOLE, top, 0, 0, bot, pinhole);
     }
 
     @Override
@@ -59,8 +65,7 @@ public final class OverlayImage extends OverlayOffsetAlignBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new OverlayImage(this.top, this.bot);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new OverlayImage(this.top, this.bot, p);
     }
 }

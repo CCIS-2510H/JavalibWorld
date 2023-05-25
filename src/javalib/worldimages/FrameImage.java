@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Stack;
 public final class FrameImage extends RectangleImageBase {
 
     /** The image being framed */
-    public WorldImage img;
+    public final WorldImage img;
 
     /**
      * Create a frame around the passed in image
@@ -29,12 +30,12 @@ public final class FrameImage extends RectangleImageBase {
      *            -- Image to frame
      * @param color
      *            -- Color of the frame
+     * @throws NullPointerException if img or color is null
      */
     public FrameImage(WorldImage img, Color color) {
-        super((int) Math.ceil(img.getBB().getWidth()), (int) Math.ceil(img
-                .getBB().getHeight()), OutlineMode.OUTLINE, color);
+        super((int) Math.ceil(Objects.requireNonNull(img, "Image cannot be null").getBB().getWidth()), (int) Math.ceil(img
+                .getBB().getHeight()), OutlineMode.OUTLINE, color, img.pinhole);
         this.img = img;
-        this.pinhole = this.img.pinhole;
     }
 
     /**
@@ -42,6 +43,7 @@ public final class FrameImage extends RectangleImageBase {
      * 
      * @param img
      *            -- Image to frame
+     * @throws NullPointerException if img is null
      */
     public FrameImage(WorldImage img) {
         this(img, Color.black);
@@ -64,8 +66,6 @@ public final class FrameImage extends RectangleImageBase {
             return;
         if (this.height <= 0)
             return;
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
 
         // save the current paint
         Paint oldPaint = g.getPaint();
@@ -89,8 +89,6 @@ public final class FrameImage extends RectangleImageBase {
             return;
         if (this.height <= 0)
             return;
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
 
         BoundingBox bb = this.img.getBB();
         images.push(new RectangleImage((int)Math.ceil(bb.getWidth()),
@@ -132,6 +130,7 @@ public final class FrameImage extends RectangleImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
         return new FrameImage(this.img.movePinholeTo(p), this.color);
     }
 }

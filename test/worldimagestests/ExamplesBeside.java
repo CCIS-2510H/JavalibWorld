@@ -3,8 +3,13 @@ package worldimagestests;
 import java.awt.Color;
 
 import javalib.impworld.WorldScene;
-import javalib.worldcanvas.*;
-import javalib.worldimages.*;
+import javalib.worldcanvas.WorldCanvas;
+import javalib.worldimages.BesideImage;
+import javalib.worldimages.FrameImage;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.ShearedImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.WorldImage;
 
 public class ExamplesBeside {
 

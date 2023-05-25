@@ -2,7 +2,8 @@ package funworldtests;
 
 import java.awt.Color;
 
-import javalib.funworld.*;
+import javalib.funworld.World;
+import javalib.funworld.WorldScene;
 import javalib.worldimages.CircleImage;
 import javalib.worldimages.OutlineMode;
 import javalib.worldimages.TextImage;

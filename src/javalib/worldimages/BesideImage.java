@@ -10,6 +10,7 @@ package javalib.worldimages;
  * </p>
  */
 
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -25,6 +26,9 @@ public final class BesideImage extends OverlayOffsetAlignBase {
     private BesideImage(WorldImage im1, WorldImage im2) {
         super(AlignModeX.LEFT, AlignModeY.MIDDLE, im1, im1.getWidth(), 0, im2);
     }
+    private BesideImage(WorldImage im1, WorldImage im2, Posn pinhole) {
+        super(AlignModeX.LEFT, AlignModeY.MIDDLE, im1, im1.getWidth(), 0, im2, pinhole);
+    }
 
     /**
      * Position an image next to another image
@@ -33,6 +37,7 @@ public final class BesideImage extends OverlayOffsetAlignBase {
      *            -- Left image
      * @param ims
      *            -- Right image(s)
+     * @throws NullPointerException if im1 or any of ims is null
      */
     public BesideImage(WorldImage im1, WorldImage... ims) {
         this(im1, multipleImageHandling(ims));
@@ -65,8 +70,7 @@ public final class BesideImage extends OverlayOffsetAlignBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new BesideImage(this.top, this.bot);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new BesideImage(this.top, this.bot, p);
     }
 }

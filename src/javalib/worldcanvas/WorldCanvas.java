@@ -40,10 +40,10 @@ public class WorldCanvas {
     public transient CanvasPanel panel;
 
     /** the width of the panel */
-    protected int width;
+    protected final int width;
 
     /** the height of the panel */
-    protected int height;
+    protected final int height;
 
     /**
      * <P>

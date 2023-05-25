@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -14,8 +15,8 @@ import java.util.Stack;
  * 
  */
 public final class VisiblePinholeImage extends WorldImage {
-    WorldImage img;
-    Color color;
+    final WorldImage img;
+    final Color color;
     static final LineImage line1 = new LineImage(new Posn(10, 0), Color.BLACK);
     static final LineImage line2 = new LineImage(new Posn(0, 10), Color.BLACK);
 
@@ -29,9 +30,9 @@ public final class VisiblePinholeImage extends WorldImage {
         this(img, Color.BLACK);
     }
     public VisiblePinholeImage(WorldImage img, Color c) {
-        super(img.pinhole, 1 + img.depth);
+        super(Objects.requireNonNull(img, "Image cannot be null").pinhole, 1 + img.depth);
         this.img = img;
-        this.color = c;
+        this.color = Objects.requireNonNull(c, "Color cannot be null");
     }
     @Override
     int numKids() {
@@ -59,6 +60,7 @@ public final class VisiblePinholeImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
         return new VisiblePinholeImage(this.img.movePinholeTo(p));
     }
 

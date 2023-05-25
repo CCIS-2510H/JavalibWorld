@@ -1,6 +1,7 @@
 package javalib.worldimages;
 
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -13,10 +14,10 @@ import java.util.Stack;
  */
 public final class ShearedImage extends TransformImageBase {
     /** the shear amount along the x axis */
-    public double sx;
+    public final double sx;
 
     /** the shear amount along the y axis */
-    public double sy;
+    public final double sy;
 
     /**
      * Shear the image
@@ -27,13 +28,22 @@ public final class ShearedImage extends TransformImageBase {
      *            -- Shear along the X axis
      * @param sy
      *            -- Shear along the Y axis
+     * @throws NullPointerException if img is null
      */
     public ShearedImage(WorldImage img, double sx, double sy) {
-        super(img, AffineTransform.getShearInstance(sx, sy));
+        super(Objects.requireNonNull(img, "Sheared image cannot be null"),
+                AffineTransform.getShearInstance(sx, sy));
         this.sx = sx;
         this.sy = sy;
     }
 
+    private ShearedImage(WorldImage img, double sx, double sy, Posn pinhole) {
+        super(Objects.requireNonNull(img, "Sheared image cannot be null"),
+                AffineTransform.getShearInstance(sx, sy),
+                pinhole);
+        this.sx = sx;
+        this.sy = sy;
+    }
 
     @Override
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
@@ -48,8 +58,7 @@ public final class ShearedImage extends TransformImageBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new ShearedImage(this.img, this.sx, this.sy);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new ShearedImage(this.img, this.sx, this.sy, p);
     }
 }

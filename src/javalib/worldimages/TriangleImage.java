@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -25,23 +26,24 @@ import java.util.Stack;
  * @since April 4, 2015
  */
 public final class TriangleImage extends WorldImage {
+    static final Color DEFAULT_COLOR = Color.BLACK;
 
     /** the first point of the triangle */
-    public Posn p1;
+    public final Posn p1;
 
     /** the second point of the triangle */
-    public Posn p2;
+    public final Posn p2;
 
     /** the third point of the triangle */
-    public Posn p3;
+    public final Posn p3;
 
     /** the outline mode of the triangle - outline/solid */
-    public OutlineMode fill;
+    public final OutlineMode fill;
 
     /** the color of the triangle */
-    public Color color;
+    public final Color color;
 
-    private Polygon poly;
+    private final Polygon poly;
 
     /**
      * A full constructor for this triangle image. The points are relative to
@@ -57,10 +59,20 @@ public final class TriangleImage extends WorldImage {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if p1, p2, p3, fill or color is null
      */
     public TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill,
             Color color) {
-        super(1);
+        this(p1, p2, p3, fill, DEFAULT_PINHOLE, color);
+    }
+    TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill, Posn pinhole, Color color) {
+        super(pinhole, 1);
+        Objects.requireNonNull(p1, "p1 cannot be null");
+        Objects.requireNonNull(p2, "p2 cannot be null");
+        Objects.requireNonNull(p3, "p3 cannot be null");
+        Objects.requireNonNull(fill, "Fill cannot be null");
+        Objects.requireNonNull(color, "Color cannot be null");
+
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -83,6 +95,9 @@ public final class TriangleImage extends WorldImage {
 
     }
 
+    TriangleImage(Posn p1, Posn p2, Posn p3, OutlineMode fill) {
+        this(p1, p2, p3, fill, DEFAULT_COLOR);
+    }
     /**
      * A full constructor for this triangle image. The points are relative to
      * each other
@@ -97,9 +112,10 @@ public final class TriangleImage extends WorldImage {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if p1, p2, p3, fill or color is null
      */
     public TriangleImage(Posn p1, Posn p2, Posn p3, String fill, Color color) {
-        this(p1, p2, p3, OutlineMode.fromString(fill), color);
+        this(p1, p2, p3, OutlineMode.fromString(Objects.requireNonNull(fill, "Fill cannot be null")), color);
     }
     @Override
     int numKids() {
@@ -127,9 +143,6 @@ public final class TriangleImage extends WorldImage {
     
     @Override
     protected void drawStackUnsafe(Graphics2D g) {
-        if (color == null)
-            color = new Color(0, 0, 0);
-
         // save the current paint
         Paint oldPaint = g.getPaint();
         // set the paint to the given color
@@ -199,9 +212,8 @@ public final class TriangleImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new TriangleImage(this.p1, this.p2, this.p3, this.fill,
-                this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new TriangleImage(this.p1, this.p2, this.p3, this.fill,
+                p, this.color);
     }
 }

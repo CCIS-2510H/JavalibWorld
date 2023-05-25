@@ -10,6 +10,7 @@ package javalib.worldimages;
  * </p>
  */
 
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -27,6 +28,9 @@ public final class BesideAlignImage extends OverlayOffsetAlignBase {
         super(AlignModeX.LEFT, mode, im1, im1.getWidth(), 0, im2);
     }
 
+    private BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage im2, Posn pinhole) {
+        super(AlignModeX.LEFT, mode, im1, im1.getWidth(), 0, im2, pinhole);
+    }
     /**
      * Position an image next to another image
      * 
@@ -37,6 +41,7 @@ public final class BesideAlignImage extends OverlayOffsetAlignBase {
      *            -- Left image
      * @param ims
      *            -- Right image(s)
+     * @throws NullPointerException if mode, im1 or any of ims is null
      */
     public BesideAlignImage(AlignModeY mode, WorldImage im1, WorldImage... ims) {
         this(mode, im1, multipleImageHandling(mode, ims));
@@ -52,6 +57,7 @@ public final class BesideAlignImage extends OverlayOffsetAlignBase {
      *            -- Left image
      * @param ims
      *            -- Right image(s)
+     * @throws NullPointerException if mode, im1 or any of ims is null
      */
     public BesideAlignImage(String mode, WorldImage im1, WorldImage... ims) {
         this(AlignModeY.fromString(mode), im1, ims);
@@ -86,8 +92,7 @@ public final class BesideAlignImage extends OverlayOffsetAlignBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new BesideAlignImage(this.alignY, this.top, this.bot);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new BesideAlignImage(this.alignY, this.top, this.bot, p);
     }
 }

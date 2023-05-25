@@ -10,6 +10,7 @@ package javalib.worldimages;
  * </p>
  */
 
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -25,17 +26,8 @@ public final class AboveImage extends OverlayOffsetAlignBase {
     private AboveImage(WorldImage im1, WorldImage im2) {
         super(AlignModeX.CENTER, AlignModeY.TOP, im1, 0, im1.getHeight(), im2);
     }
-
-    /**
-     * Position an image above another image
-     * 
-     * @param im1
-     *            -- Top image
-     * @param ims
-     *            -- Bottom image(s)
-     */
-    public AboveImage(WorldImage im1, WorldImage... ims) {
-        this(im1, multipleImageHandling(ims));
+    private AboveImage(WorldImage im1, WorldImage im2, Posn pinhole) {
+        super(AlignModeX.CENTER, AlignModeY.TOP, im1, 0, im1.getHeight(), im2, pinhole);
     }
 
     /**
@@ -45,9 +37,10 @@ public final class AboveImage extends OverlayOffsetAlignBase {
      *            -- Top image
      * @param ims
      *            -- Bottom image(s)
+     * @throws NullPointerException if im1 or any of ims is null
      */
-    public AboveImage(String mode, WorldImage im1, WorldImage... ims) {
-        this(im1, ims);
+    public AboveImage(WorldImage im1, WorldImage... ims) {
+        this(im1, multipleImageHandling(ims));
     }
 
     /**
@@ -77,8 +70,7 @@ public final class AboveImage extends OverlayOffsetAlignBase {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new AboveImage(this.top, this.bot);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new AboveImage(this.top, this.bot, p);
     }
 }

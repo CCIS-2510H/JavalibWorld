@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -39,12 +40,17 @@ public final class EllipseImage extends EllipseImageBase {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if fill or color is null
      */
     public EllipseImage(int width, int height, OutlineMode outlineMode,
             Color color) {
         super(width, height, outlineMode, color);
     }
 
+    private EllipseImage(int width, int height, OutlineMode outlineMode,
+                 Color color, Posn pinhole) {
+        super(width, height, outlineMode, color, pinhole);
+    }
     /**
      * A full constructor for this ellipse image.
      * 
@@ -56,34 +62,61 @@ public final class EllipseImage extends EllipseImageBase {
      *            -- outline or solid
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if outlineMode or color is null
      */
     public EllipseImage(int width, int height, String outlineMode, Color color) {
         super(width, height, outlineMode, color);
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new EllipseImage(this.width, this.height, this.fill,
+                this.color, p);
     }
 }
 
 abstract class EllipseImageBase extends WorldImage {
 
     /** the width of this ellipse */
-    public int width;
+    public final int width;
 
     /** the height of this ellipse */
-    public int height;
+    public final int height;
 
     /** Outline mode of the ellipse */
-    public OutlineMode fill;
+    public final OutlineMode fill;
 
     /** Color of the ellipse */
-    public Color color;
+    public final Color color;
 
+    /**
+     * A full constructor for this ellipse image
+     * @param width the width of the ellipse
+     * @param height the height of the ellipse
+     * @param mode the {@link OutlineMode} fill-mode of the ellipse
+     * @param color the color of the ellipse
+     * @throws NullPointerException if fill or color is null
+     */
     public EllipseImageBase(int width, int height, OutlineMode mode, Color color) {
-        super(1);
+        this(width, height, mode, color, DEFAULT_PINHOLE);
+    }
+    EllipseImageBase(int width, int height, OutlineMode mode, Color color, Posn pinhole) {
+        super(pinhole,1);
         this.width = width;
         this.height = height;
-        this.fill = mode;
-        this.color = color;
+        this.fill = Objects.requireNonNull(mode, "Fill cannot be null");
+        this.color = Objects.requireNonNull(color, "Color cannot be null");
     }
 
+    /**
+     * A full constructor for this ellipse image
+     * @param width the width of the ellipse
+     * @param height the height of the ellipse
+     * @param outlineMode the {@link OutlineMode} fill-mode of the ellipse
+     * @param color the color of the ellipse
+     * @throws NullPointerException if fill or color is null
+     */
     public EllipseImageBase(int width, int height, String outlineMode,
             Color color) {
         this(width, height, OutlineMode.fromString(outlineMode), color);
@@ -140,8 +173,6 @@ abstract class EllipseImageBase extends WorldImage {
             return;
         if (this.height <= 0)
             return;
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
 
         // save the current paint
         Paint oldPaint = g.getPaint();
@@ -203,13 +234,5 @@ abstract class EllipseImageBase extends WorldImage {
      */
     public int hashCode() {
         return this.color.hashCode() + this.width + this.height;
-    }
-
-    @Override
-    public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new EllipseImage(this.width, this.height, this.fill,
-                this.color);
-        i.pinhole = p;
-        return i;
     }
 }

@@ -2,11 +2,27 @@ package worldimagestests;
 
 import javalib.funworld.World;
 import javalib.worldcanvas.WorldCanvas;
-import javalib.worldimages.*;
 import javalib.funworld.WorldScene;
 
 import java.awt.Color;
 
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.CropImage;
+import javalib.worldimages.EllipseImage;
+import javalib.worldimages.FrameImage;
+import javalib.worldimages.LineImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.OverlayImage;
+import javalib.worldimages.PhantomImage;
+import javalib.worldimages.PointPolygonImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.RotateImage;
+import javalib.worldimages.ScaleImage;
+import javalib.worldimages.ShearedImage;
+import javalib.worldimages.VisiblePinholeImage;
+import javalib.worldimages.WedgeImage;
+import javalib.worldimages.WorldImage;
 import tester.Tester;
 
 /**

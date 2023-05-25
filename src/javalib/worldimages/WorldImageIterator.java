@@ -13,8 +13,8 @@ abstract class WorldImageIterator implements Iterator<WorldImage> {
     public WorldImage curImg;
     public AffineTransform curTx;
     
-    private WorldImage root;
-    private AffineTransform rootTx;
+    private final WorldImage root;
+    private final AffineTransform rootTx;
     
     public WorldImageIterator(WorldImage src) {
         this(src, new AffineTransform());
@@ -41,6 +41,7 @@ abstract class WorldImageIterator implements Iterator<WorldImage> {
 
     @Override
     public WorldImage next() {
+        // Invariant: expanded.length == worklist.length
         while (!this.expanded.peekFirst()) {
             this.expanded.removeFirst();
             this.expandChild(this.worklist.peek());

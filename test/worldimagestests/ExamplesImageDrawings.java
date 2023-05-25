@@ -1,11 +1,40 @@
 package worldimagestests;
 
 import javalib.worldcanvas.WorldCanvas;
-import javalib.worldimages.*;
 import javalib.funworld.WorldScene;
 
 import java.awt.Color;
 
+import javalib.worldimages.AboveAlignImage;
+import javalib.worldimages.AlignModeX;
+import javalib.worldimages.AlignModeY;
+import javalib.worldimages.BesideAlignImage;
+import javalib.worldimages.BesideImage;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.ComputedPixelImage;
+import javalib.worldimages.EllipseImage;
+import javalib.worldimages.EquilateralTriangleImage;
+import javalib.worldimages.FrameImage;
+import javalib.worldimages.FromFileImage;
+import javalib.worldimages.HexagonImage;
+import javalib.worldimages.LineImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.OverlayImage;
+import javalib.worldimages.OverlayOffsetAlign;
+import javalib.worldimages.OverlayOffsetImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RadialStarImage;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.RegularPolyImage;
+import javalib.worldimages.RotateImage;
+import javalib.worldimages.ScaleImage;
+import javalib.worldimages.ScaleImageXY;
+import javalib.worldimages.ShearedImage;
+import javalib.worldimages.StarImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.TriangleImage;
+import javalib.worldimages.VisiblePinholeImage;
+import javalib.worldimages.WorldImage;
 import tester.Tester;
 
 /**

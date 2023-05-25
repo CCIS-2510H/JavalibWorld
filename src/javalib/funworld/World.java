@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
-/**
+/*
  * Copyright 2007, 2008 2009, 2012 Viera K. Proulx
  * This program is distributed under the terms of the
  * GNU Lesser General Public License (LGPL)
@@ -28,7 +28,7 @@ import javax.swing.WindowConstants;
  * events and a timer.
  *
  * @author Viera K. Proulx
- * @since November 15 2007, March 17 2008, October 19 2009, February 4 2012
+ * @since November 15, 2007; March 17, 2008; October 19, 2009; February 4, 2012
  */
 abstract public class World {
 
@@ -38,7 +38,7 @@ abstract public class World {
   public WorldCanvas theCanvas;
 
   /**
-   * true if 'bigBang' started the world and it did not end, did not stop
+   * true if 'bigBang' started the world and it did not end or stop
    */
   private transient boolean worldExists = false;
 
@@ -185,7 +185,7 @@ abstract public class World {
 
   /**
    * Start the world by creating a canvas of the given size, creating and
-   * adding the key and mouse adapters, without running the the timer.
+   * adding the key and mouse adapters, without running the timer.
    *
    * @param w the width of the <code>{@link WorldCanvas Canvas}</code>
    * @param h the height of the <code>{@link WorldCanvas Canvas}</code>
@@ -250,15 +250,16 @@ abstract public class World {
    *     return this.makeOneLastChange().endOfWorld("done");
    *   }
    * </pre>
-   * However, because worlds are intended to be immutable, there is an off-by-one-world glitch
+   * <p>However, because worlds are intended to be immutable, there is an off-by-one-world glitch
    * here: calling <code>endOfWorld</code> will produce a new world that knows it's over,
    * but this current world does not, and its event handlers continue to fire.
    * Moreover, we need to draw the lastScene from the new world, without modifying this one.
-   *
-   * This helper routine will disable the current world and draw the given world's lastScene,
+   * </p>
+   * <p>This helper routine will disable the current world and draw the given world's lastScene,
    * or else transfer control over to the given world.
+   * </p>
    * @param w The world that either gains control from this one, or paints our last rendered scene.
-   * @return
+   * @return the next world that should have control
    */
   private World stopOrReset(World w, String why) {
     w.worldEnded = w.hasWorldEnded();
@@ -755,14 +756,13 @@ abstract public class World {
     if (this.worldExists) {
       this.theCanvas.clear();
       this.theCanvas.drawScene(this.makeScene());
-      return true;
     } else {
       if (this.getLastScene("") != null) {
         this.theCanvas.clear();
         this.theCanvas.drawScene(lastScene);
       }
-      return true;
     }
+    return true;
   }
 
   /**
@@ -816,12 +816,6 @@ class MyWindowClosingListener extends WindowAdapter {
   public void windowClosing(WindowEvent we) {
     if (this.w != null && this.w.mytime != null)
       this.w.mytime.stopTimer();
-
-    /**
-     * if (tunes.MusicBox.SYNTH_READY){ // clear the tick tune bucket
-     * this.w.tickTunes.clearBucket(); // clear the key tune bucket
-     * this.w.keyTunes.clearBucket(); }
-     **/
   }
 }
 
@@ -844,7 +838,7 @@ final class MyTimer {
    */
   Timer timer;
 
-  public boolean running = true;
+  private boolean running = true;
 
   /**
    * the timer speed
@@ -988,18 +982,16 @@ final class MyMouseAdapter extends MouseAdapter {
   /**
    * Adjust the reported mouse position to account for the top bar
    *
-   * @param mousePosn the recorded mouse position
+   * @param e the recorded mouse position
    * @return the actual mouse position
    */
-  Posn adjustMousePosn(Posn mousePosn) {
+  Posn adjustMousePosn(MouseEvent e) {
     // .... use this to find the height of the top bar
     if (this.currentWorld == null || this.currentWorld.theCanvas == null || this.currentWorld.theCanvas.frame == null) {
-      return mousePosn;
+      return new Posn(e.getX(), e.getY());
     }
     Insets ins = this.currentWorld.theCanvas.frame.getInsets();
-    mousePosn.y -= ins.top;
-    mousePosn.x -= ins.left;
-    return mousePosn;
+    return new Posn(e.getX() - ins.left, e.getY() - ins.top);
   }
 
   /**
@@ -1009,9 +1001,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseClicked(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld = this.currentWorld
-            .processMouseClicked(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld = this.currentWorld.processMouseClicked(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -1022,9 +1013,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseEntered(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld = this.currentWorld
-            .processMouseEntered(adjustMousePosn(this.mousePosn));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld = this.currentWorld.processMouseEntered(this.mousePosn);
     this.currentWorld.stopTimer = false;
   }
 
@@ -1035,9 +1025,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseExited(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld = this.currentWorld
-            .processMouseExited(adjustMousePosn(this.mousePosn));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld = this.currentWorld.processMouseExited(this.mousePosn);
     this.currentWorld.stopTimer = false;
   }
 
@@ -1048,9 +1037,8 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mousePressed(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld = this.currentWorld
-            .processMousePressed(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld = this.currentWorld.processMousePressed(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
@@ -1061,16 +1049,15 @@ final class MyMouseAdapter extends MouseAdapter {
    */
   public void mouseReleased(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld = this.currentWorld
-            .processMouseReleased(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld = this.currentWorld.processMouseReleased(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 
   public void mouseMoved(MouseEvent e) {
     this.currentWorld.stopTimer = true;
-    this.mousePosn = new Posn(e.getX(), e.getY());
-    this.currentWorld.processMouseMoved(adjustMousePosn(this.mousePosn), buttonNameFor(e));
+    this.mousePosn = adjustMousePosn(e);
+    this.currentWorld.processMouseMoved(this.mousePosn, buttonNameFor(e));
     this.currentWorld.stopTimer = false;
   }
 }

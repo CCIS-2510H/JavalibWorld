@@ -17,6 +17,9 @@ public class EmptyImage extends RectangleImageBase {
     public EmptyImage() {
         super(0, 0, "solid", new Color(0, 0, 0, 0));
     }
+    private EmptyImage(Posn pinhole) {
+        super(0, 0, OutlineMode.SOLID, new Color(0,0,0,0), pinhole);
+    }
 
     @Override
     protected StringBuilder toIndentedStringHelp(StringBuilder sb, Stack<Object> stack) {
@@ -31,5 +34,10 @@ public class EmptyImage extends RectangleImageBase {
     protected boolean equalsStacksafe(WorldImage other,
                                       Stack<WorldImage> worklistThis, Stack<WorldImage> worklistThat) {
         return other instanceof EmptyImage && this.pinhole.equals(other.pinhole);
+    }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        return new EmptyImage(p);
     }
 }

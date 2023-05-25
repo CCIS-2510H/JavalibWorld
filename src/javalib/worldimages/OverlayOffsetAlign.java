@@ -2,6 +2,7 @@ package javalib.worldimages;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -44,6 +45,12 @@ public final class OverlayOffsetAlign extends OverlayOffsetAlignBase {
         super(alignX, alignY, top, dx, dy, bot);
     }
 
+    private OverlayOffsetAlign(AlignModeX alignX, AlignModeY alignY,
+                              WorldImage top, double dx, double dy, WorldImage bot,
+                              Posn pinhole) {
+        super(alignX, alignY, top, dx, dy, bot, pinhole);
+    }
+
     /**
      * Overlay of the top image on the bottom one, using <code>alignX</code> and
      * <code>alignY</code> as a starting point, with the bottom offset by the
@@ -71,105 +78,163 @@ public final class OverlayOffsetAlign extends OverlayOffsetAlignBase {
         super(AlignModeX.fromString(alignX), AlignModeY.fromString(alignY),
                 top, dx, dy, bot);
     }
+
+    @Override
+    public WorldImage movePinholeTo(Posn p) {
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new OverlayOffsetAlign(this.alignX, this.alignY,
+                this.top, this.dx, this.dy, this.bot, p);
+    }
 }
 
 abstract class OverlayOffsetAlignBase extends WorldImage {
 
     /** the bottom image for the combined image */
-    public WorldImage bot;
+    public final WorldImage bot;
 
     /** the top image for the combined image */
-    public WorldImage top;
+    public final WorldImage top;
 
     /** how much the top and bottom images need to move relative to each other */
-    protected DPosn deltaTop, deltaBot;
-    public double dx, dy;
+    protected final DPosn deltaTop, deltaBot;
+    public final double dx, dy;
 
     /** The base alignments */
-    public AlignModeX alignX;
-    public AlignModeY alignY;
+    public final AlignModeX alignX;
+    public final AlignModeY alignY;
 
     public OverlayOffsetAlignBase(AlignModeX alignX, AlignModeY alignY,
             WorldImage top, double dx, double dy, WorldImage bot) {
-        super(1 + Math.max(top.depth, bot.depth));
-        this.bot = bot;
-        this.top = top;
-        this.alignX = alignX;
-        this.alignY = alignY;
-        this.dx = dx;
-        this.dy = dy;
+        this(new TransientOverlayOffsetAlign(
+                Objects.requireNonNull(alignX, "Horizontal align mode cannot be null"),
+                Objects.requireNonNull(alignY, "Vertical align mode cannot be null"),
+                Objects.requireNonNull(top, "Top image cannot be null"),
+                dx, dy,
+                Objects.requireNonNull(bot, "Bottom image cannot be null")));
+    }
+    OverlayOffsetAlignBase(AlignModeX alignX, AlignModeY alignY,
+                                  WorldImage top, double dx, double dy, WorldImage bot,
+                                  Posn pinhole) {
+        this(new TransientOverlayOffsetAlign(
+                Objects.requireNonNull(alignX, "Horizontal align mode cannot be null"),
+                Objects.requireNonNull(alignY, "Vertical align mode cannot be null"),
+                Objects.requireNonNull(top, "Top image cannot be null"),
+                dx, dy,
+                Objects.requireNonNull(bot, "Bottom image cannot be null")),
+                pinhole);
+    }
+    OverlayOffsetAlignBase(TransientOverlayOffsetAlign img) {
+        this(img, img.pinhole);
+    }
+    OverlayOffsetAlignBase(TransientOverlayOffsetAlign img, Posn pinhole) {
+        super(pinhole, img.depth);
+        this.bot = img.bot;
+        this.top = img.top;
+        this.deltaBot = img.deltaBot;
+        this.deltaTop = img.deltaTop;
+        this.dx = img.dx;
+        this.dy = img.dy;
+        this.alignX = img.alignX;
+        this.alignY = img.alignY;
+        this.hashCode = img.hashCode;
+    }
 
-        BoundingBox botBox = this.bot.getBB();
-        BoundingBox topBox = this.top.getBB();
-        double botDeltaX, botDeltaY, topDeltaX, topDeltaY;
-        switch(alignX) {
-            case LEFT: // move both images so their left sides are at x = 0;
-                botDeltaX = -botBox.getTlx();
-                topDeltaX = -topBox.getTlx();
-                break;
-            case CENTER:
-                botDeltaX = -botBox.getCenterX();
-                topDeltaX = -topBox.getCenterX();
-                break;
-            case PINHOLE:
-                botDeltaX = -bot.pinhole.x;
-                topDeltaX = -top.pinhole.x;
-                break;
-            case RIGHT:
-                botDeltaX = -botBox.getBrx();
-                topDeltaX = -topBox.getBrx();
-                break;
-            default:
-                throw new IllegalArgumentException("Unexpected AlignModeX");
-        }
-        switch(alignY) {
-            case TOP: // move both images so their left sides are at x = 0;
-                botDeltaY = -botBox.getTly();
-                topDeltaY = -topBox.getTly();
-                break;
-            case MIDDLE:
-                botDeltaY = -botBox.getCenterY();
-                topDeltaY = -topBox.getCenterY();
-                break;
-            case PINHOLE:
-                botDeltaY = -bot.pinhole.y;
-                topDeltaY = -top.pinhole.y;
-                break;
-            case BOTTOM:
-                botDeltaY = -botBox.getBry();
-                topDeltaY = -topBox.getBry();
-                break;
-            default:
-                throw new IllegalArgumentException("Unexpected AlignModeY");
-        }
-        topDeltaX -= dx;
-        topDeltaY -= dy;
+    /**
+     * This class is entirely an implementation detail, in order to make the computation of
+     * the pinhole happen before the super() call in OverlayOffsetAlignBase's constructor.
+     */
+    private static final class TransientOverlayOffsetAlign {
+        final Posn pinhole;
+        final int depth;
+        final WorldImage top, bot;
+        final AlignModeX alignX;
+        final AlignModeY alignY;
+        final double dx, dy;
+        final DPosn deltaTop, deltaBot;
+        final int hashCode;
 
-        double minX = Math.min(botBox.getTlx() + botDeltaX, topBox.getTlx() + topDeltaX);
-        double minY = Math.min(botBox.getTly() + botDeltaY, topBox.getTly() + topDeltaY);
-        double maxX = Math.max(botBox.getBrx() + botDeltaX, topBox.getBrx() + topDeltaX);
-        double maxY = Math.max(botBox.getBry() + botDeltaY, topBox.getBry() + topDeltaY);
+        private TransientOverlayOffsetAlign(AlignModeX alignX, AlignModeY alignY,
+                                    WorldImage top, double dx, double dy, WorldImage bot) {
+            this.depth = 1 + Math.max(top.depth, bot.depth);
+            this.bot = bot;
+            this.top = top;
+            this.alignX = alignX;
+            this.alignY = alignY;
+            this.dx = dx;
+            this.dy = dy;
 
-        double centerX = (minX + maxX) / 2.0;
-        double centerY = (minY + maxY) / 2.0;
+            BoundingBox botBox = this.bot.getBB();
+            BoundingBox topBox = this.top.getBB();
+            double botDeltaX, botDeltaY, topDeltaX, topDeltaY;
+            switch (alignX) {
+                case LEFT: // move both images so their left sides are at x = 0;
+                    botDeltaX = -botBox.getTlx();
+                    topDeltaX = -topBox.getTlx();
+                    break;
+                case CENTER:
+                    botDeltaX = -botBox.getCenterX();
+                    topDeltaX = -topBox.getCenterX();
+                    break;
+                case PINHOLE:
+                    botDeltaX = -bot.pinhole.x;
+                    topDeltaX = -top.pinhole.x;
+                    break;
+                case RIGHT:
+                    botDeltaX = -botBox.getBrx();
+                    topDeltaX = -topBox.getBrx();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unexpected AlignModeX");
+            }
+            switch (alignY) {
+                case TOP: // move both images so their left sides are at x = 0;
+                    botDeltaY = -botBox.getTly();
+                    topDeltaY = -topBox.getTly();
+                    break;
+                case MIDDLE:
+                    botDeltaY = -botBox.getCenterY();
+                    topDeltaY = -topBox.getCenterY();
+                    break;
+                case PINHOLE:
+                    botDeltaY = -bot.pinhole.y;
+                    topDeltaY = -top.pinhole.y;
+                    break;
+                case BOTTOM:
+                    botDeltaY = -botBox.getBry();
+                    topDeltaY = -topBox.getBry();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unexpected AlignModeY");
+            }
+            topDeltaX -= dx;
+            topDeltaY -= dy;
+
+            double minX = Math.min(botBox.getTlx() + botDeltaX, topBox.getTlx() + topDeltaX);
+            double minY = Math.min(botBox.getTly() + botDeltaY, topBox.getTly() + topDeltaY);
+            double maxX = Math.max(botBox.getBrx() + botDeltaX, topBox.getBrx() + topDeltaX);
+            double maxY = Math.max(botBox.getBry() + botDeltaY, topBox.getBry() + topDeltaY);
+
+            double centerX = (minX + maxX) / 2.0;
+            double centerY = (minY + maxY) / 2.0;
 
 //        topDeltaX -= centerX;
 //        topDeltaY -= centerY;
 //        botDeltaX -= centerX;
 //        botDeltaY -= centerY;
 
-        this.deltaBot = new DPosn(botDeltaX, botDeltaY);
-        this.deltaTop = new DPosn(topDeltaX, topDeltaY);
+            this.deltaBot = new DPosn(botDeltaX, botDeltaY);
+            this.deltaTop = new DPosn(topDeltaX, topDeltaY);
 
-        if (alignX == AlignModeX.PINHOLE && alignY == AlignModeY.PINHOLE && dx == 0 && dy == 0) {
-            this.pinhole = new Posn((int)(top.pinhole.x + topDeltaX), (int)(top.pinhole.y + topDeltaY));
-        } else {
-            this.pinhole = new Posn((int) centerX, (int) centerY);
+            if (alignX == AlignModeX.PINHOLE && alignY == AlignModeY.PINHOLE && dx == 0 && dy == 0) {
+                this.pinhole = new Posn((int) (top.pinhole.x + topDeltaX), (int) (top.pinhole.y + topDeltaY));
+            } else {
+                this.pinhole = new Posn((int) centerX, (int) centerY);
+            }
+
+            this.hashCode = this.bot.hashCode() + this.top.hashCode()
+                    + this.alignX.hashCode() + this.alignY.hashCode()
+                    + (int) this.dx * 37 + (int) this.dy * 16;
         }
-
-        this.hashCode = this.bot.hashCode() + this.top.hashCode()
-            + this.alignX.hashCode() + this.alignY.hashCode()
-            + (int) this.dx * 37 + (int) this.dy * 16;
     }
 
     @Override
@@ -277,12 +342,4 @@ abstract class OverlayOffsetAlignBase extends WorldImage {
         return this.hashCode;
     }
     private int hashCode;
-
-    @Override
-    public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new OverlayOffsetAlign(this.alignX, this.alignY,
-                this.top, this.dx, this.dy, this.bot);
-        i.pinhole = p;
-        return i;
-    }
 }

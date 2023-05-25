@@ -8,8 +8,8 @@ package javalib.worldimages;
  * @since April 4, 2015
  */
 public class Posn {
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
 
     public Posn(int x, int y) {
         this.x = x;
@@ -22,6 +22,10 @@ public class Posn {
             return false;
         Posn that = (Posn) other;
         return this.x == that.x && this.y == that.y;
+    }
+
+    public Posn offset(int dx, int dy) {
+        return new Posn(this.x + dx, this.y + dy);
     }
 
     @Override

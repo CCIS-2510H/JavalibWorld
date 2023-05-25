@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -32,21 +33,21 @@ import java.util.Stack;
  */
 public final class RadialStarImage extends WorldImage {
   /** the number of points of this polygon */
-  public int points;
+  public final int points;
 
   /** the outer radius of the star */
-  public double outerRadius;
+  public final double outerRadius;
 
   /** the inner radius of the star */
-  public double innerRadius;
+  public final double innerRadius;
 
   /** the outline mode - solid/outline of this polygon */
-  public OutlineMode fill;
+  public final OutlineMode fill;
 
   /** the color of this polygon */
-  public Color color;
+  public final Color color;
 
-  private Path2D poly;
+  private final Path2D poly;
 
   /**
    * Constructs a many-pointed star
@@ -55,9 +56,14 @@ public final class RadialStarImage extends WorldImage {
    * @param outerRadius -- the outer radius of the star (where the points are)
    * @param fill -- outline or solid
    * @param color -- the color of the star
+   * @throws NullPointerException if fill or color is null
    */
   public RadialStarImage(int numPoints, double innerRadius, double outerRadius, OutlineMode fill, Color color) {
-    super(1);
+    this(numPoints, innerRadius, outerRadius, fill, color, DEFAULT_PINHOLE);
+  }
+  private RadialStarImage(int numPoints, double innerRadius, double outerRadius, OutlineMode fill, Color color,
+                         Posn pinhole) {
+    super(pinhole, 1);
 
     if (numPoints < 3) {
       throw new IllegalArgumentException(
@@ -71,30 +77,31 @@ public final class RadialStarImage extends WorldImage {
     this.outerRadius = outerRadius;
     this.innerRadius = innerRadius;
     this.points = numPoints;
-    this.color = color;
-    this.fill = fill;
-    this.generatePoly();
+    this.color = Objects.requireNonNull(color, "Color cannot be null");
+    this.fill = Objects.requireNonNull(fill, "Fill cannot be null");
+    this.poly = this.generatePoly();
   }
 
   /**
    * Create the internal polygon representing the set of points to draw
    */
-  private void generatePoly() {
-    this.poly = new Path2D.Double();
+  private Path2D generatePoly() {
+    Path2D poly = new Path2D.Double();
     // the angle from one outer point to the next inner divot
     double skipAngle = (2.0 * Math.PI) / (2.0 * this.points);
     // start at the topmost point; rotate for each component
     double curAngle = (Math.PI / 2.0);
-    this.poly.moveTo(Math.cos(curAngle) * this.outerRadius, -Math.sin(curAngle) * this.outerRadius);
+    poly.moveTo(Math.cos(curAngle) * this.outerRadius, -Math.sin(curAngle) * this.outerRadius);
     for (int i = 0; i < this.points; i++) {
       if (i != 0) {
-        this.poly.lineTo(Math.cos(curAngle) * this.outerRadius, -Math.sin(curAngle) * this.outerRadius);
+        poly.lineTo(Math.cos(curAngle) * this.outerRadius, -Math.sin(curAngle) * this.outerRadius);
       }
       curAngle += skipAngle;
-      this.poly.lineTo(Math.cos(curAngle) * this.innerRadius, -Math.sin(curAngle) * this.innerRadius);
+      poly.lineTo(Math.cos(curAngle) * this.innerRadius, -Math.sin(curAngle) * this.innerRadius);
       curAngle += skipAngle;
     }
-    this.poly.closePath();
+    poly.closePath();
+    return poly;
   }
 
   @Override
@@ -117,9 +124,6 @@ public final class RadialStarImage extends WorldImage {
 
   @Override
   protected void drawStackUnsafe(Graphics2D g) {
-    if (color == null)
-      color = new Color(0, 0, 0);
-
     // save the current paint
     Paint oldPaint = g.getPaint();
     // set the paint to the given color
@@ -186,9 +190,8 @@ public final class RadialStarImage extends WorldImage {
 
   @Override
   public WorldImage movePinholeTo(Posn p) {
-    WorldImage i = new RadialStarImage(this.points, this.innerRadius, this.outerRadius,
-            this.fill, this.color);
-    i.pinhole = p;
-    return i;
+    Objects.requireNonNull(p, "Pinhole position cannot be null");
+    return new RadialStarImage(this.points, this.innerRadius, this.outerRadius,
+            this.fill, this.color, p);
   }
 }

@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.Objects;
 
 import javalib.worldimages.OutlineMode;
 import javalib.worldimages.RectangleImage;
@@ -26,16 +27,16 @@ import javax.imageio.ImageIO;
 public abstract class WorldSceneBase {
 
     /** width of the scene */
-    public int width;
+    public final int width;
 
     /** height of the scene */
-    public int height;
+    public final int height;
 
     protected interface IList<T> extends Iterable<T> {
         Cons<T> add(T val);
     }
 
-    protected class Empty<T> implements IList<T> {
+    private static final class Empty<T> implements IList<T> {
         public Cons<T> add(T val) {
             return new Cons<T>(val, this);
         }
@@ -45,7 +46,7 @@ public abstract class WorldSceneBase {
         }
     }
 
-    protected class Cons<T> implements IList<T> {
+    private static final class Cons<T> implements IList<T> {
         T first;
         IList<T> rest;
 
@@ -63,7 +64,7 @@ public abstract class WorldSceneBase {
         }
     }
 
-    protected class IListIterator<T> implements Iterator<T> {
+    private static final class IListIterator<T> implements Iterator<T> {
         IList<T> source;
 
         IListIterator(IList<T> source) {
@@ -198,7 +199,7 @@ public abstract class WorldSceneBase {
         int x, y;
 
         public PlaceImage(WorldImage i, int x, int y) {
-            this.img = i;
+            this.img = Objects.requireNonNull(i, "Cannot place a null image");
             this.x = x;
             this.y = y;
         }
@@ -206,6 +207,10 @@ public abstract class WorldSceneBase {
             sb.append("this.x = ").append(this.x).append(", ");
             sb.append("this.y = ").append(this.y).append(",\n");
             sb.append(linePrefix);
+            if (this.img == null) {
+                sb.append("<null image>");
+                return sb;
+            }
             return this.img.toIndentedString(sb, linePrefix + "  ", indent);
         }
     }

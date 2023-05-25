@@ -6,6 +6,7 @@ import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -16,12 +17,12 @@ public final class WedgeImage extends EllipseImageBase {
   /**
    * the radius of this wedge
    */
-  public int radius;
+  public final int radius;
 
   /**
    * the angle of this wedge
    */
-  public int angle;
+  public final int angle;
 
   /**
    * A full constructor for this wedge image.
@@ -30,14 +31,18 @@ public final class WedgeImage extends EllipseImageBase {
    * @param angle  -- the angle (in degrees) of the wedge; positive angles increase counterclockwise
    * @param fill   -- Outline or solid
    * @param color  -- the color for this image
+   * @throws NullPointerException if fill or color is null
    */
   public WedgeImage(int radius, int angle, OutlineMode fill, Color color) {
+    this(radius, angle, fill, color, DEFAULT_PINHOLE);
+  }
+
+  WedgeImage(int radius, int angle, OutlineMode fill, Color color, Posn pinhole) {
     // Note: this passes in 2 * radius as the width and height *of the underlying ellipse*
     // It does *not* imply that the width and height of this wedge are 2 * radius.
-    super(2 * radius, 2 * radius, fill, color);
+    super(2 * radius, 2 * radius, fill, color, pinhole);
     this.radius = radius;
     this.angle = angle;
-    this.pinhole = new Posn(0, 0);
   }
 
   /**
@@ -47,6 +52,7 @@ public final class WedgeImage extends EllipseImageBase {
    * @param angle  -- the angle (in degrees) of the wedge; positive angles increase counterclockwise
    * @param fill   -- Outline or solid
    * @param color  -- the color for this image
+   * @throws NullPointerException if fill or color is null
    */
   public WedgeImage(int radius, int angle, String fill, Color color) {
     this(radius, angle, OutlineMode.fromString(fill), color);
@@ -207,8 +213,6 @@ public final class WedgeImage extends EllipseImageBase {
   protected void drawStackUnsafe(Graphics2D g) {
     if (this.radius <= 0)
       return;
-    if (this.color == null)
-      this.color = new Color(0, 0, 0);
 
     // save the current paint
     Paint oldPaint = g.getPaint();
@@ -270,9 +274,8 @@ public final class WedgeImage extends EllipseImageBase {
 
   @Override
   public WorldImage movePinholeTo(Posn p) {
-    WorldImage i = new WedgeImage(this.radius, this.angle, this.fill,
-            this.color);
-    i.pinhole = p;
-    return i;
+    Objects.requireNonNull(p, "Pinhole position cannot be null");
+    return new WedgeImage(this.radius, this.angle, this.fill,
+            this.color, p);
   }
 }

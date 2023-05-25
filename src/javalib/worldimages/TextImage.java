@@ -9,8 +9,8 @@ import java.awt.Paint;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 import java.util.Stack;
 
 /**
@@ -32,18 +32,18 @@ import java.util.Stack;
 public final class TextImage extends WorldImage {
 
     /** the text to be shown */
-    public String text;
+    public final String text;
 
     /** the size of the font to use: the default here is 13 */
-    public double size;
+    public final double size;
 
     /** the color of the text */
-    public Color color;
+    public final Color color;
 
     /**
      * the style of the font
      */
-    public FontStyle style = FontStyle.REGULAR;
+    public final FontStyle style;
 
     /** the width of the bounding box */
     public double width = 0;
@@ -54,13 +54,13 @@ public final class TextImage extends WorldImage {
     private double baselineDy = 0;
 
     /** the Canvas for defining the font for this text image */
-    public static CanvasPanel c = new CanvasPanel(600, 600);
+    public static final CanvasPanel c = new CanvasPanel(600, 600);
 
     /** the graphics context where the text is to be shown */
-    protected static Graphics2D g = c.getBufferGraphics();
+    private static final Graphics2D g = c.getBufferGraphics();
 
     /** the current default font in our graphics context */
-    protected static Font font = g.getFont();
+    private static final Font font = g.getFont();
 
     /**
      * A full constructor for this text image.
@@ -73,12 +73,19 @@ public final class TextImage extends WorldImage {
      *            -- the style of the font: (regular, bold, italic, italic/bold)
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if text, style, or color is null
      */
     public TextImage(String text, double size, FontStyle style, Color color) {
-        super(1);
+        this(text, size, style, color, DEFAULT_PINHOLE);
+    }
+    private TextImage(String text, double size, FontStyle style, Color color, Posn pinhole) {
+        super(pinhole,1);
+        Objects.requireNonNull(text, "Text cannot be null");
+        Objects.requireNonNull(style, "Style cannot be null");
+        Objects.requireNonNull(color, "Color cannot be null");
         // bad things happen if we want to display a null String
         // or a String of length 0
-        if (text == null || text.equals(""))
+        if (text.equals(""))
             text = " ";
         this.text = text;
         this.size = size;
@@ -96,6 +103,7 @@ public final class TextImage extends WorldImage {
      *            -- the size of the font to use
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if text or color is null
      */
     public TextImage(String text, double size, Color color) {
         this(text, size, FontStyle.REGULAR, color);
@@ -110,6 +118,7 @@ public final class TextImage extends WorldImage {
      *            -- the size of the font to use
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if text or color is null
      */
     public TextImage(String text, int size, Color color) {
         this(text, size, FontStyle.REGULAR, color);
@@ -122,6 +131,7 @@ public final class TextImage extends WorldImage {
      *            -- the text to be shown
      * @param color
      *            -- the color for this image
+     * @throws NullPointerException if text or color is null
      */
     public TextImage(String text, Color color) {
         this(text, 13, FontStyle.REGULAR, color);
@@ -141,11 +151,6 @@ public final class TextImage extends WorldImage {
 
     @Override
     protected void drawStackUnsafe(Graphics2D g) {
-        if (this.text == null)
-            this.text = "";
-        if (this.color == null)
-            this.color = new Color(0, 0, 0);
-
         // save the current paint and font
         Paint oldPaint = g.getPaint();
         Font oldFont = g.getFont();
@@ -278,9 +283,8 @@ public final class TextImage extends WorldImage {
 
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new TextImage(this.text, this.size, this.style,
-                this.color);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new TextImage(this.text, this.size, this.style,
+                this.color, p);
     }
 }

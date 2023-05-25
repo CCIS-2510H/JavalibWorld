@@ -1,11 +1,24 @@
 package impworldtests;
 
-import javalib.impworld.*;
-import javalib.worldimages.*;
+import javalib.impworld.World;
+import javalib.impworld.WorldScene;
 
 import java.awt.Color;
 
-import tester.*;
+import javalib.worldimages.AboveImage;
+import javalib.worldimages.BesideImage;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.EllipseImage;
+import javalib.worldimages.FontStyle;
+import javalib.worldimages.LineImage;
+import javalib.worldimages.OverlayOffsetAlign;
+import javalib.worldimages.OverlayOffsetImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.TriangleImage;
+import javalib.worldimages.WorldImage;
+import tester.Tester;
 
 /**
  * Copyright 2012 Viera K. Proulx This program is distributed under the terms of
@@ -123,15 +136,15 @@ class Cloud {
 
     // move this cloud east with the wind
     void move(int dx) {
-        this.loc.x = this.loc.x + dx;
+        this.loc = this.loc.offset(dx, 0);
     }
 
     // when cloud moves off the canvas, move it back to the west
     void moveInBounds(int dx, int hbound) {
         if (this.loc.x + dx > hbound)
-            this.loc.x = dx;
+            this.loc = new Posn(dx, this.loc.y);
         else
-            this.loc.x = this.loc.x + dx;
+            this.loc = this.loc.offset(dx, 0);
     }
 
     // make the image of this cloud

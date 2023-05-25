@@ -13,6 +13,7 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.util.Hashtable;
+import java.util.Objects;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -400,7 +401,7 @@ public class CanvasPanel extends JPanel {
          * Reference to the <code>CanvasPanel</code> that created this
          * <code>Painter</code>.
          */
-        protected CanvasPanel panel = null;
+        protected final CanvasPanel panel;
 
         /**
          * Contructor that should only be called by a <code>CanvasPanel</code>.
@@ -410,7 +411,7 @@ public class CanvasPanel extends JPanel {
          *            <code>Painter</code>
          */
         protected Painter(CanvasPanel panel) {
-            this.panel = panel;
+            this.panel = Objects.requireNonNull(panel, "panel cannot be null");
         }
 
         /**

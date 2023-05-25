@@ -1,5 +1,7 @@
 package javalib.worldimages;
 
+import java.util.Objects;
+
 /**
  * Class representing the scaling of an image
  * 
@@ -17,15 +19,19 @@ public final class ScaleImage extends ScaleImageXYBase {
      *            -- Image to scale
      * @param scale
      *            -- Scale amount
+     * @throws NullPointerException if img is null
      */
     public ScaleImage(WorldImage img, double scale) {
         super(img, scale, scale);
     }
 
+    private ScaleImage(WorldImage img, double scale, Posn pinhole) {
+        super(img, scale, scale, pinhole);
+    }
+
     @Override
     public WorldImage movePinholeTo(Posn p) {
-        WorldImage i = new ScaleImage(this.img, this.scaleX);
-        i.pinhole = p;
-        return i;
+        Objects.requireNonNull(p, "Pinhole position cannot be null");
+        return new ScaleImage(this.img, this.scaleX, p);
     }
 }

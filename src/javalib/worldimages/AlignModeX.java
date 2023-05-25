@@ -1,5 +1,7 @@
 package javalib.worldimages;
 
+import java.util.Objects;
+
 /**
  * An enum representing alignment states along the X axis an overlaid WorldImage
  * can have
@@ -21,6 +23,7 @@ public enum AlignModeX {
      * @return The enum associated with the given <code>name</code>
      */
     public static AlignModeX fromString(String name) {
+        Objects.requireNonNull(name, "Horizontal align mode name cannot be null");
         switch(name.toUpperCase()) {
             case "LEFT": return LEFT;
             case "RIGHT": return RIGHT;

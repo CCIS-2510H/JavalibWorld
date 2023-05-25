@@ -3,8 +3,15 @@ package worldimagestests;
 import java.awt.Color;
 
 import javalib.impworld.WorldScene;
-import javalib.worldcanvas.*;
-import javalib.worldimages.*;
+import javalib.worldcanvas.WorldCanvas;
+import javalib.worldimages.AlignModeX;
+import javalib.worldimages.AlignModeY;
+import javalib.worldimages.FrameImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.OverlayOffsetAlign;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.WorldImage;
 
 public class ExamplesOverlay {
 

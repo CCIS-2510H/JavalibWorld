@@ -1,7 +1,21 @@
 package worldimagestests;
 
-import javalib.worldimages.*;
-import tester.*;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.EllipseImage;
+import javalib.worldimages.FontStyle;
+import javalib.worldimages.FrameImage;
+import javalib.worldimages.FromFileImage;
+import javalib.worldimages.LineImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.OverlayImage;
+import javalib.worldimages.OverlayOffsetImage;
+import javalib.worldimages.Posn;
+import javalib.worldimages.RectangleImage;
+import javalib.worldimages.TextImage;
+import javalib.worldimages.TriangleImage;
+import javalib.worldimages.WorldImage;
+import tester.IExamples;
+import tester.Tester;
 
 import java.awt.Color;
 
@@ -38,8 +52,8 @@ public class ExamplesImageMethods implements IExamples {
     // Tests for the CircleImage class
     void testCircleImage(Tester t) {
         t.checkExpect(this.circle1.toString(),
-                "new CircleImage(this.radius = 4,\nthis.fill = OutlineMode.SOLID,"
-                        + "\nthis.color = [r=255,g=0,b=0])");
+                "new CircleImage(this.radius = 4,\n  this.fill = OutlineMode.SOLID,"
+                        + "\n  this.color = [r=255,g=0,b=0])");
         t.checkExpect(this.circle1.toIndentedString(new StringBuilder(), "  ", 1).toString(),
                 "new CircleImage(this.radius = 4,"
                         + "\n   this.fill = OutlineMode.SOLID,"
@@ -69,8 +83,8 @@ public class ExamplesImageMethods implements IExamples {
     void testEllipseImage(Tester t) {
         t.checkExpect(this.ellipse1.toString(),
                 "new EllipseImage(this.width = 4, this.height = 5,"
-                        + "\nthis.fill = OutlineMode.SOLID,"
-                        + "\nthis.color = [r=0,g=255,b=0])");
+                        + "\n  this.fill = OutlineMode.SOLID,"
+                        + "\n  this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.ellipse1.toIndentedString(new StringBuilder(), "  ", 1).toString(),
                 "new EllipseImage(this.width = 4, this.height = 5,"
                         + "\n   this.fill = OutlineMode.SOLID,"
@@ -99,8 +113,8 @@ public class ExamplesImageMethods implements IExamples {
     void testFrameImage(Tester t) {
         t.checkExpect(this.frame1.toString(),
                 "new FrameImage(\n"
-                + "this.color = [r=0,g=0,b=0],\n"
-                + "this.img = "+ this.circle1.toString() + ")");
+                + "  this.color = [r=0,g=0,b=0],\n"
+                + "  this.img = "+ this.circle1.toString().replaceAll("\n", "\n  ") + ")");
         t.checkExpect(
                 this.frame1.toIndentedString(new StringBuilder("\n"), "", 2).toString(),
                 "\nnew FrameImage(\n"
@@ -138,8 +152,8 @@ public class ExamplesImageMethods implements IExamples {
     void testRectangleImage(Tester t) {
         t.checkExpect(this.rectangle1.toString(),
                 "new RectangleImage(this.width = 4, this.height = 5,"
-                        + "\nthis.fill = OutlineMode.SOLID,"
-                        + "\nthis.color = [r=0,g=255,b=0])");
+                        + "\n  this.fill = OutlineMode.SOLID,"
+                        + "\n  this.color = [r=0,g=255,b=0])");
         t.checkExpect(this.rectangle1.toIndentedString(new StringBuilder(), "", 3).toString(),
                 "new RectangleImage(this.width = 4, this.height = 5,"
                         + "\n   this.fill = OutlineMode.SOLID,"
@@ -172,7 +186,7 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(
                 this.line1.toString(),
                 "new LineImage(this.endPoint = (4, 5),"
-                        + "\nthis.color = [r=0,g=255,b=0])");
+                        + "\n  this.color = [r=0,g=255,b=0])");
         t.checkExpect(
                 this.line1.toIndentedString(new StringBuilder(), "", 3).toString(),
                 "new LineImage(this.endPoint = (4, 5),"
@@ -217,9 +231,9 @@ public class ExamplesImageMethods implements IExamples {
     // Tests for the TriangleImage class
     void testTriangleImage(Tester t) {
         t.checkExpect(this.triangle1.toString(),
-                "new TriangleImage(\nthis.p1 = (2, 3),\nthis.p2 = (4, 5),\nthis.p3 = (6, 7),"
-                        + "\nthis.fill = OutlineMode.SOLID,"
-                        + "\nthis.color = [r=0,g=0,b=0])");
+                "new TriangleImage(\n  this.p1 = (2, 3),\n  this.p2 = (4, 5),\n  this.p3 = (6, 7),"
+                        + "\n  this.fill = OutlineMode.SOLID,"
+                        + "\n  this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.triangle1.toIndentedString(new StringBuilder(), "", 3).toString(),
                 "new TriangleImage("
                         + "\n   this.p1 = (2, 3),"
@@ -258,9 +272,9 @@ public class ExamplesImageMethods implements IExamples {
     // Tests for the TextImage class
     void testTextImage(Tester t) {
         char c = '"';
-        t.checkExpect(this.text1.toString(), "new TextImage(this.text = " + c
-                + "hello" + c + "," + "\nthis.size = 6.0, this.style = FontStyle.ITALIC,"
-                + "\nthis.color = [r=0,g=0,b=0])");
+        t.checkExpect(this.text1.toString(), "new TextImage(this.text = " + c + "hello" + c + ","
+                + "\n  this.size = 6.0, this.style = FontStyle.ITALIC,"
+                + "\n  this.color = [r=0,g=0,b=0])");
         t.checkExpect(this.text1.toIndentedString(new StringBuilder(), "", 3).toString(),
                 "new TextImage(this.text = " + c + "hello" + c + ","
                         + "\n   this.size = 6.0, this.style = FontStyle.ITALIC,"
@@ -277,7 +291,7 @@ public class ExamplesImageMethods implements IExamples {
         t.checkExpect(this.line1.equals(this.text1), false, "fails - different classes");
         t.checkExpect(this.text1.equals(this.line1), false, "fails - different classes");
 
-        t.checkExpect(this.text1.getWidth(), 16.0);
+        t.checkExpect(this.text1.getWidth(), 14.0);
         t.checkExpect(this.text1.getHeight(), 6.0);
     }
 
@@ -291,9 +305,9 @@ public class ExamplesImageMethods implements IExamples {
 
     // Tests for the OverlayImage class
     void testOverlayImage(Tester t) {
-        t.checkExpect(this.overlay1.toString(), "new OverlayImage(\nthis.top = "
-                + this.overlay1.top.toString() + ",\nthis.bot = "
-                + this.overlay1.bot.toString() + ")");
+        t.checkExpect(this.overlay1.toString(), "new OverlayImage(\n  this.top = "
+                + this.overlay1.top.toString().replaceAll("\n", "\n  ") + ",\n  this.bot = "
+                + this.overlay1.bot.toString().replaceAll("\n", "\n  ") + ")");
         t.checkExpect(this.overlay1.toIndentedString(new StringBuilder(), "", 1).toString(),
                 "new OverlayImage(\n this.top = " + this.overlay1.top.toIndentedString(new StringBuilder(), " ", 1).toString()
                         + ",\n this.bot = " + this.overlay1.bot.toIndentedString(new StringBuilder(), " ", 1).toString()
@@ -331,12 +345,16 @@ public class ExamplesImageMethods implements IExamples {
     void testOverlayOffsetImage(Tester t) {
         t.checkExpect(
                 this.overlayXY1.toString(),
-                "new OverlayOffsetImage(\nthis.top = " + this.circle1.toString() + ","
-                        + "\nthis.dx = 5.0, this.dy = 3.0,"
-                        + "\nthis.bot = " + this.rectangle1.toString() + ")");
+                "new OverlayOffsetImage("
+                        + "\n  this.pinhole = (-3, -2),"
+                        + "\n  this.top = " + this.circle1.toString().replaceAll("\n", "\n  ") + ","
+                        + "\n  this.dx = 5.0, this.dy = 3.0,"
+                        + "\n  this.bot = " + this.rectangle1.toString().replaceAll("\n", "\n  ") + ")");
         t.checkExpect(
                 this.overlayXY1.toIndentedString(new StringBuilder(), "", 3).toString(),
-                "new OverlayOffsetImage(\n   this.top = " + this.circle1.toIndentedString(new StringBuilder(), "   ", 3).toString() + ","
+                "new OverlayOffsetImage("
+                        + "\n   this.pinhole = (-3, -2),"
+                        + "\n   this.top = " + this.circle1.toIndentedString(new StringBuilder(), "   ", 3).toString() + ","
                         + "\n   this.dx = 5.0, this.dy = 3.0,"
                         + "\n   this.bot = " + this.rectangle1.toIndentedString(new StringBuilder(), "   ", 3).toString() + ")");
 
